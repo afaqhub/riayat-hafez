@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#1F4D45">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أوراق مراجعة القرآن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;700&family=Almarai:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --uiz:1; --pri:#1F4D45; --bar:#1F4D45; --head:#1F4D45; --field:#FFFFFF; --previewbg:#C9D1C8;
+  --ink:#1E2623; --muted:#5F6A65; --green:#1F4D45; --green2:#2E6B5F; --gold:#A9822F;
+  --bg:#E9EDE8; --paper:#FFFFFF; --line:#D3DAD2; --soft:#F3F6F2;
+  --ok:#1E6B34; --okbg:#DDEFE1; --wait:#8A5A00; --waitbg:#FBEBC8; --off:#7A7A7A; --offbg:#ECECEC; --danger:#A2271C;
+  --r1:10px; --r2:16px;
+  --ui:'Tajawal','Cairo',system-ui,sans-serif; --quran:'Amiri Quran','Amiri',serif;
+}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--ui);font-size:15.5px;line-height:1.65;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hidden{display:none!important}
+html[data-mode=dark]{
+  --ink:#E2E8E4; --muted:#9DAAA4; --green:#2E6B5F; --green2:#7CC4B1; --gold:#D1AE5A; --pri:#2E6B5F; --bar:#132E29; --head:#8FD1BF;
+  --bg:#0F1614; --paper:#18221F; --line:#2D3B36; --soft:#1F2B27; --field:#111916; --previewbg:#26312D;
+  --ok:#86D8A0; --okbg:#1B3A26; --wait:#EDC870; --waitbg:#3B3015; --off:#9A9A9A; --offbg:#2A2D2C; --danger:#F08A80;
+  color-scheme:dark;
+}
+html,body{overflow-x:clip;max-width:100%}
+.top-in,nav.tabs .in,.demo-bar,.controls,#tab-bank,#tab-add,#tab-summary,#tab-settings,.modal .box,.login .card,.mbar{zoom:var(--uiz)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- الشريط العلوي ---------- */
+.top{position:sticky;top:0;z-index:30;background:var(--bar);color:#fff;padding-top:env(safe-area-inset-top,0px)}
+.top-in{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:0}
+.brand svg{width:30px;height:30px;flex:none}
+.top .sp{flex:1}
+.role{font-size:12.5px;background:rgba(255,255,255,.14);padding:3px 10px;border-radius:99px}
+.role.demo{background:var(--gold)}
+.icon-btn{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:5px 10px;font-size:13px}
+nav.tabs{background:var(--bar);border-top:1px solid rgba(255,255,255,.1)}
+nav.tabs .in{max-width:1320px;margin:0 auto;display:flex;gap:2px;padding:0 10px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{background:none;border:0;color:rgba(255,255,255,.75);padding:10px 14px 12px;font-weight:700;font-size:14.5px;white-space:nowrap;border-bottom:3px solid transparent}
+nav.tabs button.on{color:#fff;border-bottom-color:var(--gold)}
+.demo-bar{background:var(--waitbg);color:var(--wait);text-align:center;font-size:13.5px;padding:6px 12px;border-bottom:1px solid #EBD9A6}
+
+main{max-width:1320px;margin:0 auto;padding:18px 16px 60px}
+h2{font-size:21px;margin:0 0 4px;color:var(--head)}
+h3{font-size:16.5px;margin:0 0 10px;color:var(--head)}
+.lead{color:var(--muted);margin:0 0 16px;font-size:14.5px}
+
+/* ---------- عناصر عامة ---------- */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r2);padding:16px}
+.panel + .panel{margin-top:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.row > *{flex:1 1 140px}
+label.f{display:block;font-size:13px;color:var(--muted);font-weight:700;margin-bottom:4px}
+select,input[type=text],input[type=number],input[type=password],textarea{width:100%;border:1px solid var(--line);background:var(--field);border-radius:var(--r1);padding:8px 10px;min-height:40px}
+textarea{min-height:76px;resize:vertical;line-height:1.7}
+input[type=color]{width:46px;height:40px;border:1px solid var(--line);border-radius:var(--r1);padding:3px;background:var(--field)}
+.chk{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer;user-select:none}
+.chk input{width:18px;height:18px;accent-color:var(--green2)}
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:var(--r1);padding:8px 14px;font-weight:700;font-size:14.5px;min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:hover{border-color:var(--green2)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.pri:hover{background:var(--green2)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.sm{padding:4px 10px;min-height:32px;font-size:13px}
+.btn.ok{color:var(--ok);border-color:#B9DBC1}
+.btn.warn{color:var(--wait);border-color:#EBD39C}
+.btn.off{color:var(--off)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r1);overflow:hidden;background:var(--paper);flex-wrap:wrap}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:700;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--pri);color:#fff}
+.hint{font-size:13px;color:var(--muted)}
+.preview-line{margin-top:8px;padding:8px 12px;background:var(--soft);border-radius:var(--r1);font-size:14px;border-inline-start:4px solid var(--gold)}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:1px 9px;border-radius:99px;background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.chip.s-ok{background:var(--okbg);color:var(--ok);border-color:#BFDDC6}
+.chip.s-wait{background:var(--waitbg);color:var(--wait);border-color:#EBD39C}
+.chip.s-off{background:var(--offbg);color:var(--off);border-color:#DDD;text-decoration:line-through}
+details.more{border-top:1px dashed var(--line);margin-top:12px;padding-top:10px}
+details.more summary{cursor:pointer;font-weight:700;color:var(--green2);font-size:14.5px}
+.q{font-family:var(--quran);font-size:1.18em;line-height:2.1}
+.an{font-family:var(--ui);font-size:.62em;color:var(--gold);padding:0 .2em;vertical-align:.15em}
+.tokfail{color:var(--danger);font-family:var(--ui);font-size:.9em}
+
+/* ---------- الدخول ---------- */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:
+  radial-gradient(circle at 20% 15%,rgba(169,130,47,.12),transparent 40%),var(--bar)}
+.login .card{background:var(--paper);border-radius:22px;max-width:420px;width:100%;padding:28px 24px;text-align:center}
+.login .card svg{width:64px;height:64px}
+.login h1{font-size:23px;margin:8px 0 2px;color:var(--head)}
+.login p{color:var(--muted);margin:0 0 18px;font-size:14.5px}
+.login input{text-align:center;font-size:17px;margin-bottom:10px}
+.login .err{color:var(--danger);font-size:14px;min-height:22px}
+.login .alt{margin-top:14px;font-size:14px}
+.login .alt button{background:none;border:0;color:var(--green2);text-decoration:underline;font-weight:700}
+
+/* ---------- إعداد الورقة ---------- */
+.builder{display:grid;grid-template-columns:minmax(330px,440px) 1fr;gap:16px;align-items:start}
+.controls{display:flex;flex-direction:column;gap:12px}
+.preview-wrap{position:sticky;top:112px;background:var(--previewbg);border-radius:var(--r2);padding:14px;max-height:calc(100vh - 128px);overflow:auto}
+.preview-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.preview-bar .sp{flex:1}
+.paper-clip{width:100%;overflow:hidden}
+.paper-holder{transform-origin:top right}
+.paper-holder iframe{border:0;background:#fff;display:block;width:794px;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.cand{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:var(--r1)}
+.cand label{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-bottom:1px solid var(--soft);font-size:14px;cursor:pointer}
+.cand label:last-child{border-bottom:0}
+.cand input{margin-top:5px;accent-color:var(--green2)}
+.cand .m{font-size:12px;color:var(--muted)}
+.dirs input{margin-bottom:6px}
+.step-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.step-h b{width:26px;height:26px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+.step-h h3{margin:0}
+
+/* ---------- البنك ---------- */
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.qcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--r2);padding:14px 16px;margin-bottom:10px;border-inline-start:5px solid var(--line)}
+.qcard.st-ok{border-inline-start-color:#4E9C63}
+.qcard.st-wait{border-inline-start-color:#D9A43A}
+.qcard.st-off{border-inline-start-color:#B7B7B7;opacity:.82}
+.qmeta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.qmeta .id{font-weight:800;color:var(--ink)}
+.qtam{color:var(--muted);font-size:14.5px;margin-bottom:2px}
+.qtext{font-size:16px}
+.qans{margin-top:8px;padding:8px 12px;background:var(--soft);border-radius:var(--r1);font-size:15px}
+.qnote{margin-top:6px;font-size:13px;color:var(--wait)}
+.qact{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pager{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:12px}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+
+/* ---------- الملخص ---------- */
+table.sum{width:100%;border-collapse:collapse;font-size:14px;background:var(--paper)}
+table.sum th,table.sum td{border-bottom:1px solid var(--soft);padding:7px 8px;text-align:center}
+table.sum th{background:var(--soft);color:var(--head);position:sticky;top:0}
+table.sum td:nth-child(2){text-align:right;font-weight:700}
+table.sum tr:hover td{background:var(--soft);cursor:pointer}
+.tbl-wrap{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:var(--r2)}
+.st-label{font-size:12.5px;font-weight:700;padding:2px 8px;border-radius:99px}
+.lb-none{background:#EEE;color:#777}.lb-build{background:#E3EEF8;color:#245;}.lb-miss{background:var(--waitbg);color:var(--wait)}.lb-full{background:var(--okbg);color:var(--ok)}
+.big-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.big-stats div{background:var(--paper);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px}
+.big-stats b{display:block;font-size:24px;color:var(--head)}
+.big-stats span{font-size:13px;color:var(--muted)}
+
+/* ---------- الإعدادات ---------- */
+.set-group{margin-bottom:14px}
+.set-row{display:grid;grid-template-columns:180px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--soft)}
+.set-row .k{font-weight:700;font-size:14px}
+.set-row .k small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+
+/* ---------- النوافذ ---------- */
+.modal{position:fixed;inset:0;background:rgba(20,30,27,.55);z-index:60;display:grid;place-items:center;padding:14px}
+.modal .box{background:var(--paper);border-radius:var(--r2);width:min(860px,100%);max-height:calc(100vh - 28px);overflow:auto;padding:18px}
+.modal .box h3{display:flex;align-items:center;justify-content:space-between}
+.tok-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;background:var(--soft);padding:10px;border-radius:var(--r1);margin:8px 0}
+.tok-tools > *{flex:0 0 auto}
+.tok-tools select{width:130px}.tok-tools input{width:80px}
+.live{border:1px dashed var(--line);border-radius:var(--r1);padding:10px 12px;min-height:48px;background:var(--field)}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;z-index:90;font-size:14.5px;max-width:90vw;text-align:center}
+.toast.err{background:var(--danger)}
+.loading{position:fixed;top:0;left:0;right:0;height:3px;z-index:99;background:linear-gradient(90deg,transparent,var(--gold),transparent);background-size:50% 100%;animation:ld 1s linear infinite}
+@keyframes ld{from{background-position:-50% 0}to{background-position:150% 0}}
+
+.mbar{display:none}
+@media (max-width:980px){
+  .mbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
+  .mbar .btn{flex:1}
+  #tab-build{padding-bottom:64px}
+  .builder{grid-template-columns:1fr}
+  .preview-wrap{position:relative;top:0;max-height:none}
+  .filters{grid-template-columns:1fr 1fr}
+  .filters > :first-child{grid-column:1/-1}
+  .set-row{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  .top{position:relative}
+  .top-in{flex-wrap:wrap;gap:6px 6px;padding:8px 10px}
+  .brand{font-size:15.5px;flex:1 1 100%;min-width:0}
+  .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top .sp{display:none}
+  .role{order:-1;display:none}
+  .icon-btn{padding:4px 0;font-size:12.5px;flex:1 1 0;min-width:0}
+  nav.tabs .in{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));padding:0 4px;overflow:visible}
+  nav.tabs button{padding:9px 2px 10px;font-size:12.5px;white-space:normal;line-height:1.3}
+  .filters{grid-template-columns:1fr}
+  .preview-wrap{padding:8px}
+  main{padding:12px 10px 60px}
+  .panel{padding:13px}
+}
+</style>
+</head>
+<body>
+<div id="loading" class="loading hidden"></div>
+
+<!-- ================= شاشة الدخول ================= -->
+<section id="loginView" class="login">
+  <div class="card">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="#A9822F" stroke-width="4"><rect x="22" y="22" width="56" height="56"/><rect x="22" y="22" width="56" height="56" transform="rotate(45 50 50)"/></g><circle cx="50" cy="50" r="10" fill="#1F4D45"/></svg>
+    <h1 id="loginTitle">أوراق مراجعة القرآن</h1>
+    <p>إعداد أوراق المراجعة وطباعتها من بنك الأسئلة</p>
+    <input id="passInput" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <label class="chk" style="justify-content:center;margin-bottom:12px"><input id="remember" type="checkbox" checked> تذكّر كلمة المرور في هذا الجهاز</label>
+    <button id="loginBtn" class="btn pri" style="width:100%">دخول</button>
+    <div id="loginErr" class="err"></div>
+    <div class="alt">أو <button id="demoBtn">تجربة المنصة بالأسئلة النموذجية</button></div>
+    <div class="alt"><button id="uiBtn2">الإضاءة وحجم الخط</button></div>
+  </div>
+</section>
+
+<!-- ================= التطبيق ================= -->
+<div id="appView" class="hidden">
+  <header class="top">
+    <div class="top-in">
+      <div class="brand"><svg viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="#D9B867" stroke-width="6"><rect x="24" y="24" width="52" height="52"/><rect x="24" y="24" width="52" height="52" transform="rotate(45 50 50)"/></g></svg><span id="appTitle">أوراق مراجعة القرآن</span></div>
+      <span class="sp"></span>
+      <span id="roleBadge" class="role"></span>
+      <button id="uiBtn" class="icon-btn" title="الإضاءة وحجم الخط">Aa</button>
+      <button id="helpBtn" class="icon-btn">مساعدة</button>
+      <button id="reloadBtn" class="icon-btn" title="تحديث البيانات من الجدول">تحديث</button>
+      <button id="logoutBtn" class="icon-btn">خروج</button>
+    </div>
+    <nav class="tabs"><div class="in" id="tabs">
+      <button data-tab="build" class="on">إعداد ورقة</button>
+      <button data-tab="bank">بنك الأسئلة</button>
+      <button data-tab="add" data-admin>إضافة سؤال</button>
+      <button data-tab="summary">ملخص السور</button>
+      <button data-tab="settings" data-admin>الإعدادات</button>
+    </div></nav>
+  </header>
+  <div id="demoBar" class="demo-bar hidden">وضع التجربة: الأسئلة نموذجية، وأي تعديل يبقى في هذه الجلسة فقط ولا يُحفظ في الجدول.</div>
+
+  <main>
+    <!-- ========== إعداد ورقة ========== -->
+    <section id="tab-build">
+      <div class="builder">
+        <div class="controls">
+          <div class="panel">
+            <div class="step-h"><b>١</b><h3>نطاق المراجعة</h3></div>
+            <div class="row">
+              <div><label class="f">من سورة</label><select id="fromS"></select></div>
+              <div style="flex:0 1 100px"><label class="f">آية</label><select id="fromA"></select></div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div><label class="f">إلى سورة</label><select id="toS"></select></div>
+              <div style="flex:0 1 100px"><label class="f">آية</label><select id="toA"></select></div>
+            </div>
+            <div class="row" style="margin-top:10px;align-items:center">
+              <label class="chk" style="flex:0 0 auto"><input type="checkbox" id="wholeSurahs" checked> سور كاملة</label>
+            </div>
+            <div id="rangePreview" class="preview-line"></div>
+          </div>
+
+          <div class="panel">
+            <div class="step-h"><b>٢</b><h3>محتوى الورقة</h3></div>
+            <div class="seg" id="contentSeg">
+              <button data-v="both" class="on">إكمال وأسئلة</button>
+              <button data-v="comp">إكمال فقط</button>
+              <button data-v="ques">أسئلة فقط</button>
+            </div>
+
+            <div id="compBox" style="margin-top:14px">
+              <label class="f">طريقة الإكمال</label>
+              <div class="seg" id="compMode">
+                <button data-v="seg" class="on">مقاطع (من… إلى…)</button>
+                <button data-v="blank">فراغات داخل النص</button>
+              </div>
+              <div class="row" style="margin-top:10px" id="segOpts">
+                <div><label class="f">عدد المقاطع</label><input type="number" id="segCount" min="1" max="20" value="4"></div>
+                <div><label class="f">طول المقطع</label><select id="segLen"><option value="0.25">ربع وجه</option><option value="0.5">نصف وجه</option><option value="1">وجه كامل</option></select></div>
+              </div>
+              <div class="row hidden" style="margin-top:10px" id="blankOpts">
+                <div><label class="f">نسبة الفراغات</label><select id="blankRatio"><option value="0.2">قليلة</option><option value="0.3" selected>متوسطة</option><option value="0.45">كثيرة</option></select></div>
+                <div><label class="f">موضع الفراغ</label><select id="blankPos"><option value="mix">منوّع</option><option value="end">أواخر الآيات</option><option value="start">أوائل الآيات</option></select></div>
+              </div>
+              <div class="row" style="margin-top:10px;align-items:center">
+                <button class="btn sm" id="regenBtn" style="flex:0 0 auto">توليد مواضع أخرى</button>
+                <label class="chk" style="flex:0 0 auto"><input type="checkbox" id="compFirst" checked> الإكمال أول الورقة</label>
+              </div>
+            </div>
+
+            <div id="quesBox" style="margin-top:14px">
+              <div class="row">
+                <div><label class="f">أنواع الأسئلة</label><select id="tplFilter"><option value="">كل الأنواع (تنويع)</option></select></div>
+                <div style="flex:0 1 110px"><label class="f">العدد الأقصى</label><input type="number" id="qMax" min="1" max="60" value="10"></div>
+              </div>
+              <div class="row" style="margin-top:8px;align-items:center">
+                <label class="chk" style="flex:0 0 auto" id="incWaitWrap"><input type="checkbox" id="incWait"> إظهار غير المراجعة</label>
+                <button class="btn sm" id="shuffleBtn" style="flex:0 0 auto">اختيار آخر</button>
+              </div>
+              <div id="candInfo" class="hint" style="margin:8px 0 6px"></div>
+              <div id="candList" class="cand"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="step-h"><b>٣</b><h3>رأس الورقة وتذييلها</h3></div>
+            <div class="row">
+              <div><label class="f">عنوان الورقة</label><input type="text" id="sheetTitle"></div>
+              <div style="flex:0 1 90px"><label class="f">رقمها</label><input type="text" id="sheetNo" placeholder="اختياري"></div>
+            </div>
+            <div style="margin-top:8px"><label class="f">السطر الثاني</label><input type="text" id="sheetSub"></div>
+            <div style="margin-top:8px"><label class="f">العبارة الافتتاحية</label><select id="openSel"></select><input type="text" id="openTxt" style="margin-top:6px"></div>
+            <div style="margin-top:8px"><label class="f">العبارة الختامية</label><select id="closeSel"></select><input type="text" id="closeTxt" style="margin-top:6px"></div>
+            <div class="row" style="margin-top:8px">
+              <div><label class="f">المعلمة</label><select id="teacherSel"></select></div>
+              <div><label class="f">التوقيع</label><input type="text" id="signTxt"></div>
+            </div>
+            <details class="more">
+              <summary>الحقول والدرجات</summary>
+              <div class="row" style="margin-top:10px">
+                <label class="chk"><input type="checkbox" id="showBism"> البسملة</label>
+                <label class="chk"><input type="checkbox" id="showName"> خانة الاسم</label>
+                <label class="chk"><input type="checkbox" id="showGroup"> خانة المجموعة</label>
+                <label class="chk"><input type="checkbox" id="showDate"> التاريخ</label>
+              </div>
+              <div class="row" style="margin-top:10px">
+                <label class="chk"><input type="checkbox" id="showGrades"> الدرجات</label>
+                <div><label class="f">درجة مقطع الإكمال</label><input type="number" id="compGrade" min="0" max="20"></div>
+                <div><label class="f">المجموع (فارغ = تلقائي)</label><input type="text" id="totalOverride"></div>
+              </div>
+              <div style="margin-top:8px"><label class="f">عبارة تحت الدرجة</label><input type="text" id="gradeNote"></div>
+            </details>
+            <details class="more">
+              <summary>عناوين الأسئلة</summary>
+              <div id="dirsBox" class="dirs" style="margin-top:10px"></div>
+            </details>
+          </div>
+
+          <div class="panel">
+            <div class="step-h"><b>٤</b><h3>الشكل</h3></div>
+            <label class="f">السمة</label>
+            <div class="seg" id="themeSeg"></div>
+            <div class="row" style="margin-top:10px">
+              <div><label class="f">خط الورقة</label><select id="fontSel"></select></div>
+              <div style="flex:0 1 110px"><label class="f">حجم الخط</label><select id="sizeSel"><option value="0.9">صغير</option><option value="1" selected>متوسط</option><option value="1.12">كبير</option><option value="1.25">كبير جدًا</option></select></div>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <div><label class="f">الإطار</label><select id="frameSel"><option value="double">مزدوج</option><option value="single">بسيط</option><option value="none">بلا إطار</option></select></div>
+              <div><label class="f">مساحة الإجابة</label><select id="spaceSel"><option value="0.75">ضيقة</option><option value="1" selected>متوسطة</option><option value="1.35">واسعة</option></select></div>
+              <div style="flex:0 0 auto"><label class="f">لون خاص</label><input type="color" id="colorPick"></div>
+            </div>
+            <div class="row" style="margin-top:10px;align-items:center">
+              <label class="chk"><input type="checkbox" id="showOrn" checked> الزخارف</label>
+              <label class="chk"><input type="checkbox" id="showLogo"> الشعار</label>
+              <div><input type="file" id="logoFile" accept="image/*" class="hidden"><button class="btn sm" id="logoBtn">رفع شعار</button></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="step-h"><b>٥</b><h3>أدوات إضافية</h3></div>
+            <div class="row">
+              <button class="btn" id="copyText">نسخ نص الورقة</button>
+              <button class="btn" id="copyDesign">نسخ تعليمات تصميم</button>
+            </div>
+            <div class="row" style="margin-top:8px" data-admin>
+              <button class="btn" id="copyRequest">نسخ طلب أسئلة للمشروع</button>
+              <button class="btn" id="copyRequestText">الطلب مع نص الآيات</button>
+            </div>
+            <p class="hint" style="margin:8px 0 0" data-admin>«نسخ طلب أسئلة» ينسخ النطاق فقط (الأخف والموصى به). «مع نص الآيات» أدق في الأرقام لكنه أكثر استهلاكًا لحدود الذكاء الاصطناعي.</p>
+          </div>
+        </div>
+
+        <div class="mbar" id="mbar"><button class="btn" id="mPrev">معاينة الورقة</button><button class="btn pri" id="mPrint">طباعة / حفظ PDF</button></div>
+        <div class="preview-wrap" id="previewWrap">
+          <div class="preview-bar">
+            <div class="seg" id="viewSeg"><button data-v="sheet" class="on">الورقة</button><button data-v="key">نموذج الإجابة</button></div>
+            <span class="sp"></span>
+            <button class="btn pri" id="printBtn">طباعة / حفظ PDF</button>
+          </div>
+          <div class="paper-clip" id="paperClip"><div class="paper-holder" id="paperHolder"><iframe id="paper" title="معاينة الورقة"></iframe></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== بنك الأسئلة ========== -->
+    <section id="tab-bank" class="hidden">
+      <h2>بنك الأسئلة</h2>
+      <p class="lead" id="bankLead"></p>
+      <div class="filters">
+        <input type="text" id="bSearch" placeholder="بحث في نص السؤال أو الإجابة أو الوسوم أو المعرّف">
+        <select id="bSurah"><option value="">كل السور</option></select>
+        <select id="bTpl"><option value="">كل القوالب</option></select>
+        <select id="bStatus"><option value="">كل الحالات</option><option>لم يُراجع</option><option>معتمد</option><option>مستبعد</option></select>
+        <select id="bSort"><option value="mushaf">ترتيب المصحف</option><option value="new">الأحدث إضافة</option><option value="id">المعرّف</option><option value="uses">الأقل استخدامًا</option></select>
+      </div>
+      <div class="stats" id="bStats"></div>
+      <div id="bList"></div>
+      <div class="pager" id="bPager"></div>
+    </section>
+
+    <!-- ========== إضافة سؤال ========== -->
+    <section id="tab-add" class="hidden">
+      <h2>إضافة سؤال</h2>
+      <p class="lead">يُضاف السؤال إلى الجدول بحالة «لم يُراجع» ما لم تُختر حالة أخرى، ويأخذ معرّفًا جديدًا تلقائيًا.</p>
+      <div class="panel" id="addForm"></div>
+    </section>
+
+    <!-- ========== ملخص السور ========== -->
+    <section id="tab-summary" class="hidden">
+      <h2>ملخص السور</h2>
+      <p class="lead">حال بنك الأسئلة في كل سورة. اضغط على سورة لعرض أسئلتها.</p>
+      <div class="big-stats" id="sumStats"></div>
+      <div class="row" style="margin-bottom:10px;align-items:center">
+        <label class="chk" style="flex:0 0 auto"><input type="checkbox" id="sumOnly"> السور التي فيها أسئلة فقط</label>
+      </div>
+      <div class="tbl-wrap"><table class="sum" id="sumTable"></table></div>
+      <div class="panel" data-admin style="margin-top:14px">
+        <h3>فحص جودة البنك</h3>
+        <p class="hint" style="margin-top:0">يكشف الأخطاء الشائعة بعد لصق أسئلة جديدة: معرّف مكرر، اسم سورة غير معروف، رقم آية خارج السورة، رمز آية غير صحيح، قالب غير موجود في القوائم، نص قرآني مكتوب باليد.</p>
+        <button class="btn pri" id="auditBtn">فحص البنك الآن</button>
+        <div id="auditBox" style="margin-top:10px"></div>
+      </div>
+    </section>
+
+    <!-- ========== الإعدادات ========== -->
+    <section id="tab-settings" class="hidden">
+      <h2>الإعدادات</h2>
+      <p class="lead">هذه القيم محفوظة في ورقة «الإعدادات» بالجدول، وهي الأصل الذي تبدأ به كل ورقة جديدة. التغيير هنا يظهر لكل المستخدمات.</p>
+      <div id="setBox"></div>
+      <div class="panel" style="margin-top:14px">
+        <h3>القوائم</h3>
+        <p class="hint" style="margin-top:0">إضافة عنصر جديد لإحدى القوائم المنسدلة (مثل اسم كاتبة جديدة أو قالب جديد).</p>
+        <div class="row">
+          <div><label class="f">القائمة</label><select id="listSel"></select></div>
+          <div><label class="f">العنصر الجديد</label><input type="text" id="listVal"></div>
+          <div id="listExtraWrap" class="hidden"><label class="f">التوجيه الافتراضي للقالب</label><input type="text" id="listExtra"></div>
+          <div style="flex:0 0 auto"><button class="btn pri" id="listAdd">إضافة</button></div>
+        </div>
+        <div id="listsView" class="hint" style="margin-top:10px"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden"><div class="box" id="modalBox"></div></div>
+<div id="toast" class="toast hidden"></div>
+<script>
+'use strict';
+/* =====================================================================
+   منصة أوراق مراجعة القرآن — الإصدار 1.0
+   الإعداد الوحيد المطلوب: ضع رابط تطبيق الويب من Apps Script هنا (ينتهي بـ /exec)
+   ===================================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbx3ZYXSbW6e4dIrDvqNMIyaqreTmIswOoOagWPNQx6KV5JEUCaiZVz5MMf7SC6QzScMPA/exec';
+const APP_VERSION = '1.0';
+
+const DATA = {"SURAHS":[["الفاتحة",7],["البقرة",286],["آل عمران",200],["النساء",176],["المائدة",120],["الأنعام",165],["الأعراف",206],["الأنفال",75],["التوبة",129],["يونس",109],["هود",123],["يوسف",111],["الرعد",43],["إبراهيم",52],["الحجر",99],["النحل",128],["الإسراء",111],["الكهف",110],["مريم",98],["طه",135],["الأنبياء",112],["الحج",78],["المؤمنون",118],["النور",64],["الفرقان",77],["الشعراء",227],["النمل",93],["القصص",88],["العنكبوت",69],["الروم",60],["لقمان",34],["السجدة",30],["الأحزاب",73],["سبأ",54],["فاطر",45],["يس",83],["الصافات",182],["ص",88],["الزمر",75],["غافر",85],["فصلت",54],["الشورى",53],["الزخرف",89],["الدخان",59],["الجاثية",37],["الأحقاف",35],["محمد",38],["الفتح",29],["الحجرات",18],["ق",45],["الذاريات",60],["الطور",49],["النجم",62],["القمر",55],["الرحمن",78],["الواقعة",96],["الحديد",29],["المجادلة",22],["الحشر",24],["الممتحنة",13],["الصف",14],["الجمعة",11],["المنافقون",11],["التغابن",18],["الطلاق",12],["التحريم",12],["الملك",30],["القلم",52],["الحاقة",52],["المعارج",44],["نوح",28],["الجن",28],["المزمل",20],["المدثر",56],["القيامة",40],["الإنسان",31],["المرسلات",50],["النبأ",40],["النازعات",46],["عبس",42],["التكوير",29],["الانفطار",19],["المطففين",36],["الانشقاق",25],["البروج",22],["الطارق",17],["الأعلى",19],["الغاشية",26],["الفجر",30],["البلد",20],["الشمس",15],["الليل",21],["الضحى",11],["الشرح",8],["التين",8],["العلق",19],["القدر",5],["البينة",8],["الزلزلة",8],["العاديات",11],["القارعة",11],["التكاثر",8],["العصر",3],["الهمزة",9],["الفيل",5],["قريش",4],["الماعون",7],["الكوثر",3],["الكافرون",6],["النصر",3],["المسد",5],["الإخلاص",4],["الفلق",5],["الناس",6]],"PAGES":[7,5,11,8,5,8,11,9,4,8,7,7,5,5,8,4,7,7,7,8,7,4,8,10,6,7,5,5,4,6,6,8,5,4,5,6,3,4,8,3,4,4,3,5,5,5,7,1,4,9,6,7,7,8,8,7,9,9,7,6,8,9,8,7,6,11,8,8,5,4,8,8,7,6,8,6,6,5,3,5,4,3,7,4,7,7,8,6,9,5,7,5,3,7,4,8,8,6,7,6,7,7,8,8,5,3,3,4,4,4,6,8,5,5,4,5,7,7,6,6,6,7,6,8,5,5,7,8,10,9,8,9,8,7,9,5,8,9,4,7,9,8,6,7,6,5,4,5,6,8,11,11,8,7,6,8,6,10,6,8,6,8,9,16,10,7,6,6,6,4,4,7,8,9,8,11,8,8,9,8,7,5,7,9,8,6,6,7,7,6,5,5,4,7,7,7,7,4,7,7,7,6,7,5,6,5,7,6,8,6,5,8,9,11,8,9,8,10,9,9,8,7,7,9,9,8,8,9,9,10,7,9,11,9,10,10,8,8,7,6,9,11,6,9,8,9,8,8,5,8,5,10,6,8,6,5,8,6,9,9,10,15,16,20,19,20,15,8,12,8,8,12,10,8,7,8,6,9,8,8,10,7,10,10,11,11,9,8,9,11,10,8,11,11,5,7,7,11,8,8,13,9,14,13,11,14,13,13,13,12,19,15,25,14,13,12,11,11,15,12,10,10,14,11,9,13,15,9,9,11,11,5,10,8,7,8,8,9,9,8,6,17,10,15,17,15,15,15,14,10,10,7,4,5,7,10,5,3,5,9,9,12,11,12,12,10,19,20,21,23,28,25,23,24,23,21,13,9,13,9,11,8,13,12,10,8,8,7,7,8,7,9,11,7,7,10,8,9,7,8,7,7,11,11,10,9,8,9,9,10,11,8,9,6,11,9,10,6,9,7,8,5,8,7,4,8,11,7,7,8,9,8,9,9,8,7,12,8,6,13,15,13,14,16,13,24,27,25,26,24,27,29,16,10,16,19,22,10,5,11,10,9,7,9,11,7,8,9,9,8,7,9,9,8,11,8,11,9,9,9,8,8,10,5,7,9,13,7,12,12,11,14,13,13,16,18,21,20,13,9,10,10,9,6,8,7,11,8,10,9,9,6,8,5,5,7,7,15,20,16,24,21,23,17,18,26,18,24,21,22,22,24,27,27,34,26,23,8,7,6,5,6,5,10,4,6,7,8,5,6,7,9,8,7,7,9,9,5,7,7,5,12,14,19,27,18,26,28,29,15,18,13,15,19,18,30,28,26,20,25,31,30,25,31,42,29,25,28,27,22,32,30,23,27,29,26,27,12,18,21,17,14,14,15],"DEMO":{"rows":[{"المعرّف":1,"الحالة":"معتمد","القالب":"إكمال مع ربط","نوع النطاق":"آيات متتابعة","السورة":"الشعراء","من آية":69,"إلى سورة":"","إلى آية":74,"مواضع إضافية":"","التمهيد":"","نص السؤال":"أكملي من قوله تعالى: {آية:الشعراء:69} إلى قوله تعالى: {آية:الشعراء:74}، واذكري اسم النبي الكريم.","الإجابة النموذجية":"الشعراء: 69–74 — النبي الكريم: إبراهيم عليه السلام.","الصعوبة":"سهل","الدرجة":5,"الوسوم":"قصة إبراهيم، قصص الأنبياء","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":2,"الحالة":"معتمد","القالب":"إكمال مع ربط","نوع النطاق":"آيات متتابعة","السورة":"الشعراء","من آية":165,"إلى سورة":"","إلى آية":173,"مواضع إضافية":"","التمهيد":"","نص السؤال":"أكملي من قوله تعالى: {آية:الشعراء:165} إلى قوله تعالى: {آية:الشعراء:173}، واذكري اسم النبي الكريم.","الإجابة النموذجية":"الشعراء: 165–173 — النبي الكريم: لوط عليه السلام.","الصعوبة":"متوسط","الدرجة":5,"الوسوم":"قصة لوط، قصص الأنبياء","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":3,"الحالة":"لم يُراجع","القالب":"إكمال مع ربط","نوع النطاق":"آيات متتابعة","السورة":"الشعراء","من آية":128,"إلى سورة":"","إلى آية":135,"مواضع إضافية":"","التمهيد":"","نص السؤال":"أكملي من قوله تعالى: {آية:الشعراء:128} إلى قوله تعالى: {آية:الشعراء:135}، واذكري اسم النبي الكريم.","الإجابة النموذجية":"الشعراء: 128–135 — النبي الكريم: هود عليه السلام.","الصعوبة":"متوسط","الدرجة":6,"الوسوم":"قصة هود، قصص الأنبياء","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":4,"الحالة":"معتمد","القالب":"سؤال عام عن السورة","نوع النطاق":"سورة كاملة","السورة":"الشعراء","من آية":"","إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"تكررت في سورة الشعراء خاتمةٌ واحدة بعد كل قصة من قصص الأنبياء.","نص السؤال":"اكتبي هاتين الآيتين اللتين تكررتا، واذكري كم مرة تكررتا في السورة.","الإجابة النموذجية":"{مقطع:الشعراء:8-9} — تكررتا ثماني مرات، أولاهما في كل مرة الآية: 8، 67، 103، 121، 139، 158، 174، 190.","الصعوبة":"متوسط","الدرجة":2,"الوسوم":"تكرار، خواتيم القصص","ملاحظات داخلية":"سؤال يمسك السورة من مفصلها","المصدر":"يدوي","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"","مرات الاستخدام":0},{"المعرّف":5,"الحالة":"معتمد","القالب":"دلالة على معنى","نوع النطاق":"آيات متتابعة","السورة":"الشعراء","من آية":192,"إلى سورة":"","إلى آية":201,"مواضع إضافية":"","التمهيد":"","نص السؤال":"أن القرآن الكريم منزَّل من عند الله، نزل به جبريل عليه السلام على نبينا محمد ﷺ بلسان عربي مبين، وأن خبره في كتب الأولين.","الإجابة النموذجية":"الشعراء: 192–201، أولها: {آية:الشعراء:192}","الصعوبة":"صعب","الدرجة":6,"الوسوم":"القرآن، الوحي","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":6,"الحالة":"لم يُراجع","القالب":"دلالة على معنى","نوع النطاق":"آيات متتابعة","السورة":"الشعراء","من آية":78,"إلى سورة":"","إلى آية":82,"مواضع إضافية":"","التمهيد":"من حسن الأدب مع الله سبحانه أن ننسب إليه الهداية والرزق والشفاء والإحياء، وننسب المرض إلى أنفسنا.","نص السؤال":"اذكري الآيات التي جاء فيها هذا الأدب على لسان إبراهيم عليه السلام.","الإجابة النموذجية":"الشعراء: 78–82، وفيها: {آية:الشعراء:80}","الصعوبة":"متوسط","الدرجة":3,"الوسوم":"الأدب مع الله، إبراهيم","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":7,"الحالة":"معتمد","القالب":"متشابهات","نوع النطاق":"آيات متفرقة","السورة":"الشعراء","من آية":65,"إلى سورة":"","إلى آية":"","مواضع إضافية":"الشعراء:119 ؛ الشعراء:170","التمهيد":"","نص السؤال":"{مطلع:الشعراء:65:1} — {مطلع:الشعراء:119:3} — {مطلع:الشعراء:170:2}","الإجابة النموذجية":"الشعراء: 65 (موسى) — 119 (نوح) — 170 (لوط).","الصعوبة":"صعب","الدرجة":3,"الوسوم":"متشابهات، النجاة","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":8,"الحالة":"مستبعد","القالب":"دلالة على معنى","نوع النطاق":"آية","السورة":"الشعراء","من آية":214,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"اذكري الآية التي تدل على وجوب الدعوة.","الإجابة النموذجية":"الشعراء: 214.","الصعوبة":"سهل","الدرجة":1,"الوسوم":"الدعوة","ملاحظات داخلية":"استُبعد: صياغته عامة جدًا وتحتمل آيات كثيرة؛ يحتاج تحديدًا أكثر.","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":9,"الحالة":"معتمد","القالب":"تقسيم بنيوي","نوع النطاق":"آية","السورة":"الأحزاب","من آية":1,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"غالياتي.. اذكرن نداءات الله عز وجل لنبيه ﷺ في سورة الأحزاب:","نص السؤال":"النداء الأول: افتتاح تشريعات السورة بالأمر بالثبات على التقوى والتوكل على الله وحده.","الإجابة النموذجية":"{آية:الأحزاب:1}","الصعوبة":"سهل","الدرجة":1,"الوسوم":"نداء، النبي ﷺ","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":10,"الحالة":"معتمد","القالب":"تقسيم بنيوي","نوع النطاق":"آية","السورة":"الأحزاب","من آية":28,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"النداء الثاني: تخيير أزواج النبي ﷺ بين زينة الدنيا وبين الله ورسوله والدار الآخرة.","الإجابة النموذجية":"{آية:الأحزاب:28}","الصعوبة":"سهل","الدرجة":1,"الوسوم":"نداء، أمهات المؤمنين","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":11,"الحالة":"لم يُراجع","القالب":"تقسيم بنيوي","نوع النطاق":"آية","السورة":"الأحزاب","من آية":45,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"النداء الثالث: بيان صفات النبي ﷺ في تبليغ الرسالة، وأنه سراج منير.","الإجابة النموذجية":"{مقطع:الأحزاب:45-46}","الصعوبة":"متوسط","الدرجة":1,"الوسوم":"نداء، صفات النبي ﷺ","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":12,"الحالة":"لم يُراجع","القالب":"تقسيم بنيوي","نوع النطاق":"آية","السورة":"الأحزاب","من آية":59,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"النداء الخامس: تشريع الحجاب والستر لنساء النبي ﷺ وبناته ونساء المؤمنين.","الإجابة النموذجية":"{آية:الأحزاب:59}","الصعوبة":"متوسط","الدرجة":1,"الوسوم":"نداء، الحجاب","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":13,"الحالة":"معتمد","القالب":"دلالة على معنى","نوع النطاق":"آية","السورة":"الزمر","من آية":22,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"ذكرت السورة بعض أنواع القلوب: القاسي، واللين، والمشمئز.","نص السؤال":"القلب القاسي: اذكري الآية الدالة عليه.","الإجابة النموذجية":"{آية:الزمر:22}","الصعوبة":"متوسط","الدرجة":2,"الوسوم":"القلوب","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":14,"الحالة":"معتمد","القالب":"دلالة على معنى","نوع النطاق":"آية","السورة":"الزمر","من آية":23,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"القلب اللين: اذكري الآية الدالة عليه.","الإجابة النموذجية":"{آية:الزمر:23}","الصعوبة":"متوسط","الدرجة":2,"الوسوم":"القلوب","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":15,"الحالة":"لم يُراجع","القالب":"دلالة على معنى","نوع النطاق":"آية","السورة":"الزمر","من آية":45,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"القلب المشمئز: اذكري الآية الدالة عليه.","الإجابة النموذجية":"{آية:الزمر:45}","الصعوبة":"متوسط","الدرجة":2,"الوسوم":"القلوب","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":16,"الحالة":"معتمد","القالب":"موضوع أو قصة","نوع النطاق":"آيات متتابعة","السورة":"الزمر","من آية":53,"إلى سورة":"","إلى آية":55,"مواضع إضافية":"","التمهيد":"في السورة دعوة لكل العصاة إلى عدم اليأس من رحمة الله، وبيانٌ لطريق التوبة والرجوع إليه واتباع كتابه.","نص السؤال":"اذكري الآيات الدالة على ذلك.","الإجابة النموذجية":"{مقطع:الزمر:53-55}","الصعوبة":"سهل","الدرجة":3,"الوسوم":"التوبة، الرجاء","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":17,"الحالة":"معتمد","القالب":"تقسيم بنيوي","نوع النطاق":"آيات متفرقة","السورة":"فاطر","من آية":3,"إلى سورة":"","إلى آية":"","مواضع إضافية":"فاطر:5 ؛ فاطر:15","التمهيد":"تكرر في سورة فاطر نداء الله تعالى للناس جميعًا ثلاث مرات.","نص السؤال":"اكتبي مواضع النداء الثلاثة: في بيان الخلق والرزق، وفي التحذير من الدنيا، وفي تقرير الافتقار التام لله.","الإجابة النموذجية":"الخلق والرزق: {آية:فاطر:3} — التحذير من الدنيا: {آية:فاطر:5} — الافتقار إلى الله: {آية:فاطر:15}","الصعوبة":"متوسط","الدرجة":3,"الوسوم":"نداء، يا أيها الناس","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":18,"الحالة":"معتمد","القالب":"متشابه عابر للسور","نوع النطاق":"عدة سور","السورة":"يس","من آية":10,"إلى سورة":"","إلى آية":"","مواضع إضافية":"البقرة:6","التمهيد":"","نص السؤال":"اكتبي الآية (10) من سورة يس التي تشابهت مع الآية (6) من سورة البقرة، مع آية بعد كلٍّ منهما.","الإجابة النموذجية":"{مقطع:يس:10-11} — {مقطع:البقرة:6-7}","الصعوبة":"صعب","الدرجة":4,"الوسوم":"متشابهات، الإنذار","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":19,"الحالة":"معتمد","القالب":"متشابهات","نوع النطاق":"آيات متفرقة","السورة":"العنكبوت","من آية":7,"إلى سورة":"","إلى آية":"","مواضع إضافية":"العنكبوت:9 ؛ العنكبوت:58","التمهيد":"","نص السؤال":"{مطلع:العنكبوت:7:5} — {مطلع:العنكبوت:9:5} — {مطلع:العنكبوت:58:5}","الإجابة النموذجية":"العنكبوت: 7 — 9 — 58.","الصعوبة":"صعب","الدرجة":3,"الوسوم":"متشابهات، جزاء المؤمنين","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":20,"الحالة":"لم يُراجع","القالب":"دلالة على معنى","نوع النطاق":"آيات متتابعة","السورة":"العنكبوت","من آية":41,"إلى سورة":"","إلى آية":42,"مواضع إضافية":"","التمهيد":"","نص السؤال":"ضرب الله مثلًا لمن اتخذ من دونه أولياء.","الإجابة النموذجية":"{مقطع:العنكبوت:41-42}","الصعوبة":"سهل","الدرجة":3,"الوسوم":"الأمثال","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":21,"الحالة":"معتمد","القالب":"دلالة على معنى","نوع النطاق":"آية","السورة":"النور","من آية":35,"إلى سورة":"","إلى آية":"","مواضع إضافية":"","التمهيد":"","نص السؤال":"مثل نور الله سبحانه وتعالى.","الإجابة النموذجية":"{آية:النور:35}","الصعوبة":"سهل","الدرجة":2,"الوسوم":"الأمثال، النور","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":22,"الحالة":"معتمد","القالب":"موضوع أو قصة","نوع النطاق":"آيات متتابعة","السورة":"النور","من آية":27,"إلى سورة":"","إلى آية":29,"مواضع إضافية":"","التمهيد":"","نص السؤال":"أرشد الله تعالى في السورة إلى آداب دخول بيوت الغير.","الإجابة النموذجية":"{مقطع:النور:27-29}","الصعوبة":"سهل","الدرجة":3,"الوسوم":"الآداب، الاستئذان","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":23,"الحالة":"معتمد","القالب":"متشابهات","نوع النطاق":"آيات متفرقة","السورة":"النور","من آية":4,"إلى سورة":"","إلى آية":"","مواضع إضافية":"النور:6 ؛ النور:23","التمهيد":"","نص السؤال":"{مطلع:النور:4:3} — {مطلع:النور:23:3} — {مطلع:النور:6:3}","الإجابة النموذجية":"النور: 4 — 23 — 6.","الصعوبة":"صعب","الدرجة":3,"الوسوم":"متشابهات، القذف","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":24,"الحالة":"مستبعد","القالب":"متشابهات","نوع النطاق":"آيات متفرقة","السورة":"النور","من آية":12,"إلى سورة":"","إلى آية":"","مواضع إضافية":"النور:16","التمهيد":"","نص السؤال":"{مطلع:النور:12:3} — {مطلع:النور:16:3}","الإجابة النموذجية":"النور: 12 — 16.","الصعوبة":"متوسط","الدرجة":2,"الوسوم":"متشابهات","ملاحظات داخلية":"استُبعد مؤقتًا: مكرر في ورقة سابقة؛ يُعاد في المراجعة القادمة.","المصدر":"ذكاء اصطناعي سابق","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":3},{"المعرّف":25,"الحالة":"لم يُراجع","القالب":"متشابهات","نوع النطاق":"آيات متفرقة","السورة":"النور","من آية":41,"إلى سورة":"","إلى آية":"","مواضع إضافية":"النور:43","التمهيد":"","نص السؤال":"{مطلع:النور:41:4} — {مطلع:النور:43:4}","الإجابة النموذجية":"النور: 41 (يسبح له من في السماوات والأرض) — 43 (يزجي سحابًا).","الصعوبة":"متوسط","الدرجة":2,"الوسوم":"متشابهات، آيات الكون","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":26,"الحالة":"معتمد","القالب":"سؤال عام عن السورة","نوع النطاق":"عدة سور","السورة":"الشعراء","من آية":1,"إلى سورة":"القصص","إلى آية":1,"مواضع إضافية":"","التمهيد":"افتُتحت ثلاث سور متتالية بالحروف المقطعة.","نص السؤال":"اذكري السور الثلاث وما افتُتحت به كلٌّ منها.","الإجابة النموذجية":"الشعراء: {آية:الشعراء:1} — النمل: {آية:النمل:1} — القصص: {آية:القصص:1}","الصعوبة":"سهل","الدرجة":3,"الوسوم":"الحروف المقطعة، الربط بين السور","ملاحظات داخلية":"","المصدر":"يدوي","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":"","إصدار التلقين":"","مرات الاستخدام":0},{"المعرّف":27,"الحالة":"لم يُراجع","القالب":"موضوع أو قصة","نوع النطاق":"آيات متتابعة","السورة":"الفرقان","من آية":63,"إلى سورة":"","إلى آية":77,"مواضع إضافية":"","التمهيد":"ختم الله سورة الفرقان بذكر صفات عباد الرحمن.","نص السؤال":"اذكري ثلاثًا من صفاتهم مع الآية الدالة على كل صفة.","الإجابة النموذجية":"الفرقان: 63–77، أولها: {آية:الفرقان:63}","الصعوبة":"متوسط","الدرجة":3,"الوسوم":"عباد الرحمن، الأخلاق","ملاحظات داخلية":"","المصدر":"ذكاء اصطناعي سابق","الكاتب":"جهاد","تاريخ الإضافة":"2026-10-03","آخر تعديل":"","مرتبط بأصل":"","إصدار التلقين":"1.0","مرات الاستخدام":0},{"المعرّف":28,"الحالة":"معتمد","القالب":"إكمال مع ربط","نوع النطاق":"آيات متتابعة","السورة":"الشعراء","من آية":214,"إلى سورة":"","إلى آية":220,"مواضع إضافية":"","التمهيد":"","نص السؤال":"أكملي من قوله تعالى: {آية:الشعراء:214} إلى قوله تعالى: {آية:الشعراء:220}، واذكري لمن الخطاب.","الإجابة النموذجية":"الشعراء: 214–220 — الخطاب لنبينا محمد ﷺ.","الصعوبة":"متوسط","الدرجة":6,"الوسوم":"الدعوة، النبي ﷺ","ملاحظات داخلية":"صيغة بديلة للسؤال 8 بعد تحديده.","المصدر":"يدوي","الكاتب":"أ. عزة إسحاق","تاريخ الإضافة":"2026-10-03","آخر تعديل":"2026-10-03","مرتبط بأصل":8,"إصدار التلقين":"","مرات الاستخدام":1}],"lists":{"templates":[{"name":"إكمال مع ربط","direction":"أكملي الآيات الآتية مع ذكر ما يُطلب:","desc":"تُعطى بداية المقطع ونهايته، وتُكمل الطالبة ما بينهما مع ربطه بنبي أو موضوع."},{"name":"إكمال من موضع خفي","direction":"أكملي الآيات الآتية:","desc":"يُقتطع من منتصف المقطع أو موضع غير متوقع لتقوية الوصلات بين الآيات."},{"name":"متشابهات","direction":"اذكري المتشابهات الآتية مع ذكر آية بعدها:","desc":"تُجمع الآيات المتشابهة لفظًا وتُميّز كل واحدة بما بعدها."},{"name":"متشابه عابر للسور","direction":"اكتبي الآيات المتشابهة الآتية بين السور:","desc":"ربط آية بآية تشبهها في سورة أخرى."},{"name":"دلالة على معنى","direction":"اذكري من الآيات ما يدل على:","desc":"يُعطى المعنى ويُطلب اللفظ الدال عليه — تثبيت المبنى بالمعنى."},{"name":"موضوع أو قصة","direction":"اذكري الآيات الدالة على ما يأتي:","desc":"ربط موضوع أو حكم أو أدب أو قصة بآياته."},{"name":"تقسيم بنيوي","direction":"اذكري المواضع الآتية من السورة:","desc":"إمساك السورة من مفصلها: نداءات، أنواع، مواضع متكررة."},{"name":"سؤال عام عن السورة","direction":"أجيبي عما يأتي:","desc":"سؤال عن خصيصة في السورة كلها أو بين سور متصلة."},{"name":"إكمال شامل","direction":"أكملي الفراغات في الآيات الآتية:","desc":"فراغات متتابعة على مقطع طويل (تولّده المنصة آليًا من الفهرس)."},{"name":"أخرى","direction":"أجيبي عما يأتي:","desc":"لأي نمط جديد لم يُصنّف بعد."}],"lists":{"الحالات":["لم يُراجع","معتمد","مستبعد"],"أنواع النطاق":["آية","آيات متتابعة","آيات متفرقة","سورة كاملة","عدة سور","جزء"],"الصعوبة":["سهل","متوسط","صعب"],"المصادر":["ذكاء اصطناعي سابق","ذكاء اصطناعي لحظي","يدوي"],"الكتّاب":["أ. عزة إسحاق","جهاد"]}},"settings":[{"group":"المنصة","key":"اسم المنصة","value":"أوراق مراجعة القرآن","isDefault":false,"note":"يظهر أعلى المنصة وفي شاشة الدخول.","computed":false},{"group":"الورقة","key":"عنوان الورقة","value":"ورقة عمل","isDefault":false,"note":"السطر الأول في رأس الورقة.","computed":false},{"group":"الورقة","key":"صيغة العنوان","value":"مراجعة {النطاق}","isDefault":false,"note":"السطر الثاني؛ {النطاق} يُستبدل تلقائيًا (سورة الشعراء، سورتي فاطر ويس...).","computed":false},{"group":"الورقة","key":"إظهار البسملة","value":"نعم","isDefault":false,"note":"نعم / لا","computed":false},{"group":"الشعار","key":"رابط الشعار","value":"","isDefault":false,"note":"اختياري: رابط صورة الشعار على الإنترنت (مثل ملف logo.png في مستودع GitHub). ويمكن رفع شعار من المنصة يُحفظ في الجهاز.","computed":false},{"group":"عبارة افتتاحية","key":"افتتاح 1","value":"الحبيبة الغالية.. حفظكِ المولى.. مستعينةً بالله أجيبي على الأسئلة التالية","isDefault":true,"note":"خطاب المفرد.","computed":false},{"group":"عبارة افتتاحية","key":"افتتاح 2","value":"غالياتي.. حفظكنّ المولى.. مستعيناتٍ بالله أجبن على الأسئلة التالية","isDefault":false,"note":"خطاب الجمع.","computed":false},{"group":"عبارة افتتاحية","key":"افتتاح 3","value":"أختي الحافظة.. بارك الله في حفظكِ ونفع بكِ.. مستعينةً بالله أجيبي على الأسئلة التالية","isDefault":false,"note":"","computed":false},{"group":"عبارة ختامية","key":"ختام 1","value":"جعلنا الله وإياكنّ من أهل القرآن الذين هم أهل الله وخاصّته","isDefault":true,"note":"","computed":false},{"group":"عبارة ختامية","key":"ختام 2","value":"نفعكِ الله بما تحفظين، وجعله حجةً لكِ لا عليكِ","isDefault":false,"note":"","computed":false},{"group":"التوقيع","key":"صيغة التوقيع","value":"المحبة لكم: {المعلمة}","isDefault":false,"note":"{المعلمة} = المعلمة المختارة في الورقة.","computed":false},{"group":"المعلمات","key":"معلمة 1","value":"أ. عزة إسحاق","isDefault":true,"note":"الافتراضية في التذييل.","computed":false},{"group":"الحقول","key":"إظهار خانة الاسم","value":"نعم","isDefault":false,"note":"نعم / لا","computed":false},{"group":"الحقول","key":"نص خانة الاسم","value":"الاسم الغالي","isDefault":false,"note":"","computed":false},{"group":"الحقول","key":"إظهار خانة المجموعة","value":"نعم","isDefault":false,"note":"نعم / لا","computed":false},{"group":"الحقول","key":"نص خانة المجموعة","value":"مجموعة الأستاذة","isDefault":false,"note":"","computed":false},{"group":"الحقول","key":"إظهار التاريخ","value":"لا","isDefault":false,"note":"نعم / لا (تاريخ هجري تلقائي)","computed":false},{"group":"الدرجات","key":"إظهار الدرجات","value":"نعم","isDefault":false,"note":"الدرجات للتشجيع فقط.","computed":false},{"group":"الدرجات","key":"الدرجة الافتراضية للبند","value":"1","isDefault":false,"note":"إن لم تُكتب درجة للسؤال.","computed":false},{"group":"الدرجات","key":"درجة مقطع الإكمال","value":"2","isDefault":false,"note":"لكل مقطع «أكملي من… إلى…». والفراغ الواحد بدرجة.","computed":false},{"group":"الدرجات","key":"عبارة الدرجات","value":"","isDefault":false,"note":"اختياري: تظهر تحت نجمة الدرجة (مثل: كل فقرة عليها درجة واحدة).","computed":false},{"group":"الإكمال","key":"المقدار الافتراضي","value":"ربع وجه","isDefault":false,"note":"ربع وجه / نصف وجه / وجه","computed":false},{"group":"الإكمال","key":"عدد مقاطع الإكمال الافتراضي","value":"4","isDefault":false,"note":"","computed":false},{"group":"الإكمال","key":"نسبة الفراغات الافتراضية","value":"30","isDefault":false,"note":"نسبة مئوية تقريبية: 20 قليلة، 30 متوسطة، 45 كثيرة.","computed":false},{"group":"العرض","key":"إظهار غير المراجع في إعداد الورقة","value":"لا","isDefault":false,"note":"للإدارة فقط: نعم = تظهر الأسئلة غير المراجعة ضمن المرشحة للورقة.","computed":false},{"group":"المظهر","key":"السمة الافتراضية","value":"كلاسيكي","isDefault":false,"note":"كلاسيكي / وردي / أخضر المصحف / أزرق هادئ / بنفسجي / أبيض وأسود","computed":false},{"group":"المظهر","key":"الخط الافتراضي","value":"Noto Naskh Arabic","isDefault":false,"note":"Noto Naskh Arabic / Amiri / Tajawal / Cairo / Almarai / IBM Plex Sans Arabic","computed":false},{"group":"البنك","key":"المعرّف التالي المتاح","value":"29","isDefault":false,"note":"محسوب للعلم فقط؛ الترقيم تلقائي ولا يحتاجه الطلب.","computed":true},{"group":"البنك","key":"إصدار التلقين الحالي","value":"1.3","isDefault":false,"note":"يُكتب تلقائيًا في الأسئلة الملصقة من مشروع الذكاء. يُحدَّث عند تطوير التلقين.","computed":false},{"group":"البنك","key":"الكاتب الافتراضي للمولَّد","value":"جهاد","isDefault":false,"note":"يُكتب تلقائيًا في عمود «الكاتب» للأسئلة الملصقة إن لم يُذكر غيره.","computed":false},{"group":"البنك","key":"حدّ «السورة المستوفاة»","value":"8","isDefault":false,"note":"عدد الأسئلة المعتمدة الذي تُعدّ به السورة مستوفاة في «ملخص السور».","computed":false}]}};
+
+/* ---------------- فهرس المصحف ---------------- */
+const SUR = DATA.SURAHS;                       // [[الاسم, عدد الآيات], ...] الفهرس 0 = الفاتحة
+const TOTAL = 6236;
+const SSTART = [0];
+(function () { let acc = 1; for (let s = 1; s <= 114; s++) { SSTART[s] = acc; acc += SUR[s - 1][1]; } })();
+const ACOUNT = s => SUR[s - 1][1];
+const ABS = (s, a) => SSTART[s] + a - 1;
+const SEND = s => SSTART[s] + ACOUNT(s) - 1;
+const CUM = new Float64Array(TOTAL + 1);
+(function () {
+  let ab = 1; const w = new Float64Array(TOTAL + 1);
+  DATA.PAGES.forEach(n => { for (let k = 0; k < n; k++) { w[ab] = 1 / n; ab++; } });
+  for (let i = 1; i <= TOTAL; i++) CUM[i] = CUM[i - 1] + w[i];
+})();
+const pagesOf = (a, b) => CUM[b] - CUM[a - 1];
+function surahOfAbs(x) { let lo = 1, hi = 114; while (lo < hi) { const m = (lo + hi + 1) >> 1; if (SSTART[m] <= x) lo = m; else hi = m - 1; } return lo; }
+function ayahOfAbs(x) { const s = surahOfAbs(x); return [s, x - SSTART[s] + 1]; }
+function absAtCum(v) { let lo = 1, hi = TOTAL; while (lo < hi) { const m = (lo + hi) >> 1; if (CUM[m] >= v) hi = m; else lo = m + 1; } return lo; }
+
+const DIAC = /[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g;
+function norm(s) {
+  return String(s == null ? '' : s).replace(DIAC, '').replace(/^\s*سورة\s+/, '').replace(/[أإآٱ]/g, 'ا')
+    .replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/\s+/g, ' ').trim();
+}
+const SMAP = {}; SUR.forEach((x, i) => { SMAP[norm(x[0])] = i + 1; });
+function sNum(v) {
+  if (v === '' || v == null) return 0;
+  const n = Number(v); if (Number.isInteger(n) && n >= 1 && n <= 114) return n;
+  return SMAP[norm(v)] || 0;
+}
+const sName = s => SUR[s - 1][0];
+const AD = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+const toInt = v => { const n = parseInt(String(v == null ? '' : v).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)), 10); return isNaN(n) ? 0 : n; };
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const clampAyah = (s, a) => Math.min(Math.max(a, 1), ACOUNT(s));
+const ORD = ['الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي عشر', 'الثاني عشر', 'الثالث عشر', 'الرابع عشر', 'الخامس عشر'];
+const ord = i => ORD[i] || AD(i + 1);
+
+/* ---------------- نص المصحف (من alquran.cloud مع بديل quran.com) ---------------- */
+const QT = {}, QFAIL = new Set(), QWAIT = {};
+const isMark = w => /^[\u06D6-\u06ED\u0615-\u061A]+$/.test(w);
+function stripBasmala(t) {
+  const plain = t.replace(DIAC, '').replace(/ٱ/g, 'ا');
+  if (!/^بسم\s/.test(plain)) return t;
+  const w = t.split(/\s+/); let c = 0, i = 0;
+  while (i < w.length && c < 4) { if (!isMark(w[i])) c++; i++; }
+  return w.slice(i).join(' ').trim();
+}
+async function fetchJson(url) { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return r.json(); }
+function loadSurah(s) {
+  if (QT[s]) return Promise.resolve(QT[s]);
+  if (QWAIT[s]) return QWAIT[s];
+  QWAIT[s] = (async () => {
+    try { const c = localStorage.getItem('qt1_' + s); if (c) { const a = JSON.parse(c); if (a.length === ACOUNT(s)) { QT[s] = a; return a; } } } catch (e) { }
+    let arr = null;
+    try { const j = await fetchJson('https://api.alquran.cloud/v1/surah/' + s + '/quran-uthmani'); arr = j.data.ayahs.map(a => a.text); } catch (e) { }
+    if (!arr || arr.length !== ACOUNT(s)) {
+      try { const j = await fetchJson('https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=' + s); arr = j.verses.map(v => v.text_uthmani); } catch (e) { arr = null; }
+    }
+    if (!arr || arr.length !== ACOUNT(s)) { QFAIL.add(s); delete QWAIT[s]; return null; }
+    if (s !== 1 && s !== 9) arr[0] = stripBasmala(arr[0]);
+    arr = arr.map(t => t.replace(/\s+/g, ' ').trim());
+    QT[s] = arr; QFAIL.delete(s);
+    try { localStorage.setItem('qt1_' + s, JSON.stringify(arr)); } catch (e) { }
+    return arr;
+  })();
+  return QWAIT[s];
+}
+async function ensureSurahs(set) { await Promise.all([...set].filter(s => s >= 1 && s <= 114 && !QT[s]).map(loadSurah)); }
+const ayahText = (s, a) => (QT[s] && QT[s][a - 1]) || null;
+function realWords(t) { return t.split(' ').filter(w => w && !isMark(w)).length; }
+function headWords(t, k) { const w = t.split(' '); let c = 0, out = []; for (const x of w) { if (!isMark(x)) { if (c >= k) break; c++; } out.push(x); } return out.join(' '); }
+function tailWords(t, k) { const w = t.split(' '); let c = 0, out = []; for (let i = w.length - 1; i >= 0; i--) { const x = w[i]; if (!isMark(x)) { if (c >= k) break; c++; } out.unshift(x); } while (out.length && isMark(out[0])) out.shift(); return out.join(' '); }
+
+/* ---------------- الرموز ---------------- */
+const TOK = /\{\s*(آية|مطلع|خاتمة|مقطع)\s*:\s*([^:{}]+?)\s*:\s*([^{}]+?)\s*\}/g;
+function tokSurahs(text, set) {
+  set = set || new Set(); String(text || '').replace(TOK, (m, k, n) => { const s = sNum(n); if (s) set.add(s); return m; }); return set;
+}
+function parseTok(k, n, rest) {
+  const s = sNum(n); if (!s) return null;
+  const p = rest.split(/\s*:\s*/);
+  if (k === 'مقطع') { const m = p[0].match(/^(\d+)\s*[-–—]\s*(\d+)$/) || [null, p[0], p[0]]; let a = toInt(m[1]), b = toInt(m[2]); if (!a) return null; if (b < a) b = a; return { k, s, a: clampAyah(s, a), b: clampAyah(s, b) }; }
+  const a = toInt(p[0]); if (!a || a > ACOUNT(s)) return null;
+  return { k, s, a, b: a, n: Math.max(1, toInt(p[1]) || 4) };
+}
+/* mode: 'html' أو 'text' */
+function renderTokens(text, mode) {
+  const html = mode !== 'text';
+  const parts = []; let last = 0; const src = String(text == null ? '' : text);
+  src.replace(TOK, (m, k, n, rest, off) => { parts.push(html ? esc(src.slice(last, off)) : src.slice(last, off)); parts.push(tokOut(parseTok(k, n, rest), m, html)); last = off + m.length; return m; });
+  parts.push(html ? esc(src.slice(last)) : src.slice(last));
+  return parts.join('');
+}
+function tokOut(t, raw, html) {
+  if (!t) return html ? '<span class="tokfail">' + esc(raw) + '</span>' : raw;
+  const ref = 'سورة ' + sName(t.s) + ': ' + AD(t.a) + (t.b !== t.a ? '–' + AD(t.b) : '');
+  if (!QT[t.s]) {
+    if (!html) return '[' + ref + ']';
+    return QFAIL.has(t.s) ? '<span class="tokfail">[' + esc(ref) + ' — تعذّر جلب النص]</span>' : '<span class="hint">[' + esc(ref) + ' …]</span>';
+  }
+  const E = x => html ? esc(x) : x;
+  const num = a => html ? ' <span class="an">' + AD(a) + '</span>' : ' (' + AD(a) + ')';
+  let body;
+  if (t.k === 'آية') body = E(ayahText(t.s, t.a)) + num(t.a);
+  else if (t.k === 'مطلع') body = E(headWords(ayahText(t.s, t.a), t.n)) + ' …';
+  else if (t.k === 'خاتمة') body = '… ' + E(tailWords(ayahText(t.s, t.a), t.n)) + num(t.a);
+  else { const xs = []; for (let a = t.a; a <= t.b; a++) xs.push(E(ayahText(t.s, a)) + num(a)); body = xs.join(' '); }
+  return html ? '<span class="q">﴿' + body + '﴾</span>' : '﴿' + body + '﴾';
+}
+
+/* ---------------- نموذج السؤال ---------------- */
+const HD = { id: 'المعرّف', status: 'الحالة', tpl: 'القالب', scope: 'نوع النطاق', surah: 'السورة', from: 'من آية', toS: 'إلى سورة', to: 'إلى آية', extra: 'مواضع إضافية', tam: 'التمهيد', text: 'نص السؤال', ans: 'الإجابة النموذجية', diff: 'الصعوبة', grade: 'الدرجة', tags: 'الوسوم', notes: 'ملاحظات داخلية', source: 'المصدر', writer: 'الكاتب', created: 'تاريخ الإضافة', updated: 'آخر تعديل', parent: 'مرتبط بأصل', ver: 'إصدار التلقين', uses: 'مرات الاستخدام' };
+function fromRow(r) {
+  const q = { raw: Object.assign({}, r) };
+  for (const k in HD) q[k] = r[HD[k]] == null ? '' : r[HD[k]];
+  q.id = String(q.id).trim(); q.status = String(q.status || 'لم يُراجع').trim();
+  prepare(q); return q;
+}
+function toRow(q) { const r = Object.assign({}, q.raw || {}); for (const k in HD) r[HD[k]] = q[k]; return r; }
+function prepare(q) {
+  const L = []; let anchor = Infinity; const s = sNum(q.surah);
+  q.sn = s;
+  if (s) {
+    const f = toInt(q.from), t = toInt(q.to), ts = sNum(q.toS);
+    const fa = f ? ABS(s, clampAyah(s, f)) : SSTART[s];
+    const tsN = ts || s; let ta;
+    if (t) ta = ABS(tsN, clampAyah(tsN, t)); else if (f && !ts) ta = fa; else ta = SEND(tsN);
+    if (ta < fa) ta = fa;
+    L.push([fa, ta]); anchor = fa;
+  }
+  String(q.extra || '').split(/[؛;]/).forEach(p => {
+    const m = p.trim().match(/^(.+?)\s*[:：]\s*([0-9٠-٩]+)(?:\s*[-–—]\s*([0-9٠-٩]+))?$/); if (!m) return;
+    const s2 = sNum(m[1]); if (!s2) return;
+    const a = ABS(s2, clampAyah(s2, toInt(m[2]))), b = m[3] ? ABS(s2, clampAyah(s2, toInt(m[3]))) : a;
+    L.push([Math.min(a, b), Math.max(a, b)]); if (!s) anchor = Math.min(anchor, Math.min(a, b));
+  });
+  q.locs = L; q.anchor = anchor === Infinity ? 99999 : anchor;
+  q.prim = L[0] || null;
+  q.gradeN = toInt(q.grade) || 0;
+  q.search = norm([q.id, q.tam, q.text, q.ans, q.tags, q.notes, q.surah, q.tpl].join(' '));
+}
+function locLabel(q) {
+  if (!q.sn) return 'بلا سورة';
+  const f = toInt(q.from), t = toInt(q.to), ts = sNum(q.toS);
+  let x = sName(q.sn);
+  if (!f && !ts) x += ' (كاملة)';
+  else if (ts) x += ' ' + AD(f || 1) + ' ← ' + sName(ts) + ' ' + AD(t || ACOUNT(ts));
+  else x += ': ' + AD(f) + (t && t !== f ? '–' + AD(t) : '');
+  if (q.extra) x += ' + ' + q.extra;
+  return x;
+}
+const intersects = (q, A, B) => q.locs.some(([a, b]) => a <= B && b >= A);
+const statusCls = s => s === 'معتمد' ? 's-ok' : s === 'مستبعد' ? 's-off' : 's-wait';
+
+/* ---------------- الحالة العامة ---------------- */
+const S = {
+  pass: '', role: '', demo: false, rows: [], lists: { templates: [], lists: {} }, settings: [], nextId: 1,
+  tab: 'build', picked: new Set(), seed: Date.now() % 100000, qSeed: 1, bankPage: 0, editing: null
+};
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { } }
+};
+let PREF = LS.get('ws_prefs', {});
+const savePref = () => LS.set('ws_prefs', PREF);
+
+function sv(group, key, def) { const r = S.settings.find(x => x.group === group && x.key === key); return r && String(r.value).trim() !== '' ? String(r.value) : def; }
+function svBool(group, key, def) { const v = sv(group, key, null); if (v == null) return def; return /^(نعم|yes|true|1)$/i.test(String(v).trim()); }
+function sGroup(group) { return S.settings.filter(x => x.group === group && String(x.value).trim() !== ''); }
+function sDefault(group, fallback) { const g = sGroup(group); const d = g.find(x => x.isDefault) || g[0]; return d ? d.value : fallback; }
+const templates = () => S.lists.templates || [];
+const tplOrder = name => { const i = templates().findIndex(t => t.name === name); return i < 0 ? 999 : i; };
+const tplDir = (name, def) => { const t = templates().find(x => x.name === name); return (t && t.direction) || def; };
+
+/* ---------------- الاتصال بالخادم ---------------- */
+const $ = id => document.getElementById(id);
+let loadingN = 0;
+function busy(on) { loadingN += on ? 1 : -1; $('loading').classList.toggle('hidden', loadingN <= 0); }
+function toast(msg, err) { const t = $('toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.add('hidden'), err ? 5200 : 2800); }
+async function api(fn, args) {
+  if (S.demo) return demoApi(fn, args || {});
+  if (!API_URL) throw new Error('لم يُضبط رابط الخادم في الصفحة بعد. يمكن التجربة بالأسئلة النموذجية.');
+  busy(true);
+  try {
+    const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ pass: S.pass, fn, args: args || {} }) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || 'حدث خطأ في الخادم.');
+    return j.data;
+  } catch (e) {
+    if (e instanceof TypeError) throw new Error('تعذّر الاتصال بالخادم. تأكّدي من الإنترنت ثم أعيدي المحاولة.');
+    throw e;
+  } finally { busy(false); }
+}
+
+/* ---------------- وضع التجربة ---------------- */
+const DEMO = JSON.parse(JSON.stringify(DATA.DEMO));
+const today = () => new Date().toISOString().slice(0, 10);
+function demoApi(fn, a) {
+  const rows = DEMO.rows, find = id => rows.find(r => String(r[HD.id]) === String(id));
+  const R = {
+    login: () => ({ role: 'admin' }),
+    getData: () => ({ role: 'admin', rows: JSON.parse(JSON.stringify(rows)), lists: DEMO.lists, settings: DEMO.settings, nextId: Math.max(0, ...rows.map(r => +r[HD.id] || 0)) + 1 }),
+    setStatus: () => { (a.ids || []).forEach(id => { const r = find(id); if (r) { r[HD.status] = a.status; r[HD.updated] = today(); } }); return { ids: a.ids, status: a.status, date: today() }; },
+    updateQuestion: () => { const r = find(a.id); if (!r) throw new Error('غير موجود'); Object.assign(r, a.fields || {}); r[HD.updated] = today(); return JSON.parse(JSON.stringify(r)); },
+    addQuestion: () => { const r = Object.assign({}, a.fields); r[HD.id] = Math.max(0, ...rows.map(x => +x[HD.id] || 0)) + 1; r[HD.status] = r[HD.status] || 'لم يُراجع'; r[HD.created] = r[HD.created] || today(); r[HD.source] = r[HD.source] || 'يدوي'; r[HD.uses] = 0; rows.push(r); return JSON.parse(JSON.stringify(r)); },
+    bumpUsage: () => { (a.ids || []).forEach(id => { const r = find(id); if (r) r[HD.uses] = (+r[HD.uses] || 0) + 1; }); return { count: (a.ids || []).length }; },
+    updateSetting: () => { const x = DEMO.settings.find(s => s.group === a.group && s.key === a.key); if (x) x.value = a.value; return DEMO.settings; },
+    addSetting: () => { DEMO.settings.push({ group: a.group, key: a.key, value: a.value, isDefault: false, note: a.note || '' }); return DEMO.settings; },
+    setDefault: () => { DEMO.settings.forEach(s => { if (s.group === a.group) s.isDefault = s.key === a.key; }); return DEMO.settings; },
+    addListItem: () => { if (a.list === 'القوالب') DEMO.lists.templates.push({ name: a.value, direction: a.extra || '', desc: '' }); else (DEMO.lists.lists[a.list] = DEMO.lists.lists[a.list] || []).push(a.value); return DEMO.lists; }
+  };
+  if (!R[fn]) return Promise.reject(new Error('عملية غير معروفة'));
+  try { return Promise.resolve(R[fn]()); } catch (e) { return Promise.reject(e); }
+}
+
+/* =====================================================================
+   إعداد الورقة
+   ===================================================================== */
+const THEMES = [
+  { id: 'classic', name: 'كلاسيكي', c1: '#A8271F', c2: '#C9A23A', soft: '#FBF1EF' },
+  { id: 'rose', name: 'وردي', c1: '#A83E68', c2: '#D9A3B9', soft: '#FBF0F4' },
+  { id: 'green', name: 'أخضر المصحف', c1: '#1F5C4F', c2: '#B08A3E', soft: '#EFF5F2' },
+  { id: 'blue', name: 'أزرق هادئ', c1: '#1E4F86', c2: '#9DB7D6', soft: '#EEF3F9' },
+  { id: 'violet', name: 'بنفسجي', c1: '#5E3B8C', c2: '#C2A6DE', soft: '#F4EFFA' },
+  { id: 'mono', name: 'أبيض وأسود', c1: '#111111', c2: '#777777', soft: '#F2F2F2' }
+];
+const FONTS = [
+  ['Noto Naskh Arabic', 'نسخ'], ['Amiri', 'أميري'], ['Tajawal', 'تجوال'], ['Cairo', 'القاهرة'], ['Almarai', 'المراعي'], ['IBM Plex Sans Arabic', 'بلكس']
+];
+function rnd32(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+function getRange() {
+  let fs = +$('fromS').value, ts = +$('toS').value, fa = +$('fromA').value, ta = +$('toA').value;
+  const whole = $('wholeSurahs').checked;
+  let A = whole ? SSTART[fs] : ABS(fs, fa), B = whole ? SEND(ts) : ABS(ts, ta);
+  if (A > B) { const x = A; A = whole ? SSTART[ts] : B; B = whole ? SEND(fs) : x; }
+  return { A, B, whole };
+}
+function rangeName(R) {
+  const [s1, a1] = ayahOfAbs(R.A), [s2, a2] = ayahOfAbs(R.B);
+  const w1 = a1 === 1, w2 = a2 === ACOUNT(s2);
+  if (s1 === s2) return 'سورة ' + sName(s1) + (w1 && w2 ? '' : ' (' + AD(a1) + '–' + AD(a2) + ')');
+  if (w1 && w2) return s2 === s1 + 1 ? 'سورتي ' + sName(s1) + ' و' + sName(s2) : 'السور من ' + sName(s1) + ' إلى ' + sName(s2);
+  return 'من سورة ' + sName(s1) + ' (' + AD(a1) + ') إلى سورة ' + sName(s2) + ' (' + AD(a2) + ')';
+}
+function rangeSurahs(R) { const set = new Set(); for (let s = surahOfAbs(R.A); s <= surahOfAbs(R.B); s++) set.add(s); return set; }
+
+/* ----- مقاطع الإكمال ----- */
+function genSegments(A, B, n, len, rand) {
+  const P = pagesOf(A, B);
+  if (P <= len * 1.25) return [[A, B]];
+  n = Math.max(1, Math.min(n, Math.floor(P / (len * 0.9))));
+  const slice = P / n, base = CUM[A - 1], segs = [];
+  const clash = (a, b) => segs.some(([x, y]) => a <= y + 1 && b >= x - 1);
+  for (let i = 0; i < n; i++) {
+    for (let tr = 0; tr < 14; tr++) {
+      let a = absAtCum(base + slice * i + rand() * slice * 0.92);
+      a = Math.min(Math.max(a, A), B);
+      const s = surahOfAbs(a), sEnd = Math.min(SEND(s), B), sStart = Math.max(SSTART[s], A);
+      let b = a;
+      while (b < sEnd && pagesOf(a, b) < len * 0.9) b++;
+      while (a > sStart && pagesOf(a, b) < len * 0.75) a--;
+      if (b === a && b < sEnd) b++;
+      if (b === a && a > sStart) a--;
+      if (!clash(a, b)) { segs.push([a, b]); break; }
+    }
+  }
+  return segs.sort((x, y) => x[0] - y[0]);
+}
+function segItem(a, b, space, grade) {
+  const [s, x] = ayahOfAbs(a), [, y] = ayahOfAbs(b);
+  const long = q => { const t = ayahText(s, q); return t && realWords(t) > 14; };
+  const st = long(x) ? '{مطلع:' + s + ':' + x + ':7}' : '{آية:' + s + ':' + x + '}';
+  const en = long(y) ? '{خاتمة:' + s + ':' + y + ':6}' : '{آية:' + s + ':' + y + '}';
+  const inner = y - x > 1 ? pagesOf(a + 1, b - 1) : 0;
+  const lines = Math.max(2, Math.min(18, Math.round((inner * 15 * 1.2 + 1) * space)));
+  const text = x === y ? 'أكملي من قوله تعالى: ' + st : 'أكملي من قوله تعالى: ' + st + ' إلى قوله تعالى: ' + en;
+  return { kind: 'seg', text, lines, grade, ans: '{مقطع:' + s + ':' + x + '-' + y + '}', surahs: [s] };
+}
+/* ----- فراغات داخل النص ----- */
+function genBlanks(A, B, ratio, pos, rand) {
+  const capB = Math.min(B, A + 299), out = [];
+  for (let i = A; i <= capB; i++) {
+    const [s, a] = ayahOfAbs(i), t = ayahText(s, a);
+    if (!t) continue;
+    const w = realWords(t);
+    let blank = null;
+    if (i !== A && rand() < ratio && w >= 2) {
+      const mode = pos === 'mix' ? (rand() < 0.55 ? 'end' : 'start') : pos;
+      const k = Math.max(1, Math.min(w - 1, Math.round(w * (0.4 + rand() * 0.35))));
+      blank = { mode, k };
+    }
+    out.push({ s, a, blank });
+  }
+  return { list: out, capped: capB < B };
+}
+function blankHtml(b, key) {
+  let html = '', lastS = 0;
+  b.list.forEach(x => {
+    if (x.s !== lastS) { if (lastS) html += '</p>'; html += (b.multi ? '<div class="bl-s">سورة ' + esc(sName(x.s)) + '</div>' : '') + '<p class="bl q">'; lastS = x.s; }
+    const t = ayahText(x.s, x.a), num = ' <span class="an">' + AD(x.a) + '</span> ';
+    if (!x.blank) { html += esc(t) + num; return; }
+    const total = realWords(t), k = x.blank.k;
+    const hid = x.blank.mode === 'start' ? headWords(t, k) : tailWords(t, k);
+    const vis = x.blank.mode === 'start' ? tailWords(t, total - k) : headWords(t, total - k);
+    const gap = key ? '<mark>' + esc(hid) + '</mark>' : '<span class="gap" style="width:' + Math.max(3, Math.round(hid.length * 0.48)) + 'em"></span>';
+    html += (x.blank.mode === 'start' ? gap + ' ' + esc(vis) : esc(vis) + ' ' + gap) + num;
+  });
+  return html + '</p>';
+}
+
+/* ----- الأسئلة المرشحة ----- */
+function candidates(R) {
+  const incWait = S.role === 'admin' && $('incWait').checked, tf = $('tplFilter').value;
+  return S.rows.filter(q => q.status !== 'مستبعد' && (q.status === 'معتمد' || incWait) && (!tf || q.tpl === tf) && intersects(q, R.A, R.B))
+    .sort((a, b) => a.anchor - b.anchor || (+a.id) - (+b.id));
+}
+function autoPick(cands, max, rand) {
+  const groups = {};
+  cands.forEach(q => { (groups[q.tpl] = groups[q.tpl] || []).push(q); });
+  const keys = Object.keys(groups).sort((a, b) => tplOrder(a) - tplOrder(b));
+  keys.forEach(k => { const g = groups[k]; for (let i = g.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [g[i], g[j]] = [g[j], g[i]]; } });
+  const picked = new Set(); let added = true;
+  while (picked.size < max && added) { added = false; for (const k of keys) { if (picked.size >= max) break; const q = groups[k].shift(); if (q) { picked.add(q.id); added = true; } } }
+  return picked;
+}
+function qLines(q, space) {
+  const t = q.tpl || '', pp = q.prim ? pagesOf(q.prim[0], q.prim[1]) : 0.2;
+  let n;
+  if (/إكمال/.test(t)) n = Math.round(pp * 15 * 1.15);
+  else if (/تقسيم/.test(t)) n = 2;
+  else if (/دلالة|موضوع/.test(t)) n = Math.round(pp * 15 * 0.9);
+  else n = 3;
+  return Math.max(2, Math.min(t.includes('إكمال') ? 16 : 7, Math.round(n * space)));
+}
+function quesItem(q, space, defGrade) {
+  const multi = /متشابه/.test(q.tpl) && /\s—\s/.test(q.text) && (String(q.text).match(TOK) || []).length >= 2;
+  const it = { kind: 'q', id: q.id, tam: q.tam, text: q.text, ans: q.ans, grade: q.gradeN || defGrade, surahs: [...tokSurahs(q.text + ' ' + q.tam + ' ' + q.ans)] };
+  if (multi) { it.subs = String(q.text).split(/\s+—\s+/); it.subLines = /عابر/.test(q.tpl) ? 2 : 1; }
+  else it.lines = qLines(q, space);
+  return it;
+}
+
+/* ----- نموذج الورقة ----- */
+function readUI() {
+  const R = getRange();
+  const content = segVal('contentSeg'), compMode = segVal('compMode');
+  const space = +$('spaceSel').value;
+  return {
+    R, content, compMode, space,
+    segCount: Math.max(1, Math.min(20, +$('segCount').value || 4)), segLen: +$('segLen').value,
+    blankRatio: +$('blankRatio').value, blankPos: $('blankPos').value,
+    compGrade: Math.max(0, +$('compGrade').value || 0), compFirst: $('compFirst').checked,
+    title: $('sheetTitle').value.trim(), no: $('sheetNo').value.trim(), sub: $('sheetSub').value.trim(),
+    open: $('openTxt').value.trim(), close: $('closeTxt').value.trim(), sign: $('signTxt').value.trim(),
+    bism: $('showBism').checked, name: $('showName').checked, group: $('showGroup').checked, date: $('showDate').checked,
+    grades: $('showGrades').checked, total: $('totalOverride').value.trim(), gradeNote: $('gradeNote').value.trim(),
+    theme: PREF.theme || 'classic', color: PREF.color || '', font: $('fontSel').value, size: +$('sizeSel').value,
+    frame: $('frameSel').value, orn: $('showOrn').checked, logo: $('showLogo').checked ? (PREF.logo || sv('الشعار', 'رابط الشعار', '')) : '',
+    nameLabel: sv('الحقول', 'نص خانة الاسم', 'الاسم'), groupLabel: sv('الحقول', 'نص خانة المجموعة', 'مجموعة الأستاذة')
+  };
+}
+function buildModel(U) {
+  const sections = [];
+  const defGrade = toInt(sv('الدرجات', 'الدرجة الافتراضية للبند', '1')) || 1;
+  if (U.content !== 'ques') {
+    const rand = rnd32(S.seed);
+    if (U.compMode === 'seg') {
+      const segs = genSegments(U.R.A, U.R.B, U.segCount, U.segLen, rand);
+      sections.push({ kind: 'comp', key: '__seg', dir: dirFor('__seg', tplDir('إكمال من موضع خفي', 'أكملي الآيات الآتية:')), items: segs.map(([a, b]) => segItem(a, b, U.space, U.compGrade)) });
+    } else {
+      const bl = genBlanks(U.R.A, U.R.B, U.blankRatio, U.blankPos, rand);
+      bl.multi = new Set(bl.list.map(x => x.s)).size > 1;
+      const n = bl.list.filter(x => x.blank).length;
+      sections.push({ kind: 'comp', key: '__blank', dir: dirFor('__blank', tplDir('إكمال شامل', 'أكملي الفراغات في الآيات الآتية:')), items: [{ kind: 'blank', blanks: bl, grade: n, surahs: [] }], capped: bl.capped });
+    }
+  }
+  if (U.content !== 'comp') {
+    const chosen = S.rows.filter(q => S.picked.has(q.id)).sort((a, b) => a.anchor - b.anchor);
+    const byT = {};
+    chosen.forEach(q => { (byT[q.tpl] = byT[q.tpl] || []).push(q); });
+    Object.keys(byT).sort((a, b) => tplOrder(a) - tplOrder(b)).forEach(t => {
+      sections.push({ kind: 'ques', key: t, dir: dirFor(t, tplDir(t, 'أجيبي عما يأتي:')), items: byT[t].map(q => quesItem(q, U.space, defGrade)) });
+    });
+  }
+  if (!U.compFirst) { const c = sections.filter(s => s.kind === 'comp'); sections.splice(0, c.length); sections.push(...c); }
+  const total = sections.reduce((t, s) => t + s.items.reduce((x, i) => x + (+i.grade || 0), 0), 0);
+  return { U, sections, total: U.total || String(total), ids: sections.flatMap(s => s.items.filter(i => i.id).map(i => i.id)) };
+}
+function dirFor(key, def) { const o = (PREF.dirs || {})[key]; return o && o.trim() ? o : def; }
+function modelSurahs(M) {
+  const set = new Set();
+  M.sections.forEach(s => s.items.forEach(i => (i.surahs || []).forEach(x => set.add(x))));
+  return set;
+}
+
+/* ----- HTML الورقة ----- */
+function starSvg(total) {
+  const pts = []; for (let i = 0; i < 12; i++) { const r = i % 2 ? 27 : 47, ang = (Math.PI / 6) * i - Math.PI / 2; pts.push((50 + r * Math.cos(ang)).toFixed(1) + ',' + (50 + r * Math.sin(ang)).toFixed(1)); }
+  return '<svg class="star" viewBox="0 0 100 100"><polygon points="' + pts.join(' ') + '" fill="var(--soft)" stroke="var(--c1)" stroke-width="2.6" stroke-linejoin="round"/><line x1="33" y1="49" x2="67" y2="49" stroke="#222" stroke-width="1.6"/><text x="50" y="69" text-anchor="middle" font-size="17" font-weight="700" fill="#222">' + esc(AD(total)) + '</text></svg>';
+}
+function ornSvg() {
+  return '<svg class="orn" viewBox="0 0 400 24" preserveAspectRatio="none"><line x1="0" y1="12" x2="176" y2="12" stroke="var(--c1)" stroke-width="1.4"/><line x1="224" y1="12" x2="400" y2="12" stroke="var(--c1)" stroke-width="1.4"/><g transform="translate(200 12)"><rect x="-8" y="-8" width="16" height="16" fill="none" stroke="var(--c2)" stroke-width="1.6"/><rect x="-8" y="-8" width="16" height="16" fill="none" stroke="var(--c1)" stroke-width="1.6" transform="rotate(45)"/><circle r="2.4" fill="var(--c1)"/></g><circle cx="168" cy="12" r="2" fill="var(--c2)"/><circle cx="232" cy="12" r="2" fill="var(--c2)"/></svg>';
+}
+function sheetCSS(U) {
+  const th = THEMES.find(t => t.id === U.theme) || THEMES[0];
+  const c1 = U.color || th.c1;
+  const frame = U.frame === 'none' ? 'none' : U.frame === 'single' ? '1.6px solid var(--c1)' : '4px double var(--c1)';
+  return `
+@page{size:A4;margin:0}
+:root{--c1:${c1};--c2:${th.c2};--soft:${th.soft};--z:${U.size};--f:'${U.font}','Noto Naskh Arabic',serif;--quran:'Amiri Quran','Amiri',serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff}
+body{font-family:var(--f);color:#1b1b1b;font-size:calc(14.5px*var(--z));line-height:1.75;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.frame{position:fixed;top:8mm;bottom:8mm;left:8mm;right:8mm;border:${frame};border-radius:3px;pointer-events:none}
+table.pg{width:100%;border-collapse:collapse}
+table.pg > thead td{height:13mm;padding:0}
+table.pg > tfoot td{height:13mm;padding:0}
+table.pg > tbody > tr > td{padding:0 15mm}
+.hd{display:grid;grid-template-columns:24mm 1fr 24mm;align-items:center;gap:4mm}
+.hd .logo img{max-width:24mm;max-height:22mm;object-fit:contain}
+.hd .mid{text-align:center}
+.t1{display:inline-block;font-weight:700;font-size:1.32em;color:var(--c1);border:1.5px solid var(--c1);border-radius:14px;padding:.08em 1.1em}
+.t2{font-weight:700;font-size:1.12em;margin-top:.25em}
+.star{width:22mm;height:22mm;display:block;margin-inline-start:auto}
+.gnote{font-size:.72em;text-align:center;color:#444;margin-top:-1mm}
+.fields{display:flex;justify-content:space-between;gap:8mm;margin:3mm 0 1mm;font-size:.95em}
+.fields .dots{display:inline-block;min-width:48mm;border-bottom:1.3px dotted #555;transform:translateY(-.25em)}
+.bism{text-align:center;font-family:var(--quran);font-size:1.7em;color:var(--c1);line-height:1.6;margin:1mm 0}
+.orn{display:block;width:100%;height:5mm;margin:2mm 0}
+.open{font-weight:700;margin:1.5mm 0 3mm;font-size:1.04em}
+.open:before{content:"❀ ";color:var(--c1)}
+.sec{margin-top:4mm}
+.sec-h{font-weight:700;margin-bottom:1.5mm;break-after:avoid}
+.sec-h b{color:var(--c1);text-decoration:underline;text-underline-offset:.3em;text-decoration-thickness:1px;margin-inline-end:.35em}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:2.5mm;align-items:start;margin:0 0 2.6mm;break-inside:avoid}
+.it-n{font-weight:700;color:var(--c1);min-width:1.4em}
+.it-g{border:1.2px solid #888;border-radius:8px;width:11mm;text-align:center;font-size:.85em;line-height:1.25;padding:.6mm 0}
+.it-g i{display:block;border-bottom:1px solid #888;height:.9em}
+.tam{color:#444;margin-bottom:.4mm}
+.q{font-family:var(--quran);font-size:1.16em;line-height:2.15}
+.an{font-family:var(--f);font-size:.62em;color:var(--c1);vertical-align:.18em;padding:0 .12em}
+.ln{height:calc(2em*var(--sp,1));border-bottom:1.2px dotted #6b6b6b}
+.sub{margin-top:.6mm}
+.ans{margin-top:1mm;padding:1.2mm 3mm;background:var(--soft);border-inline-start:3px solid var(--c1);border-radius:4px}
+.bl{text-align:justify;line-height:2.55;margin:0}
+.bl-s{font-weight:700;color:var(--c1);margin:2mm 0 0;text-align:center}
+.gap{display:inline-block;border-bottom:1.3px dotted #333;height:1.1em;vertical-align:-.2em;margin:0 .15em}
+mark{background:#FFF0A8;padding:0 .1em}
+.end{margin-top:5mm;break-inside:avoid}
+.close{text-align:center;font-weight:700;color:var(--c1);margin:1mm 0}
+.sign{display:flex;justify-content:space-between;align-items:flex-end;gap:6mm;margin-top:3mm}
+.sign .s{font-weight:700;font-size:1.05em}
+.keyt{display:inline-block;background:var(--c1);color:#fff;border-radius:6px;padding:0 .7em;font-size:.85em;margin-inline-start:.6em;vertical-align:.15em}
+.tool{position:fixed;top:10px;left:10px;display:flex;gap:6px;z-index:5}
+.tool button{font:inherit;font-size:14px;padding:6px 14px;border-radius:8px;border:1px solid #bbb;background:#fff;cursor:pointer}
+.tool button.p{background:#1F4D45;color:#fff;border-color:#1F4D45}
+@media print{.tool{display:none}}
+`;
+}
+function itemHTML(it, idx, U, key) {
+  const grade = U.grades && it.grade ? '<div class="it-g"><i></i>' + esc(AD(it.grade)) + '</div>' : '<div></div>';
+  let body = '';
+  if (it.kind === 'blank') {
+    body = blankHtml(it.blanks, key) + (it.blanks.capped ? '<div class="tam">(عُرضت أول ٣٠٠ آية من النطاق)</div>' : '');
+    return '<div class="it" style="grid-template-columns:1fr auto"><div>' + body + '</div>' + grade + '</div>';
+  }
+  if (it.tam) body += '<div class="tam">' + renderTokens(it.tam) + '</div>';
+  if (it.subs) {
+    body += it.subs.map(s => '<div class="sub">' + renderTokens(s) + '</div>' + (key ? '' : '<div class="ln"></div>'.repeat(it.subLines))).join('');
+  } else {
+    body += '<div>' + renderTokens(it.text) + '</div>';
+    if (!key) body += '<div class="ln"></div>'.repeat(it.lines);
+  }
+  if (key) body += '<div class="ans">' + (it.ans ? renderTokens(it.ans) : '<span style="color:#888">لا توجد إجابة نموذجية مسجلة.</span>') + '</div>';
+  return '<div class="it"><div class="it-n">' + AD(idx + 1) + ')</div><div>' + body + '</div>' + grade + '</div>';
+}
+function sheetHTML(M, key, forPrint) {
+  const U = M.U;
+  const hijri = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); } catch (e) { return ''; } })();
+  const title = esc(U.title || 'ورقة عمل') + (U.no ? ' (' + esc(AD(U.no)) + ')' : '');
+  let h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc((U.title || 'ورقة عمل') + ' - ' + (U.sub || '')) + '</title>';
+  h += '<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@400;700&family=Cairo:wght@400;700&family=Almarai:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">';
+  h += '<style>' + sheetCSS(U) + ':root{--sp:' + U.space + '}</style></head><body>';
+  if (forPrint) h += '<div class="tool"><button class="p" onclick="window.print()">طباعة / حفظ PDF</button><button onclick="window.close()">إغلاق</button></div>';
+  h += '<div class="frame"></div><table class="pg"><thead><tr><td></td></tr></thead><tfoot><tr><td></td></tr></tfoot><tbody><tr><td>';
+  h += '<div class="hd"><div class="logo">' + (U.logo ? '<img src="' + esc(U.logo) + '" alt="">' : '') + '</div>';
+  h += '<div class="mid"><div class="t1">' + title + (key ? '<span class="keyt">نموذج الإجابة</span>' : '') + '</div>' + (U.sub ? '<div class="t2">' + esc(U.sub) + '</div>' : '') + '</div>';
+  h += '<div>' + (U.grades && !key ? starSvg(M.total) + (U.gradeNote ? '<div class="gnote">' + esc(U.gradeNote) + '</div>' : '') : '') + '</div></div>';
+  if ((U.name && !key) || U.date) h += '<div class="fields"><span>' + (U.name && !key ? esc(U.nameLabel) + ': <i class="dots"></i>' : '') + '</span><span>' + (U.date ? 'التاريخ: ' + esc(hijri) : '') + '</span></div>';
+  if (U.orn) h += ornSvg();
+  if (U.bism) h += '<div class="bism">﷽</div>';
+  if (U.open && !key) h += '<p class="open">' + esc(U.open) + '</p>';
+  if (!M.sections.length || M.sections.every(s => !s.items.length)) h += '<p style="text-align:center;color:#888;margin:20mm 0">لا يوجد محتوى بعد. اختاري نطاقًا فيه أسئلة، أو فعّلي الإكمال.</p>';
+  M.sections.forEach((s, i) => {
+    if (!s.items.length) return;
+    h += '<div class="sec"><div class="sec-h"><b>السؤال ' + ord(i) + ':</b>' + esc(s.dir) + '</div>';
+    s.items.forEach((it, j) => { h += itemHTML(it, j, U, key); });
+    h += '</div>';
+  });
+  h += '<div class="end">' + (U.orn ? ornSvg() : '');
+  if (U.close) h += '<div class="close">' + esc(U.close) + '</div>';
+  h += '<div class="sign"><span>' + (U.group && !key ? esc(U.groupLabel) + ': <i class="dots" style="display:inline-block;min-width:40mm;border-bottom:1.3px dotted #555"></i>' : '') + '</span><span class="s">' + esc(U.sign) + '</span></div></div>';
+  h += '</td></tr></tbody></table>';
+  if (forPrint) h += '<script>window.addEventListener("load",function(){(document.fonts?document.fonts.ready:Promise.resolve()).then(function(){setTimeout(function(){window.print()},350)})});<\/script>';
+  return h + '</body></html>';
+}
+
+/* ----- النص البسيط وتعليمات التصميم ----- */
+function plainText(M) {
+  const U = M.U, out = [];
+  out.push((U.title || 'ورقة عمل') + (U.no ? ' (' + U.no + ')' : ''));
+  if (U.sub) out.push(U.sub);
+  if (U.open) out.push('', U.open);
+  M.sections.forEach((s, i) => {
+    if (!s.items.length) return;
+    out.push('', 'السؤال ' + ord(i) + ': ' + s.dir);
+    s.items.forEach((it, j) => {
+      if (it.kind === 'blank') {
+        it.blanks.list.forEach(x => {
+          const t = ayahText(x.s, x.a);
+          if (!x.blank) { out.push(t + ' (' + AD(x.a) + ')'); return; }
+          const tot = realWords(t), k = x.blank.k;
+          out.push((x.blank.mode === 'start' ? '.......... ' + tailWords(t, tot - k) : headWords(t, tot - k) + ' ..........') + ' (' + AD(x.a) + ')');
+        });
+        return;
+      }
+      const g = U.grades && it.grade ? '   [' + it.grade + ']' : '';
+      if (it.tam) out.push(renderTokens(it.tam, 'text'));
+      if (it.subs) { out.push((j + 1) + ')' + g); it.subs.forEach(x => out.push('   ' + renderTokens(x, 'text'), '   ............................................')); }
+      else out.push((j + 1) + ') ' + renderTokens(it.text, 'text') + g, '............................................');
+    });
+  });
+  if (U.close) out.push('', U.close);
+  if (U.sign) out.push(U.sign);
+  return out.join('\n');
+}
+function designPrompt(M) {
+  const U = M.U, th = THEMES.find(t => t.id === U.theme) || THEMES[0];
+  return 'صمّم ورقة عمل قرآنية للطباعة بحجم A4 بالعربية (من اليمين لليسار)، بطابع إسلامي هادئ أنيق يناسب نساء وطالبات في حلقة مراجعة قرآن.\n' +
+    'المطلوب في التصميم:\n- عنوان بارز في الأعلى داخل إطار مستدير، وتحته اسم النطاق.\n- نجمة سداسية في الزاوية لكتابة الدرجة' + (U.grades ? ' (المجموع: ' + M.total + ')' : '') + '.\n- خانة للاسم، وفاصل زخرفي هندسي بسيط.\n- كل سؤال بعنوان ملوّن، وتحت كل بند أسطر منقطة كافية للكتابة.\n- الآيات بين القوسين ﴿ ﴾ بخط مصحفي، ولا يُغيَّر فيها حرف.\n- الألوان: ' + (U.color || th.c1) + ' للعناوين، و' + th.c2 + ' للزخرفة، والخلفية بيضاء.\n- لا صور أشخاص.\n\nالمحتوى (انقله كما هو):\n\n' + plainText(M);
+}
+
+/* =====================================================================
+   واجهة: إعداد الورقة
+   ===================================================================== */
+function segVal(id) { const b = $(id).querySelector('button.on'); return b ? b.dataset.v : ''; }
+function segInit(id, cb) {
+  $(id).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); cb && cb(b.dataset.v);
+  });
+}
+function setSeg(id, v) { $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.v === v)); }
+function fillSurahSel(sel, withEmpty) { sel.innerHTML = (withEmpty ? '<option value="">—</option>' : '') + SUR.map((x, i) => '<option value="' + (i + 1) + '">' + AD(i + 1) + '. ' + x[0] + '</option>').join(''); }
+function fillAyahSel(sel, s, v) { let o = ''; for (let a = 1; a <= ACOUNT(s); a++) o += '<option value="' + a + '">' + AD(a) + '</option>'; sel.innerHTML = o; sel.value = String(v || 1); }
+
+let refreshT = 0, refreshN = 0, subTouched = false, signTouched = false;
+function schedule(full) { clearTimeout(refreshT); refreshT = setTimeout(() => refresh(full), 220); }
+
+function initBuilderSettings() {
+  $('appTitle').textContent = sv('المنصة', 'اسم المنصة', 'أوراق مراجعة القرآن');
+  document.title = $('appTitle').textContent;
+  $('sheetTitle').value = sv('الورقة', 'عنوان الورقة', 'ورقة عمل');
+  $('sheetNo').value = PREF.sheetNo || '';
+  const fillTxtSel = (sel, txt, group, def) => {
+    const g = sGroup(group);
+    sel.innerHTML = g.map((x, i) => '<option value="' + i + '">' + esc(x.value.length > 60 ? x.value.slice(0, 58) + '…' : x.value) + '</option>').join('') + '<option value="-1">نص خاص…</option>';
+    const d = Math.max(0, g.findIndex(x => x.isDefault));
+    sel.value = g.length ? String(d) : '-1'; txt.value = g.length ? g[d].value : def;
+    sel.onchange = () => { if (sel.value !== '-1') txt.value = g[+sel.value].value; else { txt.value = ''; txt.focus(); } schedule(); };
+  };
+  fillTxtSel($('openSel'), $('openTxt'), 'عبارة افتتاحية', 'الحبيبة الغالية.. حفظكِ المولى.. مستعينةً بالله أجيبي على الأسئلة التالية');
+  fillTxtSel($('closeSel'), $('closeTxt'), 'عبارة ختامية', '');
+  const teachers = sGroup('المعلمات');
+  $('teacherSel').innerHTML = teachers.map(t => '<option' + (t.isDefault ? ' selected' : '') + '>' + esc(t.value) + '</option>').join('') || '<option></option>';
+  if (PREF.teacher && teachers.some(t => t.value === PREF.teacher)) $('teacherSel').value = PREF.teacher;
+  signTouched = false; updateSign();
+  $('showBism').checked = svBool('الورقة', 'إظهار البسملة', true);
+  $('showName').checked = svBool('الحقول', 'إظهار خانة الاسم', true);
+  $('showGroup').checked = svBool('الحقول', 'إظهار خانة المجموعة', true);
+  $('showDate').checked = svBool('الحقول', 'إظهار التاريخ', false);
+  $('showGrades').checked = svBool('الدرجات', 'إظهار الدرجات', true);
+  $('compGrade').value = toInt(sv('الدرجات', 'درجة مقطع الإكمال', '2')) || 2;
+  $('gradeNote').value = sv('الدرجات', 'عبارة الدرجات', '');
+  const amt = sv('الإكمال', 'المقدار الافتراضي', 'ربع وجه');
+  $('segLen').value = /نصف/.test(amt) ? '0.5' : /^وجه|كامل/.test(amt) ? '1' : '0.25';
+  $('segCount').value = toInt(sv('الإكمال', 'عدد مقاطع الإكمال الافتراضي', '4')) || 4;
+  const br = toInt(sv('الإكمال', 'نسبة الفراغات الافتراضية', '30'));
+  $('blankRatio').value = br <= 22 ? '0.2' : br >= 40 ? '0.45' : '0.3';
+  $('incWait').checked = S.role === 'admin' && svBool('العرض', 'إظهار غير المراجع في إعداد الورقة', false);
+  // الشكل
+  const defTheme = THEMES.find(t => t.name === sv('المظهر', 'السمة الافتراضية', '')) || THEMES[0];
+  if (!PREF.theme) PREF.theme = defTheme.id;
+  $('themeSeg').innerHTML = THEMES.map(t => '<button data-v="' + t.id + '"' + (t.id === PREF.theme ? ' class="on"' : '') + '>' + t.name + '</button>').join('');
+  $('fontSel').innerHTML = FONTS.map(f => '<option value="' + f[0] + '">' + f[1] + '</option>').join('');
+  $('fontSel').value = PREF.font || sv('المظهر', 'الخط الافتراضي', 'Noto Naskh Arabic');
+  if (!$('fontSel').value) $('fontSel').value = 'Noto Naskh Arabic';
+  $('sizeSel').value = PREF.size || '1'; $('frameSel').value = PREF.frame || 'double'; $('spaceSel').value = PREF.space || '1';
+  $('colorPick').value = PREF.color || (THEMES.find(t => t.id === PREF.theme) || THEMES[0]).c1;
+  $('showOrn').checked = PREF.orn !== false;
+  $('showLogo').checked = !!PREF.showLogo && !!(PREF.logo || sv('الشعار', 'رابط الشعار', ''));
+  // القوالب
+  const tf = $('tplFilter'), cur = tf.value;
+  tf.innerHTML = '<option value="">كل الأنواع (تنويع)</option>' + templates().filter(t => t.name !== 'إكمال شامل').map(t => '<option>' + esc(t.name) + '</option>').join('');
+  tf.value = cur;
+  $('incWaitWrap').classList.toggle('hidden', S.role !== 'admin');
+  // النطاق الافتراضي
+  if (!PREF.range) {
+    const first = S.rows.filter(q => q.sn).sort((a, b) => a.anchor - b.anchor)[0];
+    const s = first ? first.sn : 1; PREF.range = { fs: s, fa: 1, ts: s, ta: ACOUNT(s), whole: true };
+  }
+  const r = PREF.range;
+  $('fromS').value = r.fs; $('toS').value = r.ts; fillAyahSel($('fromA'), r.fs, r.fa); fillAyahSel($('toA'), r.ts, r.ta);
+  $('wholeSurahs').checked = r.whole !== false; syncWhole();
+  setSeg('contentSeg', PREF.content || 'both'); setSeg('compMode', PREF.compMode || 'seg'); syncContent();
+  subTouched = false;
+}
+function updateSign() {
+  if (signTouched) return;
+  $('signTxt').value = sv('التوقيع', 'صيغة التوقيع', 'المحبة لكم: {المعلمة}').replace('{المعلمة}', $('teacherSel').value || '');
+}
+function syncWhole() { const w = $('wholeSurahs').checked; $('fromA').disabled = w; $('toA').disabled = w; }
+function syncContent() {
+  const c = segVal('contentSeg'), m = segVal('compMode');
+  $('compBox').classList.toggle('hidden', c === 'ques'); $('quesBox').classList.toggle('hidden', c === 'comp');
+  $('segOpts').classList.toggle('hidden', m !== 'seg'); $('blankOpts').classList.toggle('hidden', m !== 'blank');
+}
+function saveRangePref() {
+  PREF.range = { fs: +$('fromS').value, fa: +$('fromA').value, ts: +$('toS').value, ta: +$('toA').value, whole: $('wholeSurahs').checked };
+  PREF.content = segVal('contentSeg'); PREF.compMode = segVal('compMode'); savePref();
+}
+function rePick() {
+  const R = getRange(), c = candidates(R);
+  S.picked = autoPick(c, Math.max(1, +$('qMax').value || 10), rnd32(S.qSeed));
+}
+function renderCands() {
+  const R = getRange(), c = candidates(R);
+  [...S.picked].forEach(id => { if (!c.some(q => q.id === id)) S.picked.delete(id); });
+  $('candInfo').textContent = c.length ? 'في النطاق ' + AD(c.length) + ' سؤالًا، المختار منها ' + AD(S.picked.size) + '. يمكن تغيير الاختيار بالضغط.' : 'لا توجد أسئلة ' + (S.role === 'admin' && !$('incWait').checked ? 'معتمدة ' : '') + 'في هذا النطاق بعد.';
+  $('candList').innerHTML = c.map(q => '<label><input type="checkbox" data-id="' + esc(q.id) + '"' + (S.picked.has(q.id) ? ' checked' : '') + '><span><span class="m">' + esc(q.tpl) + ' — ' + esc(locLabel(q)) + (q.status !== 'معتمد' ? ' — <span class="chip s-wait">' + esc(q.status) + '</span>' : '') + '</span><br>' + renderTokens(q.text) + '</span></label>').join('');
+  $('candList').classList.toggle('hidden', !c.length);
+}
+function updateRangePreview() {
+  const R = getRange(), p = pagesOf(R.A, R.B);
+  const c = S.rows.filter(q => q.status === 'معتمد' && intersects(q, R.A, R.B)).length;
+  $('rangePreview').innerHTML = 'يشمل: <b>' + esc(rangeName(R)) + '</b> — ' + AD(p < 1 ? p.toFixed(2) : p.toFixed(1)) + ' وجه تقريبًا — ' + AD(R.B - R.A + 1) + ' آية — الأسئلة المعتمدة فيه: ' + AD(c);
+  if (!subTouched) $('sheetSub').value = sv('الورقة', 'صيغة العنوان', 'مراجعة {النطاق}').replace('{النطاق}', rangeName(R));
+}
+function renderDirs(M) {
+  const box = $('dirsBox'), keys = M.sections.map(s => [s.key, s.dir]);
+  box.innerHTML = keys.length ? keys.map(([k, d]) => '<label class="f">' + esc(k === '__seg' ? 'مقاطع الإكمال' : k === '__blank' ? 'فراغات الإكمال' : k) + '</label><input type="text" data-dir="' + esc(k) + '" value="' + esc(d) + '">').join('') + '<button class="btn sm" id="dirsReset" style="margin-top:4px">إرجاع العناوين الأصلية</button>' : '<p class="hint">تظهر هنا عناوين أقسام الورقة بعد اختيار المحتوى.</p>';
+}
+let lastModel = null, viewKey = false;
+async function refresh(full) {
+  const my = ++refreshN;
+  updateRangePreview();
+  if (full) rePick();
+  renderCands();
+  let U = readUI(), M = buildModel(U);
+  const need = modelSurahs(M);
+  if (U.content !== 'ques' && U.compMode === 'blank') rangeSurahs({ A: U.R.A, B: Math.min(U.R.B, U.R.A + 299) }).forEach(s => need.add(s));
+  S.rows.filter(q => S.picked.has(q.id)).forEach(q => tokSurahs(q.text + ' ' + q.tam + ' ' + q.ans, need));
+  if ([...need].some(s => !QT[s] && !QFAIL.has(s))) {
+    paint(M); await ensureSurahs(need); if (my !== refreshN) return;
+    U = readUI(); M = buildModel(U); renderCands();
+  }
+  if (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.dir === undefined) renderDirs(M);
+  else if (!$('dirsBox').querySelector('input')) renderDirs(M);
+  paint(M);
+}
+function paint(M) {
+  lastModel = M;
+  const f = $('paper');
+  f.onload = () => { try { const d = f.contentDocument; const fit = () => { f.style.height = Math.max(1123, d.documentElement.scrollHeight) + 'px'; scalePaper(); }; fit(); (d.fonts ? d.fonts.ready : Promise.resolve()).then(fit); setTimeout(fit, 600); } catch (e) { } };
+  f.srcdoc = sheetHTML(M, viewKey, false);
+}
+function scalePaper() {
+  const clip = $('paperClip'), w = clip.clientWidth; if (!w) return;
+  const k = Math.min(1, w / 794), h = $('paperHolder'), H = $('paper').offsetHeight;
+  h.style.width = '794px'; h.style.transform = 'scale(' + k + ')';
+  clip.style.height = Math.ceil(H * k) + 'px';
+  clip.style.direction = 'rtl';
+  h.style.marginInlineStart = '0';
+}
+async function doPrint(key) {
+  const w = window.open('', '_blank');
+  if (!w) { toast('المتصفح منع فتح نافذة الطباعة. اسمحي بالنوافذ المنبثقة لهذه الصفحة ثم أعيدي المحاولة.', true); return; }
+  try { w.document.write('<p dir="rtl" style="font-family:sans-serif;padding:30px">جارٍ تجهيز الورقة…</p>'); } catch (e) { }
+  clearTimeout(refreshT); await refresh(false);
+  if (!lastModel) { w.close(); return; }
+  w.document.open(); w.document.write(sheetHTML(lastModel, key, true)); w.document.close();
+  if (!key && lastModel.ids.length) api('bumpUsage', { ids: lastModel.ids }).then(() => { lastModel.ids.forEach(id => { const q = S.rows.find(x => x.id === id); if (q) q.uses = (+q.uses || 0) + 1; }); }).catch(() => { });
+}
+async function copy(txt, msg) {
+  try { await navigator.clipboard.writeText(txt); }
+  catch (e) { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  toast(msg || 'نُسخ.');
+}
+async function copyRequest(withText) {
+  const R = getRange();
+  let lines = [R.whole ? rangeName(R).replace(/^سورتي /, 'من سورة ').replace(/ و/, ' إلى سورة ') : rangeName(R)];
+  if (withText) {
+    if (R.B - R.A > 450) { toast('النطاق كبير لنسخه مع النص. انسخي الطلب بلا نص، أو اختاري مقطعًا لا يتجاوز ٤٥٠ آية.', true); return; }
+    await ensureSurahs(rangeSurahs(R));
+    lines.push('نص الآيات:');
+    let last = 0;
+    for (let i = R.A; i <= R.B; i++) { const [s, a] = ayahOfAbs(i); if (s !== last) { lines.push('', 'سورة ' + sName(s) + ':'); last = s; } lines.push('(' + a + ') ' + (ayahText(s, a) || '[تعذّر جلب النص]')); }
+  }
+  copy(lines.join('\n'), 'نُسخ الطلب. الصقيه في محادثة جديدة داخل مشروع الذكاء الاصطناعي.');
+}
+
+function wireBuilder() {
+  fillSurahSel($('fromS')); fillSurahSel($('toS'));
+  $('fromS').onchange = () => { const s = +$('fromS').value; fillAyahSel($('fromA'), s, 1); if (+$('toS').value < s) { $('toS').value = s; fillAyahSel($('toA'), s, ACOUNT(s)); } saveRangePref(); schedule(true); };
+  $('toS').onchange = () => { const s = +$('toS').value; fillAyahSel($('toA'), s, ACOUNT(s)); if (+$('fromS').value > s) { $('fromS').value = s; fillAyahSel($('fromA'), s, 1); } saveRangePref(); schedule(true); };
+  ['fromA', 'toA'].forEach(id => $(id).onchange = () => { saveRangePref(); schedule(true); });
+  $('wholeSurahs').onchange = () => { syncWhole(); saveRangePref(); schedule(true); };
+  segInit('contentSeg', () => { syncContent(); saveRangePref(); schedule(); });
+  segInit('compMode', () => { syncContent(); saveRangePref(); schedule(); });
+  segInit('themeSeg', v => { PREF.theme = v; PREF.color = ''; $('colorPick').value = THEMES.find(t => t.id === v).c1; savePref(); schedule(); });
+  segInit('viewSeg', v => { viewKey = v === 'key'; schedule(); });
+  ['segCount', 'segLen', 'blankRatio', 'blankPos', 'compGrade', 'compFirst', 'sheetTitle', 'openTxt', 'closeTxt', 'showBism', 'showName', 'showGroup', 'showDate', 'showGrades', 'totalOverride', 'gradeNote', 'showOrn'].forEach(id => $(id).addEventListener('input', () => { PREF.orn = $('showOrn').checked; savePref(); schedule(); }));
+  $('sheetNo').addEventListener('input', () => { PREF.sheetNo = $('sheetNo').value; savePref(); schedule(); });
+  $('sheetSub').addEventListener('input', () => { subTouched = true; schedule(); });
+  $('signTxt').addEventListener('input', () => { signTouched = true; schedule(); });
+  $('teacherSel').onchange = () => { PREF.teacher = $('teacherSel').value; savePref(); updateSign(); schedule(); };
+  [['fontSel', 'font'], ['sizeSel', 'size'], ['frameSel', 'frame'], ['spaceSel', 'space']].forEach(([id, k]) => $(id).onchange = () => { PREF[k] = $(id).value; savePref(); schedule(); });
+  $('colorPick').oninput = () => { PREF.color = $('colorPick').value; savePref(); schedule(); };
+  $('showLogo').onchange = () => { PREF.showLogo = $('showLogo').checked; if (PREF.showLogo && !PREF.logo && !sv('الشعار', 'رابط الشعار', '')) { $('logoFile').click(); } savePref(); schedule(); };
+  $('logoBtn').onclick = () => $('logoFile').click();
+  $('logoFile').onchange = () => {
+    const f = $('logoFile').files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'), k = Math.min(1, 360 / Math.max(img.width, img.height)); c.width = img.width * k; c.height = img.height * k; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); PREF.logo = c.toDataURL('image/png'); PREF.showLogo = true; $('showLogo').checked = true; savePref(); schedule(); toast('حُفظ الشعار في هذا الجهاز.'); }; img.src = rd.result; };
+    rd.readAsDataURL(f);
+  };
+  $('tplFilter').onchange = () => schedule(true);
+  $('qMax').oninput = () => schedule(true);
+  $('incWait').onchange = () => schedule(true);
+  $('shuffleBtn').onclick = () => { S.qSeed++; schedule(true); };
+  $('regenBtn').onclick = () => { S.seed = (S.seed * 7 + 13) % 1000003; schedule(); };
+  $('candList').addEventListener('change', e => { const id = e.target.dataset.id; if (!id) return; e.target.checked ? S.picked.add(id) : S.picked.delete(id); schedule(); });
+  $('dirsBox').addEventListener('input', e => { const k = e.target.dataset.dir; if (k === undefined) return; PREF.dirs = PREF.dirs || {}; PREF.dirs[k] = e.target.value; savePref(); schedule(); });
+  $('dirsBox').addEventListener('click', e => { if (e.target.id === 'dirsReset') { PREF.dirs = {}; savePref(); $('dirsBox').innerHTML = ''; schedule(); } });
+  $('printBtn').onclick = () => doPrint(viewKey);
+  $('mPrint').onclick = () => doPrint(viewKey);
+  $('mPrev').onclick = () => $('previewWrap').scrollIntoView({ behavior: 'smooth' });
+  $('copyText').onclick = () => lastModel && copy(plainText(lastModel), 'نُسخ نص الورقة. يمكن لصقه في Word.');
+  $('copyDesign').onclick = () => lastModel && copy(designPrompt(lastModel), 'نُسخت التعليمات. الصقيها في أداة تصميم بالذكاء الاصطناعي.');
+  $('copyRequest').onclick = () => copyRequest(false);
+  $('copyRequestText').onclick = () => copyRequest(true);
+  window.addEventListener('resize', scalePaper);
+}
+
+/* =====================================================================
+   بنك الأسئلة
+   ===================================================================== */
+const PAGE_N = 25;
+function bankFiltered() {
+  const qs = norm($('bSearch').value), s = +$('bSurah').value, t = $('bTpl').value, st = $('bStatus').value, so = $('bSort').value;
+  let L = S.rows.filter(q => (!qs || q.search.includes(qs)) && (!s || q.locs.some(([a, b]) => surahOfAbs(a) <= s && surahOfAbs(b) >= s)) && (!t || q.tpl === t) && (!st || q.status === st));
+  const cmp = { mushaf: (a, b) => a.anchor - b.anchor || a.id - b.id, new: (a, b) => String(b.created).localeCompare(String(a.created)) || b.id - a.id, id: (a, b) => a.id - b.id, uses: (a, b) => (+a.uses || 0) - (+b.uses || 0) || a.anchor - b.anchor }[so];
+  return L.sort(cmp);
+}
+function renderBank() {
+  const L = bankFiltered(), pages = Math.max(1, Math.ceil(L.length / PAGE_N));
+  S.bankPage = Math.min(S.bankPage, pages - 1);
+  const cnt = st => S.rows.filter(q => q.status === st).length;
+  $('bankLead').textContent = S.role === 'admin' ? 'كل أسئلة الجدول مرتبة بترتيب المصحف. الاعتماد والاستبعاد والتعديل من هنا.' : 'الأسئلة المعتمدة مرتبة بترتيب المصحف.';
+  $('bStats').innerHTML = '<span class="chip">الكل: ' + AD(S.rows.length) + '</span><span class="chip s-ok">معتمد: ' + AD(cnt('معتمد')) + '</span>' + (S.role === 'admin' ? '<span class="chip s-wait">لم يُراجع: ' + AD(cnt('لم يُراجع')) + '</span><span class="chip s-off" style="text-decoration:none">مستبعد: ' + AD(cnt('مستبعد')) + '</span>' : '') + '<span class="chip">نتيجة البحث: ' + AD(L.length) + '</span>';
+  const page = L.slice(S.bankPage * PAGE_N, (S.bankPage + 1) * PAGE_N);
+  $('bList').innerHTML = page.length ? page.map(cardHTML).join('') : '<div class="empty">لا توجد أسئلة بهذه التصفية.</div>';
+  $('bPager').innerHTML = pages > 1 ? '<button class="btn sm" data-p="-1"' + (S.bankPage ? '' : ' disabled') + '>السابق</button><span>' + AD(S.bankPage + 1) + ' / ' + AD(pages) + '</span><button class="btn sm" data-p="1"' + (S.bankPage < pages - 1 ? '' : ' disabled') + '>التالي</button>' : '';
+  const need = new Set(); page.forEach(q => tokSurahs(q.text + ' ' + q.tam + ' ' + q.ans, need));
+  if ([...need].some(s => !QT[s] && !QFAIL.has(s))) ensureSurahs(need).then(() => { if (S.tab === 'bank') renderBank(); });
+}
+function cardHTML(q) {
+  const admin = S.role === 'admin', cls = q.status === 'معتمد' ? 'st-ok' : q.status === 'مستبعد' ? 'st-off' : 'st-wait';
+  let h = '<div class="qcard ' + cls + '" data-id="' + esc(q.id) + '"><div class="qmeta"><span class="id">#' + esc(AD(q.id)) + '</span><span class="chip ' + statusCls(q.status) + '">' + esc(q.status) + '</span><span class="chip">' + esc(q.tpl || 'بلا قالب') + '</span><span>' + esc(locLabel(q)) + '</span>' + (q.diff ? '<span>· ' + esc(q.diff) + '</span>' : '') + (q.parent ? '<span>· صيغة بديلة لـ #' + esc(AD(q.parent)) + '</span>' : '') + '</div>';
+  if (q.tam) h += '<div class="qtam">' + renderTokens(q.tam) + '</div>';
+  h += '<div class="qtext">' + renderTokens(q.text) + '</div>';
+  if (q.ans) h += '<details><summary class="hint" style="cursor:pointer;margin-top:6px">الإجابة النموذجية</summary><div class="qans">' + renderTokens(q.ans) + '</div></details>';
+  if (admin && q.notes) h += '<div class="qnote">ملاحظة: ' + esc(q.notes) + '</div>';
+  if (admin) h += '<div class="hint" style="margin-top:6px">' + esc([q.source, q.writer, q.created && 'أُضيف ' + q.created, q.updated && 'عُدّل ' + q.updated, 'استُخدم ' + AD(+q.uses || 0) + ' مرة', q.tags].filter(Boolean).join(' · ')) + '</div>';
+  if (admin) {
+    h += '<div class="qact">';
+    if (q.status !== 'معتمد') h += '<button class="btn sm ok" data-act="معتمد">اعتماد</button>';
+    if (q.status !== 'مستبعد') h += '<button class="btn sm off" data-act="مستبعد">استبعاد</button>';
+    if (q.status !== 'لم يُراجع') h += '<button class="btn sm warn" data-act="لم يُراجع">إعادة للمراجعة</button>';
+    h += '<button class="btn sm" data-act="edit">تعديل</button><button class="btn sm" data-act="alt">صيغة بديلة</button></div>';
+  }
+  return h + '</div>';
+}
+function replaceRow(row) {
+  const q = fromRow(row), i = S.rows.findIndex(x => x.id === q.id);
+  if (i >= 0) S.rows[i] = q; else S.rows.push(q);
+  S.nextId = Math.max(S.nextId, (+q.id || 0) + 1);
+  return q;
+}
+function wireBank() {
+  ['bSearch', 'bSurah', 'bTpl', 'bStatus', 'bSort'].forEach(id => $(id).addEventListener('input', () => { S.bankPage = 0; renderBank(); }));
+  $('bPager').onclick = e => { const p = e.target.dataset.p; if (!p) return; S.bankPage += +p; renderBank(); window.scrollTo(0, 0); };
+  $('bList').onclick = async e => {
+    const b = e.target.closest('button[data-act]'); if (!b) return;
+    const id = b.closest('.qcard').dataset.id, q = S.rows.find(x => x.id === id), act = b.dataset.act;
+    if (act === 'edit') return openEditor(q, 'edit');
+    if (act === 'alt') return openEditor(q, 'alt');
+    b.disabled = true;
+    try { const r = await api('setStatus', { ids: [id], status: act }); q.status = act; q.updated = r.date || today(); q.raw[HD.status] = act; toast(act === 'معتمد' ? 'اعتُمد السؤال.' : act === 'مستبعد' ? 'استُبعد السؤال.' : 'أُعيد السؤال للمراجعة.'); renderBank(); }
+    catch (err) { toast(err.message, true); b.disabled = false; }
+  };
+}
+
+/* =====================================================================
+   محرّر السؤال (تعديل / إضافة / صيغة بديلة)
+   ===================================================================== */
+const opt = (arr, v) => arr.map(x => '<option' + (String(x) === String(v) ? ' selected' : '') + '>' + esc(x) + '</option>').join('');
+function editorHTML(q, mode) {
+  const L = S.lists.lists || {}, statuses = L['الحالات'] || ['لم يُراجع', 'معتمد', 'مستبعد'];
+  const scopes = L['أنواع النطاق'] || ['آية', 'آيات متتابعة', 'آيات متفرقة', 'سورة كاملة', 'عدة سور', 'جزء'];
+  const diffs = L['الصعوبة'] || ['سهل', 'متوسط', 'صعب'], srcs = L['المصادر'] || ['يدوي'], writers = L['الكتّاب'] || [];
+  const sOpts = v => '<option value="">—</option>' + SUR.map(x => '<option' + (norm(x[0]) === norm(v) ? ' selected' : '') + '>' + x[0] + '</option>').join('');
+  const v = k => q ? (q[k] == null ? '' : q[k]) : '';
+  const writerDef = mode === 'edit' ? v('writer') : (PREF.writer || writers[0] || '');
+  return '<div class="row"><div><label class="f">القالب</label><select name="tpl">' + opt(templates().map(t => t.name), v('tpl')) + '</select></div><div><label class="f">نوع النطاق</label><select name="scope">' + opt(scopes, v('scope') || 'آية') + '</select></div><div><label class="f">الحالة</label><select name="status">' + opt(statuses, mode === 'edit' ? v('status') : 'لم يُراجع') + '</select></div><div><label class="f">الصعوبة</label><select name="diff">' + opt(diffs, v('diff') || 'متوسط') + '</select></div></div>' +
+    '<div class="row" style="margin-top:8px"><div><label class="f">السورة</label><select name="surah">' + sOpts(v('surah')) + '</select></div><div style="flex:0 1 90px"><label class="f">من آية</label><input type="number" min="1" name="from" value="' + esc(v('from')) + '"></div><div><label class="f">إلى سورة (إن امتد)</label><select name="toS">' + sOpts(v('toS')) + '</select></div><div style="flex:0 1 90px"><label class="f">إلى آية</label><input type="number" min="1" name="to" value="' + esc(v('to')) + '"></div></div>' +
+    '<div style="margin-top:8px"><label class="f">مواضع إضافية (مثل: البقرة:6 ؛ يس:10-11)</label><input type="text" name="extra" value="' + esc(v('extra')) + '"></div>' +
+    '<div class="tok-tools"><div><label class="f">إدراج نص قرآني</label><select id="tkS">' + SUR.map((x, i) => '<option value="' + x[0] + '">' + x[0] + '</option>').join('') + '</select></div><div><label class="f">آية</label><input type="number" id="tkA" min="1" value="1"></div><div><label class="f">إلى آية</label><input type="number" id="tkB" min="1"></div><div><label class="f">كلمات</label><input type="number" id="tkN" min="1" value="4"></div>' +
+    '<button type="button" class="btn sm" data-tk="آية">الآية</button><button type="button" class="btn sm" data-tk="مطلع">مطلعها</button><button type="button" class="btn sm" data-tk="خاتمة">خاتمتها</button><button type="button" class="btn sm" data-tk="مقطع">مقطع</button><span class="hint" style="flex:1 1 100%">يُدرج الرمز حيث المؤشر في آخر حقل كتابة نشط، وتعرض المنصة النص العثماني مكانه.</span></div>' +
+    '<label class="f">التمهيد (اختياري)</label><textarea name="tam" rows="2">' + esc(v('tam')) + '</textarea>' +
+    '<label class="f" style="margin-top:8px">نص السؤال</label><textarea name="text" rows="3">' + esc(v('text')) + '</textarea>' +
+    '<label class="f" style="margin-top:8px">الإجابة النموذجية</label><textarea name="ans" rows="2">' + esc(v('ans')) + '</textarea>' +
+    '<label class="f" style="margin-top:8px">المعاينة</label><div class="live" id="livePrev"></div>' +
+    '<div class="row" style="margin-top:8px"><div style="flex:0 1 90px"><label class="f">الدرجة</label><input type="number" min="0" name="grade" value="' + esc(v('grade') || 1) + '"></div><div><label class="f">الوسوم</label><input type="text" name="tags" value="' + esc(v('tags')) + '"></div><div><label class="f">الكاتب</label><select name="writer">' + opt(writers.includes(writerDef) || !writerDef ? writers : [writerDef, ...writers], writerDef) + '</select></div><div><label class="f">المصدر</label><select name="source">' + opt(srcs, mode === 'edit' ? v('source') : 'يدوي') + '</select></div></div>' +
+    '<div style="margin-top:8px"><label class="f">ملاحظات داخلية (لا تظهر للطالبة)</label><input type="text" name="notes" value="' + esc(v('notes')) + '"></div>' +
+    '<div id="edErr" class="tokfail" style="margin-top:8px"></div>' +
+    '<div class="row" style="margin-top:12px"><button class="btn pri" id="edSave" style="flex:0 0 auto">' + (mode === 'edit' ? 'حفظ التعديل' : 'إضافة السؤال') + '</button>' + (mode !== 'add' ? '<button class="btn" id="edCancel" style="flex:0 0 auto">إلغاء</button>' : '<button class="btn" id="edClear" style="flex:0 0 auto">تفريغ الحقول</button>') + '</div>';
+}
+function bindEditor(root, q, mode, done) {
+  let lastTa = root.querySelector('[name=text]');
+  root.querySelectorAll('textarea').forEach(t => t.addEventListener('focus', () => { lastTa = t; }));
+  const get = n => root.querySelector('[name=' + n + ']');
+  const live = async () => {
+    const txt = ['tam', 'text', 'ans'].map(n => get(n).value);
+    const need = new Set(); txt.forEach(t => tokSurahs(t, need));
+    const draw = () => { $('livePrev').innerHTML = (txt[0] ? '<div class="qtam">' + renderTokens(txt[0]) + '</div>' : '') + '<div class="qtext">' + renderTokens(txt[1]) + '</div>' + (txt[2] ? '<div class="qans">' + renderTokens(txt[2]) + '</div>' : ''); };
+    draw(); if ([...need].some(s => !QT[s])) { await ensureSurahs(need); draw(); }
+  };
+  root.addEventListener('input', e => { if (e.target.tagName === 'TEXTAREA') { clearTimeout(live._t); live._t = setTimeout(live, 300); } });
+  live();
+  const syncTk = () => { const s = sNum(get('surah').value); if (s) { root.querySelector('#tkS').value = sName(s); root.querySelector('#tkA').value = get('from').value || 1; root.querySelector('#tkB').value = get('to').value || ''; } };
+  get('surah').addEventListener('change', syncTk); get('from').addEventListener('change', syncTk); syncTk();
+  root.querySelector('.tok-tools').addEventListener('click', e => {
+    const k = e.target.dataset.tk; if (!k) return;
+    const s = root.querySelector('#tkS').value, a = toInt(root.querySelector('#tkA').value), b = toInt(root.querySelector('#tkB').value), n = toInt(root.querySelector('#tkN').value) || 4;
+    const sn = sNum(s); if (!a || a > ACOUNT(sn)) { toast('رقم الآية خارج السورة.', true); return; }
+    const tok = k === 'آية' ? '{آية:' + s + ':' + a + '}' : k === 'مطلع' ? '{مطلع:' + s + ':' + a + ':' + n + '}' : k === 'خاتمة' ? '{خاتمة:' + s + ':' + a + ':' + n + '}' : '{مقطع:' + s + ':' + a + '-' + Math.min(ACOUNT(sn), Math.max(a, b || a)) + '}';
+    const t = lastTa, p = t.selectionStart == null ? t.value.length : t.selectionStart;
+    t.value = t.value.slice(0, p) + tok + t.value.slice(t.selectionEnd == null ? p : t.selectionEnd); t.focus(); t.selectionStart = t.selectionEnd = p + tok.length; live();
+  });
+  const cancel = root.querySelector('#edCancel'); if (cancel) cancel.onclick = () => closeModal();
+  const clear = root.querySelector('#edClear'); if (clear) clear.onclick = () => { root.innerHTML = editorHTML(null, 'add'); bindEditor(root, null, 'add', done); };
+  root.querySelector('#edSave').onclick = async () => {
+    const f = {}; ['tpl', 'scope', 'status', 'diff', 'surah', 'from', 'toS', 'to', 'extra', 'tam', 'text', 'ans', 'grade', 'tags', 'writer', 'source', 'notes'].forEach(k => { f[HD[k]] = get(k).value.trim(); });
+    const err = validate(f); root.querySelector('#edErr').textContent = err || '';
+    if (err) return;
+    ['from', 'to', 'grade'].forEach(k => { if (f[HD[k]] !== '') f[HD[k]] = +f[HD[k]]; });
+    if (mode === 'alt' && q) f[HD.parent] = +q.id || q.id;
+    PREF.writer = f[HD.writer]; savePref();
+    const btn = root.querySelector('#edSave'); btn.disabled = true;
+    try {
+      const row = mode === 'edit' ? await api('updateQuestion', { id: q.id, fields: f }) : await api('addQuestion', { fields: f });
+      replaceRow(row); toast(mode === 'edit' ? 'حُفظ التعديل.' : 'أُضيف السؤال برقم ' + AD(row[HD.id]) + '.');
+      done && done(row);
+    } catch (e) { root.querySelector('#edErr').textContent = e.message; btn.disabled = false; }
+  };
+}
+function validate(f) {
+  if (!f[HD.tpl]) return 'اختاري القالب.';
+  if (!f[HD.text]) return 'اكتبي نص السؤال.';
+  const s = sNum(f[HD.surah]);
+  if (!s && !f[HD.extra]) return 'حدّدي السورة أو المواضع الإضافية.';
+  if (s) {
+    const fa = toInt(f[HD.from]), ts = sNum(f[HD.toS]) || s, ta = toInt(f[HD.to]);
+    if (fa > ACOUNT(s)) return 'سورة ' + sName(s) + ' عدد آياتها ' + AD(ACOUNT(s)) + '.';
+    if (ta > ACOUNT(ts)) return 'سورة ' + sName(ts) + ' عدد آياتها ' + AD(ACOUNT(ts)) + '.';
+    if (ts === s && fa && ta && ta < fa) return '«إلى آية» أصغر من «من آية».';
+    if (ts < s) return '«إلى سورة» يجب أن تكون بعد السورة الأساسية.';
+  }
+  const bad = []; [f[HD.tam], f[HD.text], f[HD.ans]].join(' ').replace(TOK, (m, k, n, r) => { if (!parseTok(k, n, r)) bad.push(m); return m; });
+  if (bad.length) return 'رمز غير صحيح: ' + bad[0];
+  return '';
+}
+function openEditor(q, mode) {
+  $('modalBox').innerHTML = '<h3>' + (mode === 'edit' ? 'تعديل السؤال #' + esc(AD(q.id)) : 'صيغة بديلة للسؤال #' + esc(AD(q.id))) + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><div id="edRoot">' + editorHTML(q, mode) + '</div>';
+  $('modal').classList.remove('hidden');
+  bindEditor($('edRoot'), q, mode, () => { closeModal(); if (S.tab === 'bank') renderBank(); if (S.afterEdit) { S.afterEdit(); S.afterEdit = null; } });
+}
+function closeModal() { $('modal').classList.add('hidden'); $('modalBox').innerHTML = ''; }
+function renderAdd() {
+  const root = $('addForm');
+  if (root.dataset.ready) return;
+  root.dataset.ready = '1'; root.innerHTML = editorHTML(null, 'add');
+  const again = () => { const keep = { surah: root.querySelector('[name=surah]').value, tpl: root.querySelector('[name=tpl]').value, scope: root.querySelector('[name=scope]').value }; root.innerHTML = editorHTML(keep, 'add'); bindEditor(root, null, 'add', again); };
+  bindEditor(root, null, 'add', again);
+}
+
+/* =====================================================================
+   ملخص السور
+   ===================================================================== */
+function renderSummary() {
+  const thr = toInt(sv('البنك', 'حدّ «السورة المستوفاة»', '8')) || 8;
+  const live = S.rows.filter(q => q.status !== 'مستبعد');
+  const per = SUR.map(() => ({ t: 0, ok: 0, w: 0, off: 0, tpls: new Set(), sim: 0 }));
+  S.rows.forEach(q => { if (!q.sn) return; const p = per[q.sn - 1]; p.t++; if (q.status === 'معتمد') p.ok++; else if (q.status === 'مستبعد') p.off++; else p.w++; if (q.status !== 'مستبعد') { p.tpls.add(q.tpl); if (/متشابه/.test(q.tpl)) p.sim++; } });
+  const covered = per.filter(p => p.t - p.off > 0).length, full = per.filter(p => p.ok >= thr).length;
+  $('sumStats').innerHTML = '<div><b>' + AD(live.length) + '</b><span>سؤالًا فعّالًا</span></div><div><b>' + AD(S.rows.filter(q => q.status === 'معتمد').length) + '</b><span>معتمدًا</span></div>' + (S.role === 'admin' ? '<div><b>' + AD(S.rows.filter(q => q.status === 'لم يُراجع').length) + '</b><span>بانتظار المراجعة</span></div>' : '') + '<div><b>' + AD(covered) + ' / ١١٤</b><span>سورة فيها أسئلة</span></div><div><b>' + AD(full) + '</b><span>سورة مستوفاة (' + AD(thr) + ' معتمدة فأكثر)</span></div>';
+  const only = $('sumOnly').checked;
+  let h = '<thead><tr><th>#</th><th>السورة</th><th>الإجمالي</th><th>معتمد</th>' + (S.role === 'admin' ? '<th>لم يُراجع</th><th>مستبعد</th>' : '') + '<th>أنواع الأسئلة</th><th>متشابهات</th><th>الوضع</th></tr></thead><tbody>';
+  per.forEach((p, i) => {
+    if (only && !p.t) return;
+    const lab = !p.t || p.t === p.off ? ['لا أسئلة', 'lb-none'] : p.ok >= thr ? ['مستوفاة', 'lb-full'] : !p.sim ? ['ينقصها متشابهات', 'lb-miss'] : ['قيد البناء', 'lb-build'];
+    h += '<tr data-s="' + (i + 1) + '"><td>' + AD(i + 1) + '</td><td>' + SUR[i][0] + '</td><td>' + AD(p.t) + '</td><td>' + AD(p.ok) + '</td>' + (S.role === 'admin' ? '<td>' + AD(p.w) + '</td><td>' + AD(p.off) + '</td>' : '') + '<td>' + AD(p.tpls.size) + '</td><td>' + AD(p.sim) + '</td><td><span class="st-label ' + lab[1] + '">' + lab[0] + '</span></td></tr>';
+  });
+  $('sumTable').innerHTML = h + '</tbody>';
+}
+
+/* ----- فحص جودة البنك ----- */
+function auditBank() {
+  const out = [], seen = {}, tnames = new Set(templates().map(t => t.name));
+  const sts = (S.lists.lists || {})['الحالات'] || ['لم يُراجع', 'معتمد', 'مستبعد'];
+  S.rows.forEach(q => { seen[q.id] = (seen[q.id] || 0) + 1; });
+  S.rows.forEach(q => {
+    const add = m => out.push({ q, m });
+    if (!q.id || isNaN(+q.id)) add('المعرّف ليس رقمًا.');
+    if (seen[q.id] > 1) add('المعرّف مكرر ' + AD(seen[q.id]) + ' مرات.');
+    if (!String(q.text).trim()) add('نص السؤال فارغ.');
+    if (!q.tpl) add('القالب فارغ.'); else if (!tnames.has(q.tpl)) add('القالب «' + q.tpl + '» غير موجود في القوائم.');
+    if (sts.indexOf(q.status) < 0) add('الحالة «' + q.status + '» غير معروفة.');
+    if (q.surah && !q.sn) add('اسم السورة «' + q.surah + '» غير معروف.');
+    if (!q.surah && !q.extra) add('لا سورة ولا مواضع.');
+    if (q.sn) {
+      if (toInt(q.from) > ACOUNT(q.sn)) add('«من آية» ' + AD(q.from) + ' أكبر من عدد آيات ' + sName(q.sn) + ' (' + AD(ACOUNT(q.sn)) + ').');
+      const ts = sNum(q.toS) || q.sn;
+      if (q.toS && !sNum(q.toS)) add('«إلى سورة» غير معروفة.');
+      if (toInt(q.to) > ACOUNT(ts)) add('«إلى آية» ' + AD(q.to) + ' أكبر من عدد آيات ' + sName(ts) + '.');
+      if (ts === q.sn && toInt(q.from) && toInt(q.to) && toInt(q.to) < toInt(q.from)) add('«إلى آية» أصغر من «من آية».');
+    }
+    String(q.extra || '').split(/[؛;]/).map(x => x.trim()).filter(Boolean).forEach(p => {
+      const m = p.match(/^(.+?)\s*[:：]\s*([0-9٠-٩]+)(?:\s*[-–—]\s*([0-9٠-٩]+))?$/);
+      if (!m || !sNum(m[1])) add('موضع إضافي غير مفهوم: «' + p + '».');
+      else if (toInt(m[2]) > ACOUNT(sNum(m[1])) || (m[3] && toInt(m[3]) > ACOUNT(sNum(m[1])))) add('موضع إضافي خارج السورة: «' + p + '».');
+    });
+    [q.tam, q.text, q.ans].join(' ').replace(TOK, (m, k, n, r) => { if (!parseTok(k, n, r)) add('رمز غير صحيح: ' + m); return m; });
+    if (/[{}]/.test([q.tam, q.text, q.ans].join(' ').replace(TOK, ''))) add('قوس { أو } خارج رمز صحيح.');
+    if (/[﴿﴾]/.test([q.tam, q.text, q.ans].join(' '))) add('فيه نص قرآني مكتوب باليد (﴿ ﴾) — تأكدي من صحته أو استبدليه برمز.');
+  });
+  return out;
+}
+function renderAudit() {
+  const L = auditBank(), box = $('auditBox');
+  if (!L.length) { box.innerHTML = '<p class="chip s-ok" style="font-size:14px;padding:4px 12px">لا توجد مشكلات في ' + AD(S.rows.length) + ' سؤالًا.</p>'; return; }
+  box.innerHTML = '<p class="hint">' + AD(L.length) + ' ملاحظة:</p>' + L.map(x => '<div class="set-row" style="grid-template-columns:90px 1fr auto"><b>#' + esc(AD(x.q.id)) + '</b><span>' + esc(x.m) + ' <span class="hint">(' + esc(x.q.surah || '') + ')</span></span><button class="btn sm" data-aid="' + esc(x.q.id) + '">تعديل</button></div>').join('');
+}
+
+/* ----- المساعدة ----- */
+function openHelp() {
+  const admin = S.role === 'admin';
+  const sec = (t, items) => '<h3 style="margin-top:14px">' + t + '</h3><ul style="margin:0;padding-inline-start:20px">' + items.map(i => '<li>' + i + '</li>').join('') + '</ul>';
+  $('modalBox').innerHTML = '<h3>طريقة الاستخدام<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+    sec('إعداد ورقة وطباعتها', ['اختاري السورة (أو من سورة إلى سورة). «سور كاملة» تختار السور كلها؛ ألغيها لاختيار آيات محددة.', 'اختاري المحتوى: إكمال وأسئلة، أو أحدهما.', 'الإكمال «مقاطع» يضع «أكملي من… إلى…» موزعة على النطاق، و«فراغات» يعرض النص ويخفي أجزاء منه. «توليد مواضع أخرى» يغيّر المواضع.', 'الأسئلة تُختار تلقائيًا بتنويع بين الأنواع؛ ويمكن الضغط على أي سؤال لإضافته أو إزالته، و«اختيار آخر» يغيّر الاختيار.', 'عدّلي العنوان والعبارات والتوقيع إن شئت، ثم الشكل.', 'المعاينة على اليسار (وأسفل الصفحة في الجوال). «نموذج الإجابة» يعرض الإجابات لطباعتها منفصلة.', '«طباعة / حفظ PDF» تفتح الورقة في نافذة؛ ومن نافذة الطباعة يمكن اختيار «حفظ بتنسيق PDF».']) +
+    (admin ? sec('مراجعة الأسئلة', ['«بنك الأسئلة» ← صفّي بالحالة «لم يُراجع».', 'لكل سؤال: اعتماد، أو تعديل، أو استبعاد (لا يُحذف، ويمكن إرجاعه)، أو صيغة بديلة.', 'المعلمات لا يرين إلا المعتمد.']) +
+      sec('إضافة سؤال', ['لا تكتبي الآيات بيدك: اختاري السورة والآية من «إدراج نص قرآني» ثم: الآية، أو مطلعها (أول كلمات)، أو خاتمتها، أو مقطع.', 'المعاينة تعرض النص كما سيُطبع.', 'السورة و«من آية» تحدد موضع السؤال في البنك وفي اختيار النطاق.']) +
+      sec('الإعدادات والملخص', ['«الإعدادات» تغيّر ما تبدأ به كل ورقة: العبارات، المعلمات، الدرجات…', '«ملخص السور» يبيّن السور الناقصة، وفي أسفله «فحص جودة البنك» بعد لصق أسئلة جديدة.']) : '') +
+    sec('ملاحظات', ['زر «تحديث» يجلب آخر ما أُضيف إلى الجدول.', 'نص الآيات يُجلب من الإنترنت أول مرة ثم يُحفظ في الجهاز.', 'إن لم تُفتح نافذة الطباعة: اسمحي بالنوافذ المنبثقة لهذا الموقع.']);
+  $('modal').classList.remove('hidden');
+}
+
+/* ----- الإضاءة وحجم الخط (لكل جهاز) ----- */
+function applyUI() {
+  const u = PREF.ui || {}, mode = u.mode || 'auto';
+  const dark = mode === 'dark' || (mode === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.mode = dark ? 'dark' : 'light';
+  document.documentElement.style.setProperty('--uiz', String(u.z || 1));
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = dark ? '#132E29' : '#1F4D45';
+  setTimeout(scalePaper, 60);
+}
+function openUI() {
+  const u = PREF.ui || {}, mode = u.mode || 'auto', z = u.z || 1;
+  $('modalBox').innerHTML = '<h3>الإضاءة وحجم الخط<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+    '<label class="f">الإضاءة</label><div class="seg" id="uiMode"><button data-v="light"' + (mode === 'light' ? ' class="on"' : '') + '>نهاري</button><button data-v="dark"' + (mode === 'dark' ? ' class="on"' : '') + '>ليلي</button><button data-v="auto"' + (mode === 'auto' ? ' class="on"' : '') + '>حسب الجهاز</button></div>' +
+    '<label class="f" style="margin-top:14px">حجم الخط في المنصة</label><div class="row" style="align-items:center;flex-wrap:nowrap"><button class="btn" id="uiMinus" style="flex:0 0 52px">أ-</button><b id="uiZ" style="flex:0 0 70px;text-align:center">' + AD(Math.round(z * 100)) + '٪</b><button class="btn" id="uiPlus" style="flex:0 0 52px">أ+</button><button class="btn sm" id="uiReset" style="flex:0 0 auto">الحجم الأصلي</button></div>' +
+    '<p class="hint" style="margin-top:12px">هذه الإعدادات للشاشة في هذا الجهاز فقط، ولا تؤثر في الورقة المطبوعة (حجم خط الورقة في «إعداد ورقة ← الشكل»).</p>';
+  $('modal').classList.remove('hidden');
+  const set = (k, v) => { PREF.ui = Object.assign({}, PREF.ui, { [k]: v }); savePref(); applyUI(); };
+  segInit('uiMode', v => set('mode', v));
+  const zoomBy = d => { const nz = Math.round(Math.min(1.4, Math.max(0.8, (PREF.ui && PREF.ui.z || 1) + d)) * 100) / 100; set('z', nz); $('uiZ').textContent = AD(Math.round(nz * 100)) + '٪'; };
+  $('uiMinus').onclick = () => zoomBy(-0.1); $('uiPlus').onclick = () => zoomBy(0.1);
+  $('uiReset').onclick = () => { set('z', 1); $('uiZ').textContent = '١٠٠٪'; };
+}
+
+/* =====================================================================
+   الإعدادات
+   ===================================================================== */
+const LIST_GROUPS = ['عبارة افتتاحية', 'عبارة ختامية', 'المعلمات'];
+function renderSettings() {
+  const groups = [];
+  S.settings.forEach(x => { if (!groups.includes(x.group)) groups.push(x.group); });
+  LIST_GROUPS.forEach(g => { if (!groups.includes(g)) groups.push(g); });
+  $('setBox').innerHTML = groups.map(g => {
+    const rows = S.settings.filter(x => x.group === g), isList = LIST_GROUPS.includes(g);
+    return '<div class="panel set-group"><h3>' + esc(g) + '</h3>' + rows.map(x => '<div class="set-row" data-g="' + esc(x.group) + '" data-k="' + esc(x.key) + '"><div class="k">' + esc(x.key) + (x.note ? '<small>' + esc(x.note) + '</small>' : '') + '</div><div>' + (x.computed ? '<b>' + esc(x.value) + '</b> <span class="hint">(محسوب)</span>' : (String(x.value).length > 50 ? '<textarea rows="2">' + esc(x.value) + '</textarea>' : '<input type="text" value="' + esc(x.value) + '">')) + '</div><div class="row" style="flex-wrap:nowrap">' + (x.computed ? '' : '<button class="btn sm" data-sact="save">حفظ</button>') + (isList ? (x.isDefault ? '<span class="chip s-ok">الافتراضي</span>' : '<button class="btn sm" data-sact="def">جعلها الافتراضية</button>') : '') + '</div></div>').join('') +
+      (isList ? '<div class="row" style="margin-top:10px"><div><input type="text" placeholder="إضافة ' + (g === 'المعلمات' ? 'اسم معلمة' : 'عبارة') + ' جديدة" data-newval></div><div style="flex:0 0 auto"><button class="btn" data-sact="add" data-g="' + esc(g) + '">إضافة</button></div></div>' : '') + '</div>';
+  }).join('');
+  const L = S.lists.lists || {};
+  $('listSel').innerHTML = '<option>القوالب</option>' + Object.keys(L).map(k => '<option>' + esc(k) + '</option>').join('');
+  $('listsView').innerHTML = '<b>القوالب:</b> ' + templates().map(t => esc(t.name)).join('، ') + '<br>' + Object.keys(L).map(k => '<b>' + esc(k) + ':</b> ' + L[k].map(esc).join('، ')).join('<br>');
+  $('listExtraWrap').classList.toggle('hidden', $('listSel').value !== 'القوالب');
+}
+function wireSettings() {
+  $('setBox').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-sact]'); if (!b) return;
+    const act = b.dataset.sact; b.disabled = true;
+    try {
+      if (act === 'add') {
+        const g = b.dataset.g, inp = b.closest('.row').querySelector('[data-newval]'), val = inp.value.trim();
+        if (!val) { b.disabled = false; return; }
+        const base = g === 'المعلمات' ? 'معلمة' : g === 'عبارة افتتاحية' ? 'افتتاح' : 'ختام';
+        let n = S.settings.filter(x => x.group === g).length + 1; while (S.settings.some(x => x.group === g && x.key === base + ' ' + n)) n++;
+        S.settings = await api('addSetting', { group: g, key: base + ' ' + n, value: val });
+      } else {
+        const row = b.closest('.set-row'), g = row.dataset.g, k = row.dataset.k;
+        if (act === 'save') { const inp = row.querySelector('input,textarea'); S.settings = await api('updateSetting', { group: g, key: k, value: inp.value }); }
+        if (act === 'def') S.settings = await api('setDefault', { group: g, key: k });
+      }
+      toast('حُفظ الإعداد.'); renderSettings(); initBuilderSettings();
+    } catch (err) { toast(err.message, true); b.disabled = false; }
+  });
+  $('listSel').onchange = () => $('listExtraWrap').classList.toggle('hidden', $('listSel').value !== 'القوالب');
+  $('listAdd').onclick = async () => {
+    const list = $('listSel').value, value = $('listVal').value.trim(); if (!value) return;
+    try { S.lists = await api('addListItem', { list, value, extra: $('listExtra').value.trim() }); $('listVal').value = ''; $('listExtra').value = ''; toast('أُضيف العنصر.'); renderSettings(); initBuilderSettings(); }
+    catch (err) { toast(err.message, true); }
+  };
+}
+
+/* =====================================================================
+   الدخول والتنقل والتشغيل
+   ===================================================================== */
+function showTab(t) {
+  if (S.role !== 'admin' && (t === 'add' || t === 'settings')) t = 'build';
+  S.tab = t;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  ['build', 'bank', 'add', 'summary', 'settings'].forEach(x => $('tab-' + x).classList.toggle('hidden', x !== t));
+  $('mbar').style.display = t === 'build' ? '' : 'none';
+  if (t === 'build') { schedule(); setTimeout(scalePaper, 50); }
+  if (t === 'bank') renderBank();
+  if (t === 'add') renderAdd();
+  if (t === 'summary') renderSummary();
+  if (t === 'settings') renderSettings();
+  window.scrollTo(0, 0);
+}
+async function loadAll() {
+  const d = await api('getData', {});
+  S.role = d.role; S.rows = (d.rows || []).map(fromRow); S.lists = d.lists || { templates: [], lists: {} };
+  S.settings = d.settings || []; S.nextId = d.nextId || 1;
+  $('roleBadge').textContent = S.demo ? 'وضع التجربة' : S.role === 'admin' ? 'الإدارة' : 'معلمة';
+  $('roleBadge').classList.toggle('demo', S.demo);
+  document.querySelectorAll('[data-admin]').forEach(el => el.classList.toggle('hidden', S.role !== 'admin'));
+  const bs = $('bSurah'); bs.innerHTML = '<option value="">كل السور</option>' + SUR.map((x, i) => '<option value="' + (i + 1) + '">' + x[0] + '</option>').join('');
+  $('bTpl').innerHTML = '<option value="">كل القوالب</option>' + templates().map(t => '<option>' + esc(t.name) + '</option>').join('');
+  $('bStatus').classList.toggle('hidden', S.role !== 'admin');
+  initBuilderSettings();
+}
+async function enter(pass, demo) {
+  S.pass = pass; S.demo = !!demo;
+  $('loginErr').textContent = '';
+  try {
+    await loadAll();
+    if (!demo && $('remember').checked) LS.set('ws_pass', pass);
+    $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden');
+    $('demoBar').classList.toggle('hidden', !demo);
+    showTab(S.tab || 'build'); schedule(true);
+  } catch (e) { $('loginErr').textContent = e.message; LS.del('ws_pass'); }
+}
+function boot() {
+  wireBuilder(); wireBank(); wireSettings();
+  $('tabs').addEventListener('click', e => { const b = e.target.closest('button[data-tab]'); if (b) showTab(b.dataset.tab); });
+  $('loginBtn').onclick = () => { const p = $('passInput').value.trim(); if (!p) { $('loginErr').textContent = 'اكتبي كلمة المرور.'; return; } enter(p, false); };
+  $('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
+  $('demoBtn').onclick = () => enter('', true);
+  $('logoutBtn').onclick = () => { LS.del('ws_pass'); location.reload(); };
+  $('reloadBtn').onclick = async () => { try { await loadAll(); showTab(S.tab); toast('حُدّثت البيانات من الجدول.'); } catch (e) { toast(e.message, true); } };
+  $('sumOnly').onchange = renderSummary;
+  $('auditBtn').onclick = renderAudit;
+  $('auditBox').onclick = e => { const id = e.target.dataset.aid; if (!id) return; const q = S.rows.find(x => x.id === id); if (q) { openEditor(q, 'edit'); S.afterEdit = renderAudit; } };
+  $('helpBtn').onclick = openHelp;
+  $('uiBtn').onclick = openUI; $('uiBtn2').onclick = openUI;
+  applyUI();
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!PREF.ui || !PREF.ui.mode || PREF.ui.mode === 'auto') applyUI(); });
+  $('sumTable').onclick = e => { const tr = e.target.closest('tr[data-s]'); if (!tr) return; $('bSurah').value = tr.dataset.s; $('bSearch').value = ''; $('bTpl').value = ''; $('bStatus').value = ''; S.bankPage = 0; showTab('bank'); };
+  $('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal').classList.contains('hidden')) closeModal(); });
+  if (!API_URL) $('loginErr').textContent = 'لم يُضبط رابط الخادم بعد؛ يمكن تجربة المنصة بالأسئلة النموذجية.';
+  const saved = LS.get('ws_pass', null);
+  if (saved && API_URL) { $('passInput').value = saved; enter(saved, false); }
+}
+boot();
+
+</script>
+</body>
+</html>
