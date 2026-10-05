@@ -203,6 +203,12 @@ details.fold[open] > summary{margin-bottom:6px}
 .mutline .mini input{width:64px;min-height:34px;padding:4px 6px}
 .mutline select{width:auto;min-height:34px;padding:4px 8px}
 .ssearch{min-height:34px!important;padding:4px 10px!important;margin-bottom:6px;font-size:14px;background:var(--soft)!important}
+.adhoc{border:1px solid var(--line);border-radius:var(--r1);padding:10px;margin-top:8px;background:var(--soft)}
+.pstep{font-weight:700;margin-bottom:8px;display:flex;gap:8px;align-items:center}
+.pstep b{width:26px;height:26px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+.bigbtn{width:100%;min-height:52px;font-size:17px;border-radius:14px}
+.okbox{padding:14px;border-radius:14px;background:var(--okbg);color:var(--ok);font-weight:700;text-align:center}
+.warnbox{padding:10px 12px;border-radius:12px;background:var(--waitbg);color:var(--wait);font-size:14px;margin-top:8px}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -334,7 +340,7 @@ details.fold[open] > summary{margin-bottom:6px}
               <details class="more" id="mutBox">
                 <summary>المتشابهات المختارة وصيغتها</summary>
                 <div class="row" style="margin-top:10px;align-items:flex-end">
-                  <div><label class="f">صيغة السؤال</label><select id="mutMode"><option value="comp">إكمال الفراغ</option><option value="surah">تحديد السورة</option><option value="choice">اختيار الكلمات الصحيحة</option><option value="mix">منوّعة</option></select></div>
+                  <div><label class="f">صيغة السؤال</label><select id="mutMode"><option value="comp">إكمال الفراغ</option><option value="surah">تحديد السورة</option><option value="mix">منوّعة (إكمال وتحديد)</option></select></div>
                   <div style="flex:0 0 auto"><button class="btn sm" id="mutShuffle">اختيار آخر</button></div>
                 </div>
                 <p class="hint" style="margin:8px 0 4px">المختارة للورقة مُعلَّمة؛ اضغطي لإضافة مجموعة أو إزالتها.</p>
@@ -356,6 +362,13 @@ details.fold[open] > summary{margin-bottom:6px}
               </details>
             </div>
           </div>
+
+          <details class="panel fold" id="adhocPanel">
+            <summary><span class="step-h"><b>✎</b><h3>أسئلة يدوية لهذه الورقة <span class="chip" id="adhocCount">٠</span></h3></span></summary>
+            <p class="hint" style="margin:6px 0">أسئلة تكتبينها لهذه الورقة فقط، وتظهر في قسم «أسئلة إضافية». ويمكن حفظ أي منها في البنك.</p>
+            <div id="adhocList"></div>
+            <button class="btn sm" id="adhocAdd" style="margin-top:8px">＋ إضافة سؤال</button>
+          </details>
 
           <details class="panel fold">
             <summary><span class="step-h"><b>٣</b><h3>رأس الورقة وتذييلها</h3></span></summary>
@@ -385,6 +398,7 @@ details.fold[open] > summary{margin-bottom:6px}
               <div><label class="f">المجموع (فارغ = تلقائي)</label><input type="text" id="totalOverride"></div>
             </div>
             <div style="margin-top:8px"><label class="f">عبارة تحت الدرجة</label><input type="text" id="gradeNote"></div>
+            <div style="margin-top:10px"><label class="f">ذكر اسم السورة قبل كل سؤال</label><select id="surahPrefix"><option value="auto">تلقائي (عند تعدد السور في الورقة)</option><option value="always">دائمًا</option><option value="never">لا</option></select></div>
             <div style="margin-top:12px"><label class="f">عناوين الأسئلة</label><div id="dirsBox" class="dirs"></div></div>
           </details>
 
@@ -463,15 +477,15 @@ details.fold[open] > summary{margin-bottom:6px}
     <!-- ========== إضافة سؤال ========== -->
     <section id="tab-add" class="hidden">
       <h2>إضافة سؤال</h2>
-      <p class="lead">يُضاف السؤال إلى الجدول بحالة «لم يُراجع» ويأخذ رقمًا تلقائيًا. يكفي نص السؤال والسورة؛ وبقية التفاصيل اختيارية.</p>
-      <div class="seg" id="addMode" style="margin-bottom:12px"><button data-v="manual" class="on">كتابة سؤال</button><button data-v="paste">لصق من الذكاء الاصطناعي</button></div>
-      <div class="panel" id="addForm"></div>
-      <div class="panel hidden" id="pasteBox">
-        <p class="hint" style="margin-top:0">انسخي ردّ مشروع الذكاء الاصطناعي كاملًا كما هو والصقيه هنا؛ تستخرج المنصة الصفوف وحدها وتعرضها للمراجعة قبل الإضافة.</p>
-        <textarea id="pasteTxt" rows="7" placeholder="الصقي هنا…"></textarea>
-        <div class="row" style="margin-top:8px"><button class="btn pri" id="pasteParse" style="flex:0 0 auto">قراءة الصفوف</button><button class="btn" id="pasteClear" style="flex:0 0 auto">تفريغ</button></div>
+      <p class="lead">تُضاف الأسئلة إلى البنك بحالة «لم يُراجع» وتأخذ أرقامها تلقائيًا، ثم تراجعها المعلمة من «بنك الأسئلة».</p>
+      <div class="seg" id="addMode" style="margin-bottom:12px"><button data-v="paste" class="on">لصق أسئلة جاهزة</button><button data-v="manual">كتابة سؤال واحد</button></div>
+      <div class="panel" id="pasteBox">
+        <div class="pstep"><b>١</b> انسخي ردّ الذكاء الاصطناعي كاملًا (أو صفوف الإكسل) والصقيه هنا:</div>
+        <textarea id="pasteTxt" rows="6" placeholder="الصقي هنا…"></textarea>
         <div id="pasteResult" style="margin-top:12px"></div>
+        <button class="btn" id="pasteClear" style="margin-top:8px">تفريغ</button>
       </div>
+      <div class="panel hidden" id="addForm"></div>
     </section>
 
     <!-- ========== ملخص السور ========== -->
@@ -498,14 +512,14 @@ details.fold[open] > summary{margin-bottom:6px}
       <div id="setBox"></div>
       <div class="panel" style="margin-top:14px">
         <h3>القوائم</h3>
-        <p class="hint" style="margin-top:0">إضافة عنصر جديد لإحدى القوائم المنسدلة (مثل اسم كاتبة جديدة أو قالب جديد).</p>
-        <div class="row">
-          <div><label class="f">القائمة</label><select id="listSel"></select></div>
-          <div><label class="f">العنصر الجديد</label><input type="text" id="listVal"></div>
+        <p class="hint" style="margin-top:0">القوائم المنسدلة التي تظهر عند كتابة الأسئلة. يمكن الإضافة والتعديل والحذف في: الكتّاب، والقوالب (وتوجيه كل قالب)، والمصادر. أما الحالات وأنواع النطاق والصعوبة فثابتة لأن المنصة تعتمد عليها.</p>
+        <div class="row"><div><label class="f">القائمة</label><select id="listSel"></select></div></div>
+        <div id="listItems" style="margin-top:10px"></div>
+        <div class="row" style="margin-top:10px" id="listAddRow">
+          <div><label class="f">عنصر جديد</label><input type="text" id="listVal"></div>
           <div id="listExtraWrap" class="hidden"><label class="f">التوجيه الافتراضي للقالب</label><input type="text" id="listExtra"></div>
           <div style="flex:0 0 auto"><button class="btn pri" id="listAdd">إضافة</button></div>
         </div>
-        <div id="listsView" class="hint" style="margin-top:10px"></div>
       </div>
     </section>
   </main>
@@ -648,7 +662,7 @@ function tokOut(t, raw, html) {
   let body;
   if (t.k === 'آية') body = E(ayahText(t.s, t.a)) + num(t.a);
   else if (t.k === 'مطلع') body = E(headWords(ayahText(t.s, t.a), t.n)) + ' …';
-  else if (t.k === 'خاتمة') body = '… ' + E(tailWords(ayahText(t.s, t.a), t.n)) + num(t.a);
+  else if (t.k === 'خاتمة') { const tt = ayahText(t.s, t.a); body = (realWords(tt) > t.n ? '… ' : '') + E(tailWords(tt, t.n)) + num(t.a); }
   else if (t.k === 'فجوة') {
     const W = wordsWithMarks(ayahText(t.s, t.a)), x = Math.max(1, t.w1), y = Math.min(W.length, t.w2);
     const parts = [];
@@ -796,6 +810,7 @@ function demoApi(fn, a) {
     addSetting: () => { DEMO.settings.push({ group: a.group, key: a.key, value: a.value, isDefault: false, note: a.note || '' }); return DEMO.settings; },
     renameSetting: () => { const x = DEMO.settings.find(s => s.group === a.group && s.key === a.key); if (x) x.key = a.newKey; return DEMO.settings; },
     deleteSetting: () => { DEMO.settings = DEMO.settings.filter(s => !(s.group === a.group && s.key === a.key)); return DEMO.settings; },
+    listOp: () => { const L = DEMO.lists; if (a.list === 'القوالب') { const i = L.templates.findIndex(t => t.name === a.value); if (i < 0) throw new Error('غير موجود'); if (a.op === 'delete') L.templates.splice(i, 1); else if (a.op === 'rename') L.templates[i].name = a.newValue; else L.templates[i].direction = a.extra; } else { const arr = L.lists[a.list] || []; const i = arr.indexOf(a.value); if (i < 0) throw new Error('غير موجود'); if (a.op === 'delete') arr.splice(i, 1); else if (a.op === 'rename') arr[i] = a.newValue; } return L; },
     setMutStatus: () => { const g = DEMO.mut.find(x => x.locs === a.locs); if (g) g.status = a.status; return { ok: true }; },
     setDefault: () => { DEMO.settings.forEach(s => { if (s.group === a.group) s.isDefault = s.key === a.key; }); return DEMO.settings; },
     addListItem: () => { if (a.list === 'القوالب') DEMO.lists.templates.push({ name: a.value, direction: a.extra || '', desc: '' }); else (DEMO.lists.lists[a.list] = DEMO.lists.lists[a.list] || []).push(a.value); return DEMO.lists; }
@@ -859,12 +874,15 @@ function genSegments(A, B, n, len, rand) {
   return segs.sort((x, y) => x[0] - y[0]);
 }
 function segItem(a, b, space, grade) {
+  // آية فأكثر بين البداية والنهاية: يُمدّ المقطع داخل السورة إن قصر
+  { const s0 = surahOfAbs(a); if (b - a < 2) { if (b + (2 - (b - a)) <= SEND(s0)) b = a + 2; else if (a - (2 - (b - a)) >= SSTART[s0]) a = b - 2; } }
   const [s, x] = ayahOfAbs(a), [, y] = ayahOfAbs(b);
   const long = q => { const t = ayahText(s, q); return t && realWords(t) > 14; };
   const t0 = ayahText(s, x), k = t0 ? Math.min(5, Math.max(2, Math.floor(realWords(t0) / 3))) : 4;
   const st = '{مطلع:' + s + ':' + x + ':' + k + '}';
   const lines = Math.max(2, Math.min(18, Math.round((pagesOf(a, b) * 15 * 1.1 + 0.5) * space)));
-  const text = 'أكملي من الآية (' + AD(x) + ') من قوله تعالى: ' + st + ' إلى آخر الآية (' + AD(y) + ')';
+  const tE = ayahText(s, y), endTok = tE && realWords(tE) <= 5 ? '{آية:' + s + ':' + y + '}' : '{خاتمة:' + s + ':' + y + ':3}';
+  const text = 'أكملي من الآية (' + AD(x) + ') من سورة ' + sName(s) + '، من قوله تعالى: ' + st + ' إلى الآية (' + AD(y) + ')، عند قوله تعالى: ' + endTok;
   return { kind: 'seg', text, lines, grade, ans: '{مقطع:' + s + ':' + x + '-' + y + '}', surahs: [s] };
 }
 /* ----- فراغات داخل النص ----- */
@@ -1031,10 +1049,24 @@ function qLines(q, space) {
   else n = 3;
   return Math.max(2, Math.min(t.includes('إكمال') ? 18 : 8, Math.round(n * space)));
 }
+const SURAH_PREFIX = { on: false };
 function quesItem(q, space, defGrade) {
   const multi = /متشابه/.test(q.tpl) && /\s—\s/.test(q.text) && (String(q.text).match(TOK) || []).length >= 2;
   let qtext = String(q.text || '');
-  if (/إكمال/.test(q.tpl) && !/من الآية/.test(qtext)) qtext = qtext.replace(/أكملي من قوله تعالى:\s*(\{\s*(?:مطلع|آية|مقتطف)\s*:\s*[^:{}]+?\s*:\s*([0-9٠-٩]+))/, (m, tok, n) => 'أكملي من الآية (' + AD(toInt(n)) + ') من قوله تعالى: ' + tok);
+  const isComp = /إكمال/.test(q.tpl);
+  if (isComp && q.sn) {
+    const s1 = sName(q.sn), s2 = sName(sNum(q.toS) || q.sn);
+    if (!/من الآية/.test(qtext)) qtext = qtext.replace(/أكملي من قوله تعالى:\s*(\{\s*(?:مطلع|آية|مقتطف)\s*:\s*[^:{}]+?\s*:\s*([0-9٠-٩]+))/, (m, tok, n) => 'أكملي من الآية (' + AD(toInt(n)) + ') من قوله تعالى: ' + tok);
+    if (!/من الآية \([^)]*\) من سورة/.test(qtext)) qtext = qtext.replace(/من الآية \(([^)]*)\)\s*(?:من قوله تعالى)?/, (m, n) => 'من الآية (' + AD(toInt(n) || n) + ') من سورة ' + s1 + '، من قوله تعالى');
+    if (!/عند قوله تعالى/.test(qtext)) {
+      qtext = qtext.replace(/إلى آخر الآية \(([^)]*)\)(?:\s*من سورة [^،,.{]+)?/, (m, n) => {
+        const ns = sNum(q.toS) || q.sn, nn = toInt(n); if (!nn || nn > ACOUNT(ns)) return m;
+        const tE = ayahText(ns, nn), tk = tE && realWords(tE) <= 5 ? '{آية:' + sName(ns) + ':' + nn + '}' : '{خاتمة:' + sName(ns) + ':' + nn + ':3}';
+        return 'إلى الآية (' + AD(nn) + ')' + (ns !== q.sn ? ' من سورة ' + sName(ns) : '') + '، عند قوله تعالى: ' + tk;
+      });
+    }
+  }
+  if (!isComp && q.sn && SURAH_PREFIX.on && !/^\s*في سورة/.test(qtext)) qtext = 'في سورة (' + sName(q.sn) + '): ' + qtext;
   const it = { kind: 'q', id: q.id, tam: q.tam, text: qtext, ans: q.ans, grade: q.gradeN || defGrade, surahs: [...tokSurahs(q.text + ' ' + q.tam + ' ' + q.ans)] };
   if (multi) {
     it.subs = String(q.text).split(/\s+—\s+/).map(x => {
@@ -1068,13 +1100,14 @@ function readUI() {
     frame: $('frameSel').value, ornStyle: $('ornSel').value || 'khatam', orn: ($('ornSel').value || 'khatam') !== 'none', gradeShape: $('gradeSel').value || 'octa',
     dateVal: $('sheetDate').value, logo: $('showLogo').checked ? currentLogo() : '',
     pages: $('showPages').checked, imani: $('showImani').checked,
-    mutOn: $('mutOn').checked, mutCount: Math.max(0, Math.min(20, +$('mutCount').value || 0)), mutMode: $('mutMode').value || 'comp',
+    surahPrefix: $('surahPrefix').value || 'auto', mutOn: $('mutOn').checked, mutCount: Math.max(0, Math.min(20, +$('mutCount').value || 0)), mutMode: $('mutMode').value || 'comp',
     nameLabel: sv('الحقول', 'نص خانة الاسم', 'الاسم'), groupLabel: sv('الحقول', 'نص خانة المجموعة', 'مجموعة الأستاذة')
   };
 }
 function buildModel(U) {
   const sections = [];
   const defGrade = toInt(sv('الدرجات', 'الدرجة الافتراضية للبند', '1')) || 1;
+  SURAH_PREFIX.on = U.surahPrefix === 'always' || (U.surahPrefix !== 'never' && surahOfAbs(U.R.A) !== surahOfAbs(U.R.B));
   if (U.content !== 'ques') {
     const rand = rnd32(S.seed);
     if (U.compMode === 'seg') {
@@ -1095,9 +1128,10 @@ function buildModel(U) {
     if (U.mutOn && U.mutCount > 0) {
       const rand = rnd32(S.qSeed * 31 + 7), cands = mutCandidates(U.R);
       const picked = S.mutPicked ? cands.filter(c => S.mutPicked.has(c.gi)) : pickMut(cands, U.mutCount, rand);
-      const modes = ['comp', 'surah', 'choice'];
+      const modes = ['comp', 'surah'];
       picked.forEach((c, i) => {
-        const it = mutItem(c, U.space, U.mutMode === 'mix' ? modes[i % 3] : U.mutMode, rnd32(S.qSeed * 13 + c.gi));
+        const md = U.mutMode === 'choice' ? 'comp' : U.mutMode;
+        const it = mutItem(c, U.space, md === 'mix' ? modes[i % 2] : md, rnd32(S.qSeed * 13 + c.gi));
         if (it.mode === 'comp') byT['متشابهات'] = (byT['متشابهات'] || []).concat([it]);
         else { const k = '__mut_' + it.mode; let sec = extra.find(x => x.key === k); if (!sec) { sec = { kind: 'ques', key: k, dir: dirFor(k, it.dir), items: [] }; extra.push(sec); } sec.items.push(it); }
       });
@@ -1108,6 +1142,8 @@ function buildModel(U) {
     });
     extra.forEach(x => sections.push(x));
   }
+  const adhoc = (S.adhoc || []).filter(x => String(x.text || '').trim());
+  if (adhoc.length) sections.push({ kind: 'ques', key: '__adhoc', dir: dirFor('__adhoc', 'أجيبي عما يأتي:'), items: adhoc.map(x => ({ kind: 'q', text: x.text, ans: x.ans, lines: Math.max(1, Math.min(15, +x.lines || 3)), grade: +x.grade || defGrade, surahs: [...tokSurahs(x.text + ' ' + (x.ans || ''))] })) });
   if (!U.compFirst) { const c = sections.filter(s => s.kind === 'comp'); sections.splice(0, c.length); sections.push(...c); }
   const total = sections.reduce((t, s) => t + s.items.reduce((x, i) => x + (+i.grade || 0), 0), 0);
   return { U, sections, total: U.total || String(total), ids: sections.flatMap(s => s.items.filter(i => i.id).map(i => i.id)) };
@@ -1345,7 +1381,9 @@ function initBuilderSettings() {
   $('showImani').checked = svBool('الورقة', 'إظهار اللمسات الإيمانية', true);
   $('mutCount').value = PREF.mutCount != null ? PREF.mutCount : (toInt(sv('المتشابهات', 'عدد المتشابهات الافتراضي', '3')) || 0);
   $('mutOn').checked = PREF.mutOn !== false;
-  $('mutMode').value = PREF.mutMode || 'comp';
+  $('mutMode').value = PREF.mutMode === 'choice' ? 'comp' : (PREF.mutMode || 'comp');
+  $('surahPrefix').value = PREF.surahPrefix || 'auto';
+  S.adhoc = PREF.adhoc || []; renderAdhoc();
   $('ornSel').value = PREF.ornSel || 'khatam'; $('gradeSel').value = PREF.gradeSel || 'octa';
   if (!$('sheetDate').value) $('sheetDate').value = new Date().toISOString().slice(0, 10);
   fillSurahSel($('memFrom')); fillSurahSel($('memTo'));
@@ -1427,6 +1465,12 @@ function renderCands() {
   $('candList').innerHTML = c.map(q => '<label><input type="checkbox" data-id="' + esc(q.id) + '"' + (S.picked.has(q.id) ? ' checked' : '') + '><span><span class="m">' + esc(q.tpl) + ' — ' + esc(locLabel(q)) + (q.status !== 'معتمد' ? ' — <span class="chip s-wait">' + esc(q.status) + '</span>' : '') + '</span><br>' + renderTokens(q.text) + '</span></label>').join('');
   $('candList').classList.toggle('hidden', !c.length);
 }
+function saveAdhoc() { PREF.adhoc = S.adhoc; savePref(); $('adhocCount').textContent = AD(S.adhoc.filter(x => String(x.text).trim()).length); }
+function renderAdhoc() {
+  const admin = S.role === 'admin';
+  $('adhocList').innerHTML = S.adhoc.map((x, i) => '<div class="adhoc" data-i="' + i + '"><label class="f">السؤال ' + AD(i + 1) + '</label><textarea rows="2" data-f="text" placeholder="نص السؤال (يمكن استعمال رموز الآيات مثل {آية:الكهف:10})">' + esc(x.text) + '</textarea><label class="f" style="margin-top:6px">الإجابة النموذجية (اختياري)</label><textarea rows="1" data-f="ans">' + esc(x.ans || '') + '</textarea><div class="row" style="margin-top:6px;align-items:flex-end"><div style="flex:0 1 110px"><label class="f">أسطر الإجابة</label><input type="number" min="1" max="15" data-f="lines" value="' + esc(x.lines || 3) + '"></div><div style="flex:0 1 90px"><label class="f">الدرجة</label><input type="number" min="0" max="20" data-f="grade" value="' + esc(x.grade || 1) + '"></div>' + (admin ? '<button class="btn sm" data-a="bank" style="flex:0 0 auto">حفظ في البنك</button>' : '') + '<button class="btn sm off" data-a="del" style="flex:0 0 auto">حذف</button></div></div>').join('');
+  $('adhocCount').textContent = AD(S.adhoc.filter(x => String(x.text).trim()).length);
+}
 function currentMutAuto() {
   const R = getRange(), cands = mutCandidates(R);
   return pickMut(cands, Math.max(0, +$('mutCount').value || 0), rnd32(S.qSeed * 31 + 7));
@@ -1447,7 +1491,7 @@ function updateRangePreview() {
 }
 function renderDirs(M) {
   const box = $('dirsBox'), keys = M.sections.map(s => [s.key, s.dir]);
-  box.innerHTML = keys.length ? keys.map(([k, d]) => '<label class="f">' + esc(k === '__seg' ? 'مقاطع الإكمال' : k === '__blank' ? 'فراغات الإكمال' : k === '__mut_surah' ? 'متشابهات: تحديد السورة' : k === '__mut_choice' ? 'متشابهات: اختيار التكملة' : k) + '</label><input type="text" data-dir="' + esc(k) + '" value="' + esc(d) + '">').join('') + '<button class="btn sm" id="dirsReset" style="margin-top:4px">إرجاع العناوين الأصلية</button>' : '<p class="hint">تظهر هنا عناوين أقسام الورقة بعد اختيار المحتوى.</p>';
+  box.innerHTML = keys.length ? keys.map(([k, d]) => '<label class="f">' + esc(k === '__seg' ? 'مقاطع الإكمال' : k === '__blank' ? 'فراغات الإكمال' : k === '__mut_surah' ? 'متشابهات: تحديد السورة' : k === '__mut_choice' ? 'متشابهات: اختيار التكملة' : k === '__adhoc' ? 'أسئلة إضافية (يدوية)' : k) + '</label><input type="text" data-dir="' + esc(k) + '" value="' + esc(d) + '">').join('') + '<button class="btn sm" id="dirsReset" style="margin-top:4px">إرجاع العناوين الأصلية</button>' : '<p class="hint">تظهر هنا عناوين أقسام الورقة بعد اختيار المحتوى.</p>';
 }
 let lastModel = null, viewKey = false;
 async function refresh(full) {
@@ -1540,6 +1584,18 @@ function wireBuilder() {
   $('memSel').onchange = () => { PREF.memSel = $('memSel').value; if (PREF.memSel === 'custom' && !PREF.memCustom) PREF.memCustom = sName(+$('memFrom').value) + '-' + sName(+$('memTo').value); savePref(); syncMem(); schedule(true); };
   ['memFrom', 'memTo'].forEach(id => $(id).onchange = () => { PREF.memCustom = sName(+$('memFrom').value) + '-' + sName(+$('memTo').value); savePref(); syncMem(); schedule(true); });
   $('mutMode').onchange = () => { PREF.mutMode = $('mutMode').value; savePref(); schedule(); };
+  $('surahPrefix').onchange = () => { PREF.surahPrefix = $('surahPrefix').value; savePref(); schedule(); };
+  $('adhocAdd').onclick = () => { S.adhoc.push({ text: '', ans: '', lines: 3, grade: 1 }); saveAdhoc(); renderAdhoc(); const t = $('adhocList').querySelectorAll('textarea'); if (t.length) t[t.length - 2].focus(); };
+  $('adhocList').addEventListener('input', e => { const i = +e.target.closest('.adhoc').dataset.i, f = e.target.dataset.f; if (!f) return; S.adhoc[i][f] = e.target.value; saveAdhoc(); schedule(); });
+  $('adhocList').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-a]'); if (!b) return; const i = +b.closest('.adhoc').dataset.i, x = S.adhoc[i];
+    if (b.dataset.a === 'del') { S.adhoc.splice(i, 1); saveAdhoc(); renderAdhoc(); schedule(); return; }
+    if (b.dataset.a === 'bank') {
+      if (!String(x.text).trim()) return;
+      const R = getRange(), f = {}; f[HD.text] = x.text; f[HD.ans] = x.ans || ''; f[HD.tpl] = 'غير محدد'; f[HD.surah] = sName(surahOfAbs(R.A)); f[HD.scope] = 'سورة كاملة'; f[HD.source] = 'يدوي'; f[HD.grade] = +x.grade || 1;
+      try { const row = await api('addQuestion', { fields: f }); replaceRow(row); toast('حُفظ في البنك برقم ' + AD(row[HD.id]) + ' (بحالة «لم يُراجع»). يمكن ضبط سورته وقالبه من «بنك الأسئلة».'); } catch (err) { toast(err.message, true); }
+    }
+  });
   $('ornSel').onchange = () => { PREF.ornSel = $('ornSel').value; savePref(); schedule(); };
   $('gradeSel').onchange = () => { PREF.gradeSel = $('gradeSel').value; savePref(); schedule(); };
   $('sheetDate').addEventListener('input', () => schedule());
@@ -1794,31 +1850,45 @@ function parsePaste(txt) {
 }
 function renderPaste() {
   const box = $('pasteResult');
-  if (!pasteRows.length) { box.innerHTML = '<p class="hint">لم يُعثر على صفوف. تأكّدي من نسخ كتلة الصفوف (المفصولة بعلامة الجدولة) أو الجدول.</p>'; return; }
-  const okN = pasteRows.filter(r => r.ok).length;
-  box.innerHTML = '<p class="hint">' + AD(pasteRows.length) + ' صفًّا: ' + AD(okN) + ' سليمًا' + (okN < pasteRows.length ? '، و' + AD(pasteRows.length - okN) + ' فيه خطأ (لا يُضاف إلا بعد تصحيحه في الجدول أو في الذكاء الاصطناعي)' : '') + '.</p>' +
-    '<div class="tbl-wrap" style="max-height:55vh"><table class="ptable"><thead><tr><th></th><th>القالب</th><th>الموضع</th><th>السؤال</th></tr></thead><tbody>' +
-    pasteRows.map(r => { const q = r.ok ? fromRow(r.f) : null; return '<tr class="' + (r.ok ? '' : 'bad') + '"><td><input type="checkbox" data-pi="' + r.i + '"' + (r.ok ? ' checked' : ' disabled') + '></td><td>' + esc(r.f[HD.tpl] || '—') + '</td><td>' + (q ? esc(locLabel(q)) : '') + '</td><td>' + (r.f[HD.tam] ? '<div class="hint">' + renderTokens(r.f[HD.tam]) + '</div>' : '') + renderTokens(r.f[HD.text] || '') + (r.errs.length ? '<div class="msg">' + esc(r.errs.join(' — ')) + '</div>' : '') + '</td></tr>'; }).join('') +
-    '</tbody></table></div><div class="row" style="margin-top:10px"><button class="btn pri" id="pasteAdd" style="flex:0 0 auto">إضافة المحدد إلى البنك</button></div>';
-  const need = new Set(); pasteRows.forEach(r => tokSurahs([r.f[HD.text], r.f[HD.tam]].join(' '), need));
-  if ([...need].some(s => !QT[s] && !QFAIL.has(s))) ensureSurahs(need).then(() => { if (!$('pasteResult').dataset.busy) renderPaste(); });
+  if (!String($('pasteTxt').value).trim()) { box.innerHTML = ''; return; }
+  if (!pasteRows.length) { box.innerHTML = '<div class="warnbox">لم تُقرأ أسئلة من النص الملصوق. تأكّدي من نسخ الرد كاملًا مع سطر العناوين.</div>'; return; }
+  const ok = pasteRows.filter(r => r.ok), bad = pasteRows.filter(r => !r.ok);
+  let h = '<div class="pstep"><b>٢</b> وُجد <span style="color:var(--pri)">&nbsp;' + AD(ok.length) + '&nbsp;</span> سؤالًا جاهزًا' + (bad.length ? '، و' + AD(bad.length) + ' فيه خطأ سيُتجاوز' : '') + '.</div>';
+  if (ok.length) h += '<button class="btn pri bigbtn" id="pasteAdd">إضافة ' + AD(ok.length) + ' سؤالًا إلى البنك</button>';
+  if (bad.length) h += '<div class="warnbox"><b>صفوف لن تُضاف:</b><br>' + bad.slice(0, 8).map(r => 'الصف ' + AD(r.i + 1) + ': ' + esc(r.errs.join('، '))).join('<br>') + (bad.length > 8 ? '<br>…' : '') + '</div>';
+  h += '<details class="more"><summary>معاينة الأسئلة قبل الإضافة (اختياري)</summary><div class="tbl-wrap" style="max-height:50vh;margin-top:8px"><table class="ptable"><tbody>' +
+    ok.slice(0, 120).map(r => { const q = fromRow(r.f); return '<tr><td style="white-space:nowrap"><span class="chip">' + esc(r.f[HD.tpl] || '') + '</span><br><span class="hint">' + esc(locLabel(q)) + '</span></td><td>' + (r.f[HD.tam] ? '<div class="hint">' + renderTokens(r.f[HD.tam]) + '</div>' : '') + renderTokens(r.f[HD.text] || '') + '</td></tr>'; }).join('') +
+    (ok.length > 120 ? '<tr><td colspan="2" class="hint">… وبقية الأسئلة</td></tr>' : '') + '</tbody></table></div></details>';
+  box.innerHTML = h;
+  const det = box.querySelector('details');
+  if (det) det.addEventListener('toggle', () => { if (!det.open) return; const need = new Set(); ok.slice(0, 120).forEach(r => tokSurahs([r.f[HD.text], r.f[HD.tam]].join(' '), need)); if ([...need].some(x => !QT[x])) ensureSurahs(need).then(() => { if (det.open) { const keep = box.innerHTML; renderPaste(); const d2 = $('pasteResult').querySelector('details'); if (d2) d2.open = true; } }); }, { once: true });
 }
 function wirePaste() {
-  segInit('addMode', v => { $('addForm').classList.toggle('hidden', v !== 'manual'); $('pasteBox').classList.toggle('hidden', v !== 'paste'); });
-  $('pasteParse').onclick = () => { pasteRows = parsePaste($('pasteTxt').value); renderPaste(); };
+  segInit('addMode', v => { $('addForm').classList.toggle('hidden', v !== 'manual'); $('pasteBox').classList.toggle('hidden', v !== 'paste'); if (v === 'manual') renderAdd(); });
+  let pt = 0;
+  $('pasteTxt').addEventListener('input', () => { clearTimeout(pt); pt = setTimeout(() => { pasteRows = parsePaste($('pasteTxt').value); renderPaste(); }, 250); });
   $('pasteClear').onclick = () => { $('pasteTxt').value = ''; pasteRows = []; $('pasteResult').innerHTML = ''; };
   $('pasteResult').addEventListener('click', async e => {
+    if (e.target.id === 'goBank') { showTab('bank'); return; }
     if (e.target.id !== 'pasteAdd') return;
-    const sel = [...$('pasteResult').querySelectorAll('input[data-pi]:checked')].map(x => pasteRows[+x.dataset.pi]).filter(r => r && r.ok);
-    if (!sel.length) { toast('لم يُحدَّد صف سليم.', true); return; }
-    e.target.disabled = true; $('pasteResult').dataset.busy = '1';
+    const sel = pasteRows.filter(r => r.ok);
+    if (!sel.length) return;
+    e.target.disabled = true;
+    const CH = 120; let added = 0;
     try {
-      const res = await api('addQuestions', { rows: sel.map(r => r.f) });
-      (res.rows || []).forEach(replaceRow);
-      toast('أُضيف ' + AD((res.rows || []).length) + ' سؤالًا بحالة «لم يُراجع».');
-      pasteRows = []; $('pasteTxt').value = ''; $('pasteResult').innerHTML = '<p class="chip s-ok" style="font-size:14px;padding:4px 12px">تمت الإضافة. راجعيها من «بنك الأسئلة».</p>';
-    } catch (err) { toast(err.message, true); e.target.disabled = false; }
-    delete $('pasteResult').dataset.busy;
+      for (let i = 0; i < sel.length; i += CH) {
+        const part = sel.slice(i, i + CH);
+        busy(true, 'جارٍ إضافة الأسئلة (' + AD(Math.min(i + CH, sel.length)) + ' من ' + AD(sel.length) + ')…');
+        try { const res = await api('addQuestions', { rows: part.map(r => r.f) }, true); (res.rows || []).forEach(replaceRow); added += (res.rows || []).length; }
+        finally { busy(false); }
+      }
+      if (!S.demo) LS.set('ws_cache', null);
+      pasteRows = []; $('pasteTxt').value = '';
+      $('pasteResult').innerHTML = '<div class="okbox">✔ أُضيف ' + AD(added) + ' سؤالًا إلى البنك بحالة «لم يُراجع».</div><button class="btn" id="goBank" style="margin-top:8px">فتح بنك الأسئلة للمراجعة</button>';
+    } catch (err) {
+      $('pasteResult').insertAdjacentHTML('afterbegin', '<div class="warnbox">' + (added ? 'أُضيف ' + AD(added) + ' سؤالًا، ثم توقفت الإضافة: ' : 'لم تتم الإضافة: ') + esc(err.message) + '</div>');
+      e.target.disabled = false;
+    }
   });
 }
 function renderAdd() {
@@ -1930,6 +2000,23 @@ function openUI() {
    الإعدادات
    ===================================================================== */
 const LIST_GROUPS = ['عبارة افتتاحية', 'عبارة ختامية', 'المعلمات'];
+const SET_CHOICES = {
+  'السمة الافتراضية': () => THEMES.map(t => t.name),
+  'الخط الافتراضي': () => FONTS.map(f => f[0]),
+  'لون المنصة': () => ['وردي', 'أخضر'],
+  'المقدار الافتراضي': () => ['ربع وجه', 'نصف وجه', 'وجه'],
+  'نطاق الحفظ العام': 'mem'
+};
+function setChoiceHTML(x) {
+  const c = SET_CHOICES[x.key];
+  if (c === 'mem') {
+    const r = memRanges(x.value), so = v => '<option value="">المصحف كله</option>' + SUR.map((y, i) => '<option value="' + y[0] + '"' + (v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
+    const f = r ? surahOfAbs(r[0][0]) : 0, t = r ? surahOfAbs(r[r.length - 1][1]) : 0;
+    return '<div class="row" style="flex-wrap:nowrap" data-mem><select data-mf>' + so(f) + '</select><span style="flex:0 0 auto;align-self:center">إلى</span><select data-mt>' + so(t) + '</select></div>';
+  }
+  const opts = c(); const v = String(x.value).trim();
+  return '<select>' + (opts.includes(v) ? '' : '<option selected>' + esc(v) + '</option>') + opts.map(o => '<option' + (o === v ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+}
 function sectionsPanel() {
   const secs = S.settings.filter(x => x.group === 'الأقسام');
   const so = '<option value="">—</option>' + SUR.map((x, i) => '<option value="' + x[0] + '">' + AD(i + 1) + '. ' + x[0] + '</option>').join('');
@@ -1937,19 +2024,27 @@ function sectionsPanel() {
     secs.map(x => '<div class="set-row" data-sec="' + esc(x.key) + '" style="grid-template-columns:170px 1fr auto"><input type="text" data-secname value="' + esc(x.key) + '"><input type="text" data-secval value="' + esc(x.value) + '"><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-sact="secsave">حفظ</button><button class="btn sm off" data-sact="secdel">حذف</button></div></div>').join('') +
     '<div class="row" style="margin-top:10px"><div><label class="f">اسم القسم</label><input type="text" id="secName" value="قسم ' + AD(secs.length + 1) + '"></div><div><label class="f">من سورة</label><select id="secFrom">' + so + '</select></div><div><label class="f">إلى سورة</label><select id="secTo">' + so + '</select></div><div style="flex:0 0 auto"><button class="btn pri" data-sact="secadd">إضافة قسم</button></div></div></div>';
 }
+const FIXED_LISTS = ['الحالات', 'أنواع النطاق', 'الصعوبة'];
+function renderListItems() {
+  const list = $('listSel').value, fixed = FIXED_LISTS.includes(list), isT = list === 'القوالب';
+  const items = isT ? templates().map(t => ({ v: t.name, ex: t.direction })) : ((S.lists.lists || {})[list] || []).map(v => ({ v }));
+  $('listItems').innerHTML = items.map(x => '<div class="set-row" data-item="' + esc(x.v) + '" style="grid-template-columns:' + (isT ? '1fr 1.6fr' : '1fr') + ' auto">' + (fixed ? '<span class="k">' + esc(x.v) + '</span>' : '<input type="text" data-nv value="' + esc(x.v) + '">' + (isT ? '<input type="text" data-ex value="' + esc(x.ex || '') + '" placeholder="التوجيه في الورقة">' : '')) + (fixed ? '<span class="hint">ثابت</span>' : '<div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-lop="save">حفظ</button><button class="btn sm off" data-lop="del">حذف</button></div>') + '</div>').join('');
+  $('listAddRow').classList.toggle('hidden', fixed);
+  $('listExtraWrap').classList.toggle('hidden', !isT);
+}
 function renderSettings() {
   const groups = [];
   S.settings.forEach(x => { if (!groups.includes(x.group)) groups.push(x.group); });
   LIST_GROUPS.forEach(g => { if (!groups.includes(g)) groups.push(g); });
   $('setBox').innerHTML = sectionsPanel() + groups.filter(g => g !== 'الأقسام').map(g => {
     const rows = S.settings.filter(x => x.group === g), isList = LIST_GROUPS.includes(g);
-    return '<div class="panel set-group"><h3>' + esc(g) + '</h3>' + rows.map(x => '<div class="set-row" data-g="' + esc(x.group) + '" data-k="' + esc(x.key) + '"><div class="k">' + esc(x.key) + (x.note ? '<small>' + esc(x.note) + '</small>' : '') + '</div><div>' + (x.computed ? '<b>' + esc(x.value) + '</b> <span class="hint">(محسوب)</span>' : (/^(نعم|لا)$/.test(String(x.value).trim()) ? '<select>' + ['نعم', 'لا'].map(v => '<option' + (String(x.value).trim() === v ? ' selected' : '') + '>' + v + '</option>').join('') + '</select>' : String(x.value).length > 50 ? '<textarea rows="2">' + esc(x.value) + '</textarea>' : '<input type="text" value="' + esc(x.value) + '">')) + '</div><div class="row" style="flex-wrap:nowrap">' + (x.computed ? '' : '<button class="btn sm" data-sact="save">حفظ</button>') + (isList ? (x.isDefault ? '<span class="chip s-ok">الافتراضي</span>' : '<button class="btn sm" data-sact="def">جعلها الافتراضية</button>') : '') + '</div></div>').join('') +
+    return '<div class="panel set-group"><h3>' + esc(g) + '</h3>' + rows.map(x => '<div class="set-row" data-g="' + esc(x.group) + '" data-k="' + esc(x.key) + '"><div class="k">' + esc(x.key) + (x.note ? '<small>' + esc(x.note) + '</small>' : '') + '</div><div>' + (x.computed ? '<b>' + esc(x.value) + '</b> <span class="hint">(محسوب)</span>' : (SET_CHOICES[x.key] ? setChoiceHTML(x) : /^(نعم|لا)$/.test(String(x.value).trim()) ? '<select>' + ['نعم', 'لا'].map(v => '<option' + (String(x.value).trim() === v ? ' selected' : '') + '>' + v + '</option>').join('') + '</select>' : String(x.value).length > 50 ? '<textarea rows="2">' + esc(x.value) + '</textarea>' : '<input type="text" value="' + esc(x.value) + '">')) + '</div><div class="row" style="flex-wrap:nowrap">' + (x.computed ? '' : '<button class="btn sm" data-sact="save">حفظ</button>') + (isList ? (x.isDefault ? '<span class="chip s-ok">الافتراضي</span>' : '<button class="btn sm" data-sact="def">جعلها الافتراضية</button>') : '') + '</div></div>').join('') +
       (isList ? '<div class="row" style="margin-top:10px"><div><input type="text" placeholder="إضافة ' + (g === 'المعلمات' ? 'اسم معلمة' : 'عبارة') + ' جديدة" data-newval></div><div style="flex:0 0 auto"><button class="btn" data-sact="add" data-g="' + esc(g) + '">إضافة</button></div></div>' : '') + '</div>';
   }).join('');
-  const L = S.lists.lists || {};
-  $('listSel').innerHTML = '<option>القوالب</option>' + Object.keys(L).map(k => '<option>' + esc(k) + '</option>').join('');
-  $('listsView').innerHTML = '<b>القوالب:</b> ' + templates().map(t => esc(t.name)).join('، ') + '<br>' + Object.keys(L).map(k => '<b>' + esc(k) + ':</b> ' + L[k].map(esc).join('، ')).join('<br>');
-  $('listExtraWrap').classList.toggle('hidden', $('listSel').value !== 'القوالب');
+  const L = S.lists.lists || {}, cur = $('listSel').value;
+  $('listSel').innerHTML = ['الكتّاب', 'القوالب', 'المصادر', 'الحالات', 'أنواع النطاق', 'الصعوبة'].filter(k => k === 'القوالب' || L[k]).map(k => '<option>' + esc(k) + '</option>').join('');
+  if (cur) $('listSel').value = cur;
+  renderListItems();
 }
 function wireSettings() {
   $('setBox').addEventListener('click', async e => {
@@ -1977,18 +2072,37 @@ function wireSettings() {
         S.settings = await api('addSetting', { group: g, key: base + ' ' + n, value: val });
       } else {
         const row = b.closest('.set-row'), g = row.dataset.g, k = row.dataset.k;
-        if (act === 'save') { const inp = row.querySelector('select,input,textarea'); S.settings = await api('updateSetting', { group: g, key: k, value: inp.value }); }
+        if (act === 'save') {
+          let val;
+          const mem = row.querySelector('[data-mem]');
+          if (mem) { const f = mem.querySelector('[data-mf]').value, t = mem.querySelector('[data-mt]').value; val = f ? f + '-' + (t || f) : ''; }
+          else val = row.querySelector('select,input,textarea').value;
+          S.settings = await api('updateSetting', { group: g, key: k, value: val });
+        }
         if (act === 'def') S.settings = await api('setDefault', { group: g, key: k });
       }
       toast('حُفظ الإعداد.'); renderSettings(); initBuilderSettings();
     } catch (err) { toast(err.message, true); b.disabled = false; }
   });
-  $('listSel').onchange = () => $('listExtraWrap').classList.toggle('hidden', $('listSel').value !== 'القوالب');
+  $('listSel').onchange = () => renderListItems();
   $('listAdd').onclick = async () => {
     const list = $('listSel').value, value = $('listVal').value.trim(); if (!value) return;
-    try { S.lists = await api('addListItem', { list, value, extra: $('listExtra').value.trim() }); $('listVal').value = ''; $('listExtra').value = ''; toast('أُضيف العنصر.'); renderSettings(); initBuilderSettings(); }
+    try { S.lists = await api('addListItem', { list, value, extra: $('listExtra').value.trim() }); $('listVal').value = ''; $('listExtra').value = ''; toast('أُضيف العنصر.'); renderListItems(); initBuilderSettings(); }
     catch (err) { toast(err.message, true); }
   };
+  $('listItems').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-lop]'); if (!b) return;
+    const row = b.closest('[data-item]'), list = $('listSel').value, old = row.dataset.item;
+    try {
+      if (b.dataset.lop === 'del') { if (!confirm('حذف «' + old + '» من القائمة؟ (لا يغيّر الأسئلة المكتوبة سابقًا)')) return; S.lists = await api('listOp', { list, op: 'delete', value: old }); }
+      else {
+        const nv = row.querySelector('[data-nv]').value.trim(), ex = row.querySelector('[data-ex]');
+        if (nv && nv !== old) S.lists = await api('listOp', { list, op: 'rename', value: old, newValue: nv });
+        if (ex) S.lists = await api('listOp', { list, op: 'extra', value: nv || old, extra: ex.value.trim() });
+      }
+      toast('حُفظ.'); renderListItems(); initBuilderSettings();
+    } catch (err) { toast(err.message, true); }
+  });
 }
 
 /* =====================================================================
@@ -2002,7 +2116,7 @@ function showTab(t) {
   $('mbar').style.display = t === 'build' ? '' : 'none';
   if (t === 'build') { schedule(); setTimeout(scalePaper, 50); }
   if (t === 'bank') renderBank();
-  if (t === 'add') renderAdd();
+  if (t === 'add' && segVal('addMode') === 'manual') renderAdd();
   if (t === 'summary') renderSummary();
   if (t === 'settings') renderSettings();
   window.scrollTo(0, 0);
