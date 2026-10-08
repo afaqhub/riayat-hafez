@@ -1342,6 +1342,7 @@ table.pg > tbody > tr > td{padding:0 15mm}
 .sec-h b{color:var(--c1);text-decoration:underline;text-underline-offset:.3em;text-decoration-thickness:1px;margin-inline-end:.35em}
 .it{display:grid;grid-template-columns:auto 1fr auto;gap:2.5mm;align-items:start;margin:0 0 2.6mm;break-inside:avoid}
 .it-n{font-weight:700;color:var(--c1);min-width:1.4em}
+.sec.one .it-n{display:none}
 .it-g{border:1.2px solid #888;border-radius:8px;width:11mm;text-align:center;font-size:.85em;line-height:1.25;padding:.6mm 0}
 .it-g i{display:block;border-bottom:1px solid #888;height:.9em}
 .tam{color:#444;margin-bottom:.4mm}
@@ -1420,7 +1421,7 @@ function sheetHTML(M, key, forPrint) {
   if (!M.sections.length || M.sections.every(s => !s.items.length)) h += '<p style="text-align:center;color:#888;margin:20mm 0">لا يوجد محتوى بعد. اختاري نطاقًا فيه أسئلة، أو فعّلي الإكمال.</p>';
   M.sections.forEach((s, i) => {
     if (!s.items.length) return;
-    h += '<div class="sec"><div class="sec-h"><b>السؤال ' + ord(i) + ':</b>' + esc(s.dir) + '</div>';
+    h += '<div class="sec' + (s.items.length === 1 ? ' one' : '') + '"><div class="sec-h"><b>السؤال ' + ord(i) + ':</b>' + esc(s.dir) + '</div>';
     s.items.forEach((it, j) => { h += itemHTML(it, j, U, key); });
     h += '</div>';
   });
@@ -1453,8 +1454,9 @@ function plainText(M) {
       }
       const g = U.grades && it.grade ? '   [' + it.grade + ']' : '';
       if (it.tam) out.push(renderTokens(it.tam, 'text'));
-      if (it.subs) { out.push((j + 1) + ')' + g); it.subs.forEach(x => out.push('   ' + renderTokens(x, 'text'), '   ............................................')); }
-      else out.push((j + 1) + ') ' + renderTokens(it.text, 'text') + g, '............................................');
+      const nn = s.items.length === 1 ? '' : (j + 1) + ') ';
+      if (it.subs) { out.push(nn + g); it.subs.forEach(x => out.push('   ' + renderTokens(x, 'text'), '   ............................................')); }
+      else out.push(nn + renderTokens(it.text, 'text') + g, '............................................');
       if (U.imani && it.imani) out.push('   ✿ ' + it.imani);
     });
   });
