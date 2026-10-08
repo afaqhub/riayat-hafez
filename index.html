@@ -375,7 +375,8 @@ details.fold[open] > summary{margin-bottom:6px}
                   <div><label class="f">صيغة السؤال</label><select id="mutMode"><option value="comp">إكمال الفراغ</option><option value="surah">تحديد السورة</option><option value="mix">منوّعة (إكمال وتحديد)</option></select></div>
                   <div style="flex:0 0 auto"><button class="btn sm" id="mutShuffle">اختيار آخر</button></div>
                 </div>
-                <p class="hint" style="margin:8px 0 4px">المختارة للورقة مُعلَّمة؛ اضغطي لإضافة مجموعة أو إزالتها.</p>
+                <div class="cnt" style="margin-top:8px"><span>أقصى عدد للمواضع في المتشابه الواحد</span><div class="stp"><button type="button" data-mloc="-1">−</button><b id="cv_mloc">٤</b><button type="button" data-mloc="1">+</button></div></div>
+                <p class="hint" style="margin:8px 0 4px">بعض الآيات لها مواضع كثيرة في المصحف؛ تُعرض مواضع النطاق أولًا ثم أقربها، والباقي يظهر عدده. المختارة للورقة مُعلَّمة؛ اضغطي لإضافة مجموعة أو إزالتها.</p>
                 <div id="mutList" class="cand"></div>
               </details>
               <div id="candInfo" class="preview-line"></div>
@@ -617,7 +618,7 @@ const AD = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 const toInt = v => { const n = parseInt(String(v == null ? '' : v).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)), 10); return isNaN(n) ? 0 : n; };
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const clampAyah = (s, a) => Math.min(Math.max(a, 1), ACOUNT(s));
-const LET = ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي', 'ك', 'ل'];
+const LET = ['أ', 'ب', 'ج', 'د', 'هـ', 'و', 'ز', 'ح', 'ط', 'ي', 'ك', 'ل', 'م', 'ن', 'س', 'ع', 'ف', 'ص', 'ق', 'ر', 'ش', 'ت', 'ث', 'خ', 'ذ', 'ض', 'ظ', 'غ'];
 const ORD = ['الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي عشر', 'الثاني عشر', 'الثالث عشر', 'الرابع عشر', 'الخامس عشر'];
 const ord = i => ORD[i] || AD(i + 1);
 
@@ -974,13 +975,21 @@ function candidates(R) {
       && q.locs.every(([a, b]) => withinParts(a, b, R) || inRanges(a, b, mem)))
     .sort((a, b) => a.anchor - b.anchor || (+a.id) - (+b.id));
 }
+/* أسئلة البنك: الأولوية للأنواع غير الإكمال (فللإكمال عدّاده الخاص)، وتنويع القوالب بترتيب عشوائي */
 function autoPick(cands, max, rand) {
-  const groups = {};
-  cands.forEach(q => { (groups[q.tpl] = groups[q.tpl] || []).push(q); });
-  const keys = Object.keys(groups).sort((a, b) => tplOrder(a) - tplOrder(b));
-  keys.forEach(k => { const g = groups[k]; for (let i = g.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [g[i], g[j]] = [g[j], g[i]]; } });
-  const picked = new Set(); let added = true;
-  while (picked.size < max && added) { added = false; for (const k of keys) { if (picked.size >= max) break; const q = groups[k].shift(); if (q) { picked.add(q.id); added = true; } } }
+  const picked = new Set(); if (max <= 0) return picked;
+  const isComp = q => /إكمال/.test(q.tpl);
+  const pass = list => {
+    const groups = {};
+    list.forEach(q => { (groups[q.tpl] = groups[q.tpl] || []).push(q); });
+    const keys = Object.keys(groups);
+    for (let i = keys.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [keys[i], keys[j]] = [keys[j], keys[i]]; }
+    keys.forEach(k => { const g = groups[k]; for (let i = g.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [g[i], g[j]] = [g[j], g[i]]; } });
+    let added = true;
+    while (picked.size < max && added) { added = false; for (const k of keys) { if (picked.size >= max) break; const q = groups[k].shift(); if (q) { picked.add(q.id); added = true; } } }
+  };
+  pass(cands.filter(q => !isComp(q)));
+  if (picked.size < max) pass(cands.filter(q => isComp(q)));
   return picked;
 }
 /* ----- نطاق المحفوظ الحالي ----- */
@@ -1008,10 +1017,18 @@ function mutCandidates(R) {
     const inR = l => inParts(l.A, l.B, R);
     if (!locs.some(inR)) return;
     const keep = locs.filter(l => inR(l) || inRanges(l.A, l.B, mem));
-    const uniq = keep.filter((l, i) => keep.findIndex(x => x.A === l.A) === i);
+    let uniq = keep.filter((l, i) => keep.findIndex(x => x.A === l.A) === i);
     if (uniq.length < 2) return;
+    // حد أقصى للمواضع: مواضع النطاق أولًا ثم أقربها، والباقي يُذكر عددًا
+    const cap = Math.max(2, +PREF.mutMaxLocs || 4), total = uniq.length;
+    if (uniq.length > cap) {
+      const inside = uniq.filter(inR), outside = uniq.filter(l => !inR(l));
+      const ref = inside.length ? inside[0].A : R.A;
+      outside.sort((x, y) => Math.abs(x.A - ref) - Math.abs(y.A - ref));
+      uniq = inside.concat(outside).slice(0, cap).sort((x, y) => x.A - y.A);
+    }
     const diffs = String(g.diff || '').split(/\s*\/\s*/);
-    out.push({ gi, g, locs: uniq, all: locs, diffs, anchor: Math.min(...uniq.filter(inR).map(l => l.A)) });
+    out.push({ gi, g, locs: uniq, more: total - uniq.length, total, all: locs, diffs, anchor: Math.min(...uniq.filter(inR).map(l => l.A)) });
   });
   return out.sort((x, y) => x.anchor - y.anchor);
 }
@@ -1570,7 +1587,7 @@ function saveRangePref() {
 }
 function rePick() {
   const R = getRange(), c = candidates(R);
-  S.picked = autoPick(c, Math.max(1, +$('qMax').value || 10), rnd32(S.qSeed));
+  S.picked = autoPick(c, Math.max(0, +$('qMax').value || 0), rnd32(S.qSeed));
 }
 function renderCands() {
   const R = getRange(), c = candidates(R);
@@ -1602,7 +1619,7 @@ function renderMutList(R) {
   const picked = S.mutPicked || new Set(($('mutOn').checked ? currentMutAuto() : []).map(c => c.gi));
   if (!cands.length) { box.innerHTML = '<p class="hint" style="padding:8px 10px">لا توجد متشابهات في هذا النطاق' + (S.mut && S.mut.length ? ' ضمن المحفوظ.' : '.') + '</p>'; return; }
   const admin = S.role === 'admin';
-  box.innerHTML = cands.map(c => '<label><input type="checkbox" data-gi="' + c.gi + '"' + (picked.has(c.gi) ? ' checked' : '') + '><span style="flex:1"><b>' + c.locs.map(l => esc(sName(l.s)) + ' ' + AD(l.a)).join(' · ') + '</b>' + (c.g.diff ? '<br><span class="m">' + esc(String(c.g.diff).slice(0, 110)) + '</span>' : '') + '</span>' + (admin ? '<button type="button" class="btn sm off" data-ex="' + c.gi + '" title="استبعاد المجموعة">استبعاد</button>' : '') + '</label>').join('');
+  box.innerHTML = cands.map(c => '<label><input type="checkbox" data-gi="' + c.gi + '"' + (picked.has(c.gi) ? ' checked' : '') + '><span style="flex:1"><b>' + c.locs.map(l => esc(sName(l.s)) + ' ' + AD(l.a)).join(' · ') + '</b>' + (c.more ? ' <span class="chip">+' + AD(c.more) + (c.more === 1 ? ' موضع آخر' : c.more === 2 ? ' موضعان آخران' : ' مواضع أخرى') + '</span>' : '') + (c.g.diff ? '<br><span class="m">' + esc(String(c.g.diff).slice(0, 110)) + '</span>' : '') + '</span>' + (admin ? '<button type="button" class="btn sm off" data-ex="' + c.gi + '" title="استبعاد المجموعة">استبعاد</button>' : '') + '</label>').join('');
 }
 function updateRangePreview() {
   const R = getRange(), p = partsPages(R);
@@ -1834,6 +1851,8 @@ function wireBuilder() {
   $('ornSel').onchange = () => { PREF.ornSel = $('ornSel').value; savePref(); schedule(); };
   $('gradeSel').onchange = () => { PREF.gradeSel = $('gradeSel').value; savePref(); schedule(); };
   $('sheetDate').addEventListener('input', () => schedule());
+  $('cv_mloc').textContent = AD(+PREF.mutMaxLocs || 4);
+  document.querySelectorAll('[data-mloc]').forEach(bt => bt.onclick = () => { PREF.mutMaxLocs = Math.max(2, Math.min(12, (+PREF.mutMaxLocs || 4) + (+bt.dataset.mloc))); savePref(); $('cv_mloc').textContent = AD(PREF.mutMaxLocs); refresh(false); });
   $('mutShuffle').onclick = () => { S.qSeed++; S.mutPicked = null; refresh(false); };
   $('mutList').addEventListener('change', e => {
     const gi = e.target.dataset.gi; if (gi === undefined) return;
