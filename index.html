@@ -318,15 +318,11 @@ details.fold[open] > summary{margin-bottom:6px}
             <button class="btn sm" id="addRange" style="margin-top:8px">＋ إضافة نطاق آخر</button>
             <div id="rangePreview" class="preview-line"></div>
             <div class="row" style="margin-top:10px">
-              <div><label class="f">القسم / نطاق المحفوظ</label><select id="memSel"></select></div>
+              <div><label class="f">نطاق حفظ الطالبات (للمتشابهات والنظائر)</label><select id="memSel"></select></div>
             </div>
             <div class="hint" id="memSummary" style="margin-top:4px"></div>
-            <div id="memCustomBox" class="hidden" style="margin-top:8px">
-              <div class="row">
-                <div><label class="f">من سورة</label><select id="memFrom"></select></div>
-                <div><label class="f">إلى سورة</label><select id="memTo"></select></div>
-              </div>
-            </div>
+            <div id="memCustomBox" class="hidden" style="margin-top:8px"></div>
+            <select id="memFrom" class="hidden"></select><select id="memTo" class="hidden"></select>
           </div>
 
           <div class="panel">
@@ -1525,7 +1521,7 @@ function initBuilderSettings() {
   const base = mc || gm || [[1, TOTAL]];
   $('memFrom').value = surahOfAbs(base[0][0]); $('memTo').value = surahOfAbs(base[base.length - 1][1]);
   const secs = sections();
-  $('memSel').innerHTML = '<option value="global">نطاق الحفظ العام</option>' + secs.map(x => '<option value="sec:' + esc(x.key) + '">' + esc(x.key) + '</option>').join('') + '<option value="custom">مخصص لهذه الورقة…</option>';
+  $('memSel').innerHTML = '<option value="global">نطاق الحفظ العام</option>' + secs.map(x => '<option value="sec:' + esc(x.key) + '">القسم: ' + esc(x.key) + '</option>').join('') + '<option value="custom">مخصص لهذه الورقة…</option>';
   if (![...$('memSel').options].some(o => o.value === PREF.memSel)) PREF.memSel = 'global';
   $('memSel').value = PREF.memSel || 'global'; syncMem();
   $('compGrade').value = toInt(sv('الدرجات', 'درجة مقطع الإكمال', '2')) || 2;
@@ -1569,7 +1565,9 @@ function updateSign() {
   $('signTxt').value = sv('التوقيع', 'صيغة التوقيع', 'المحبة لكم: {المعلمة}').replace('{المعلمة}', $('teacherSel').value || '');
 }
 function syncMem() {
-  $('memCustomBox').classList.toggle('hidden', $('memSel').value !== 'custom');
+  const box = $('memCustomBox'), custom = $('memSel').value === 'custom';
+  box.classList.toggle('hidden', !custom);
+  if (custom && !box.querySelector('[data-memed]')) box.innerHTML = '<label class="f">ما تحفظه الطالبات (يمكن أكثر من نطاق)</label>' + memEditorHTML(PREF.memCustom || '', 'لم يُحدَّد بعد: اضغطي «تحديد نطاق»');
   $('memSummary').textContent = 'المحفوظ: ' + memLabel(curMem()) + ' — لا تظهر أسئلة ولا متشابهات من خارجه.';
 }
 function syncLogoInfo() {
@@ -1606,6 +1604,28 @@ function renderAdhoc() {
   $('adhocList').innerHTML = S.adhoc.map((x, i) => '<div class="adhoc" data-i="' + i + '"><label class="f">السؤال ' + AD(i + 1) + '</label><textarea rows="2" data-f="text" placeholder="نص السؤال (يمكن استعمال رموز الآيات مثل {آية:الكهف:10})">' + esc(x.text) + '</textarea><label class="f" style="margin-top:6px">الإجابة النموذجية (اختياري)</label><textarea rows="1" data-f="ans">' + esc(x.ans || '') + '</textarea><div class="row" style="margin-top:6px;align-items:flex-end"><div style="flex:0 1 110px"><label class="f">أسطر الإجابة</label><input type="number" min="1" max="15" data-f="lines" value="' + esc(x.lines || 3) + '"></div><div style="flex:0 1 90px"><label class="f">الدرجة</label><input type="number" min="0" max="20" data-f="grade" value="' + esc(x.grade || 1) + '"></div>' + (admin ? '<button class="btn sm" data-a="bank" style="flex:0 0 auto">حفظ في البنك</button>' : '') + '<button class="btn sm off" data-a="del" style="flex:0 0 auto">حذف</button></div></div>').join('');
   $('adhocCount').textContent = AD(S.adhoc.filter(x => String(x.text).trim()).length);
 }
+/* ----- محرّر نطاق الحفظ: نطاقات متعددة غير متتابعة (سور كاملة) ----- */
+function memPairs(value) { const r = memRanges(value); return r ? r.map(([a, b]) => [surahOfAbs(a), surahOfAbs(b)]) : []; }
+function memEditorHTML(value, emptyLabel) {
+  const so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
+  const pairs = memPairs(value);
+  return '<div class="memed" data-memed>' + (pairs.length ? '' : '<p class="hint" style="margin:4px 0">' + esc(emptyLabel || 'المصحف كله') + '</p>') +
+    pairs.map(([a, b]) => '<div class="xr mr"><span class="hint" style="flex:0 0 auto">من</span><select data-ma>' + so(a) + '</select><span class="hint" style="flex:0 0 auto">إلى</span><select data-mb>' + so(b) + '</select><button type="button" class="btn sm off" data-mrdel style="flex:0 0 auto">✕</button></div>').join('') +
+    '<button type="button" class="btn sm" data-mradd style="margin-top:6px">＋ ' + (pairs.length ? 'نطاق آخر' : 'تحديد نطاق') + '</button></div>';
+}
+function memEditorValue(el) {
+  return [...el.querySelectorAll('.mr')].map(r => { const a = +r.querySelector('[data-ma]').value, b = +r.querySelector('[data-mb]').value; return sName(Math.min(a, b)) + '-' + sName(Math.max(a, b)); }).join(' ؛ ');
+}
+document.addEventListener('click', e => {
+  const ed = e.target.closest('[data-memed]'); if (!ed) return;
+  if (e.target.closest('[data-mradd]')) {
+    const v = memEditorValue(ed), last = memPairs(v).slice(-1)[0];
+    const f = last ? Math.min(114, last[1] + 2) : 1, nv = (v ? v + ' ؛ ' : '') + sName(f) + '-' + sName(Math.min(114, f + 1));
+    ed.outerHTML = memEditorHTML(nv); document.dispatchEvent(new CustomEvent('memedchange'));
+  } else if (e.target.closest('[data-mrdel]')) {
+    e.target.closest('.mr').remove(); const v = memEditorValue(ed); ed.outerHTML = memEditorHTML(v); document.dispatchEvent(new CustomEvent('memedchange'));
+  }
+});
 function syncCounts() { ['segCount', 'mutCount', 'qMax'].forEach(id => { const el = $('cv_' + id); if (el) el.textContent = AD(+$(id).value || 0); }); }
 function renderExtraRanges() {
   const xs = PREF.extraRanges || [], so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
@@ -1821,8 +1841,10 @@ function wireBuilder() {
   ['showPages', 'showImani'].forEach(id => $(id).addEventListener('input', () => schedule()));
   $('mutOn').onchange = () => { PREF.mutOn = $('mutOn').checked; savePref(); schedule(); };
   $('mutCount').oninput = () => { PREF.mutCount = +$('mutCount').value || 0; savePref(); schedule(); };
-  $('memSel').onchange = () => { PREF.memSel = $('memSel').value; if (PREF.memSel === 'custom' && !PREF.memCustom) PREF.memCustom = sName(+$('memFrom').value) + '-' + sName(+$('memTo').value); savePref(); syncMem(); schedule(true); };
-  ['memFrom', 'memTo'].forEach(id => $(id).onchange = () => { PREF.memCustom = sName(+$('memFrom').value) + '-' + sName(+$('memTo').value); savePref(); syncMem(); schedule(true); });
+  $('memSel').onchange = () => { PREF.memSel = $('memSel').value; savePref(); $('memCustomBox').innerHTML = ''; syncMem(); schedule(true); };
+  const memBuilderChanged = () => { const ed = $('memCustomBox').querySelector('[data-memed]'); if (!ed) return; PREF.memCustom = memEditorValue(ed); savePref(); syncMem(); schedule(true); };
+  $('memCustomBox').addEventListener('change', memBuilderChanged);
+  document.addEventListener('memedchange', () => { if ($('memCustomBox').querySelector('[data-memed]') && !$('memCustomBox').classList.contains('hidden')) memBuilderChanged(); });
   $('mutMode').onchange = () => { PREF.mutMode = $('mutMode').value; savePref(); schedule(); };
   $('meanHint').checked = PREF.meanHint !== false;
   $('meanHint').onchange = () => { PREF.meanHint = $('meanHint').checked; savePref(); schedule(); };
@@ -2274,11 +2296,7 @@ const SET_CHOICES = {
 };
 function setChoiceHTML(x) {
   const c = SET_CHOICES[x.key];
-  if (c === 'mem') {
-    const r = memRanges(x.value), so = v => '<option value="">المصحف كله</option>' + SUR.map((y, i) => '<option value="' + y[0] + '"' + (v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
-    const f = r ? surahOfAbs(r[0][0]) : 0, t = r ? surahOfAbs(r[r.length - 1][1]) : 0;
-    return '<div class="row" style="flex-wrap:nowrap" data-mem><select data-mf>' + so(f) + '</select><span style="flex:0 0 auto;align-self:center">إلى</span><select data-mt>' + so(t) + '</select></div>';
-  }
+  if (c === 'mem') return memEditorHTML(x.value, 'المصحف كله (لم يُحدَّد)');
   const opts = c(); const v = String(x.value).trim();
   return '<select>' + (opts.includes(v) ? '' : '<option selected>' + esc(v) + '</option>') + opts.map(o => '<option' + (o === v ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
 }
@@ -2286,8 +2304,8 @@ function sectionsPanel() {
   const secs = S.settings.filter(x => x.group === 'الأقسام');
   const so = '<option value="">—</option>' + SUR.map((x, i) => '<option value="' + x[0] + '">' + AD(i + 1) + '. ' + x[0] + '</option>').join('');
   return '<div class="panel set-group"><h3>أقسام الطالبات (نطاقات الحفظ)</h3><p class="hint" style="margin-top:0">لكل قسم اسم ونطاق حفظ (سور أو أجزاء، مثل: الكهف-الناس ؛ جزء 21-30). يُختار القسم عند إعداد الورقة فتُصفّى الأسئلة والمتشابهات بحسب محفوظه.</p>' +
-    secs.map(x => '<div class="set-row" data-sec="' + esc(x.key) + '" style="grid-template-columns:170px 1fr auto"><input type="text" data-secname value="' + esc(x.key) + '"><input type="text" data-secval value="' + esc(x.value) + '"><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-sact="secsave">حفظ</button><button class="btn sm off" data-sact="secdel">حذف</button></div></div>').join('') +
-    '<div class="row" style="margin-top:10px"><div><label class="f">اسم القسم</label><input type="text" id="secName" value="قسم ' + AD(secs.length + 1) + '"></div><div><label class="f">من سورة</label><select id="secFrom">' + so + '</select></div><div><label class="f">إلى سورة</label><select id="secTo">' + so + '</select></div><div style="flex:0 0 auto"><button class="btn pri" data-sact="secadd">إضافة قسم</button></div></div></div>';
+    secs.map(x => '<div class="set-row" data-sec="' + esc(x.key) + '" style="grid-template-columns:1fr;gap:6px"><div class="row" style="flex-wrap:nowrap"><input type="text" data-secname value="' + esc(x.key) + '" style="flex:1"><button class="btn sm" data-sact="secsave" style="flex:0 0 auto">حفظ</button><button class="btn sm off" data-sact="secdel" style="flex:0 0 auto">حذف</button></div>' + memEditorHTML(x.value) + '</div>').join('') +
+    '<div class="set-row" style="grid-template-columns:1fr;gap:6px;margin-top:10px"><label class="f">قسم جديد</label><input type="text" id="secName" value="قسم ' + AD(secs.length + 1) + '"><div id="secNewMem">' + memEditorHTML('', 'اختاري نطاق حفظ القسم: «تحديد نطاق»') + '</div><button class="btn pri" data-sact="secadd" style="justify-self:start">إضافة قسم</button></div></div>';
 }
 const FIXED_LISTS = ['الحالات', 'أنواع النطاق', 'الصعوبة'];
 function renderListItems() {
@@ -2317,15 +2335,15 @@ function wireSettings() {
     const act = b.dataset.sact; b.disabled = true;
     try {
       if (act === 'secadd') {
-        const nm = $('secName').value.trim(), f = $('secFrom').value, t = $('secTo').value;
-        if (!nm || !f) { toast('اكتبي اسم القسم واختاري بداية نطاقه.', true); b.disabled = false; return; }
-        S.settings = await api('addSetting', { group: 'الأقسام', key: nm, value: f + '-' + (t || f) });
+        const nm = $('secName').value.trim(), val = memEditorValue($('secNewMem').querySelector('[data-memed]'));
+        if (!nm || !val) { toast('اكتبي اسم القسم وحدّدي نطاق حفظه.', true); b.disabled = false; return; }
+        S.settings = await api('addSetting', { group: 'الأقسام', key: nm, value: val });
       } else if (act === 'secsave' || act === 'secdel') {
         const row = b.closest('.set-row'), old = row.dataset.sec;
         if (act === 'secdel') { if (!confirm('حذف القسم «' + old + '»؟')) { b.disabled = false; return; } S.settings = await api('deleteSetting', { group: 'الأقسام', key: old }); }
         else {
-          const nm = row.querySelector('[data-secname]').value.trim(), val = row.querySelector('[data-secval]').value.trim();
-          if (!memRanges(val)) { toast('صيغة النطاق غير مفهومة. مثال: الكهف-الناس أو جزء 21-30', true); b.disabled = false; return; }
+          const nm = row.querySelector('[data-secname]').value.trim(), val = memEditorValue(row.querySelector('[data-memed]'));
+          if (!val) { toast('حدّدي نطاق حفظ القسم.', true); b.disabled = false; return; }
           S.settings = await api('updateSetting', { group: 'الأقسام', key: old, value: val });
           if (nm && nm !== old) S.settings = await api('renameSetting', { group: 'الأقسام', key: old, newKey: nm });
         }
@@ -2339,8 +2357,8 @@ function wireSettings() {
         const row = b.closest('.set-row'), g = row.dataset.g, k = row.dataset.k;
         if (act === 'save') {
           let val;
-          const mem = row.querySelector('[data-mem]');
-          if (mem) { const f = mem.querySelector('[data-mf]').value, t = mem.querySelector('[data-mt]').value; val = f ? f + '-' + (t || f) : ''; }
+          const mem = row.querySelector('[data-memed]');
+          if (mem) val = memEditorValue(mem);
           else val = row.querySelector('select,input,textarea').value;
           S.settings = await api('updateSetting', { group: g, key: k, value: val });
         }
