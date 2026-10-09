@@ -234,6 +234,12 @@ details.fold[open] > summary{margin-bottom:6px}
 .dmeta{display:flex;gap:8px;margin-top:6px;align-items:flex-end;flex-wrap:wrap}
 .dmeta label{font-size:12.5px;color:var(--muted);font-weight:700}
 .dmeta input{width:80px;min-height:34px}
+.gradebox{margin-bottom:6px}
+.gsum{min-width:42px;text-align:center;font-size:18px;color:var(--pri);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.grow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--soft)}
+.grow .gt{flex:1;font-size:14px;line-height:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grow input{width:74px;min-height:34px;text-align:center}
+.gsec{font-weight:700;color:var(--head);margin-top:8px;font-size:14px}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -338,6 +344,23 @@ details.fold[open] > summary{margin-bottom:6px}
               <button data-v="ques">أسئلة فقط</button>
             </div>
 
+            <div class="gradebox">
+              <div class="cnt"><label class="chk" style="flex:1;margin:0"><input type="checkbox" id="showGrades"> الدرجات</label><span class="hint">المجموع</span><b class="gsum" id="gSum">٠</b></div>
+              <div id="gradeBody">
+                <div class="row" style="margin-top:8px;align-items:flex-end">
+                  <div><label class="f">الدرجة الكلية للورقة</label><input type="number" id="totalOverride" min="1" max="500" step="1" placeholder="تلقائي (مجموع الأسئلة)"></div>
+                  <div style="flex:0 0 auto"><button class="btn sm" id="gAuto">تلقائي</button></div>
+                </div>
+                <p class="hint" style="margin:6px 0">اكتبي الدرجة الكلية فتتوزع على الأسئلة بالتناسب تلقائيًا، أو عدّلي درجة أي سؤال أدناه فيتغيّر المجموع.</p>
+                <details class="more" id="gBox"><summary>درجة كل سؤال</summary><div id="gList"></div></details>
+                <details class="more"><summary>الدرجات الافتراضية وعبارة الدرجة</summary>
+                  <div class="row" style="margin-top:8px">
+                    <div><label class="f">درجة مقطع الإكمال الآلي</label><input type="number" id="compGrade" min="0" max="20"></div>
+                    <div><label class="f">عبارة تحت الدرجة</label><input type="text" id="gradeNote"></div>
+                  </div>
+                </details>
+              </div>
+            </div>
             <div id="compBox" style="margin-top:12px">
               <div class="seg" id="compMode">
                 <button data-v="seg" class="on">إكمال مقاطع</button>
@@ -422,12 +445,7 @@ details.fold[open] > summary{margin-bottom:6px}
               <label class="chk"><input type="checkbox" id="showPages"> ترقيم الصفحات</label>
               <label class="chk"><input type="checkbox" id="showImani"> اللمسات الإيمانية</label>
             </div>
-            <div class="row" style="margin-top:10px">
-              <label class="chk"><input type="checkbox" id="showGrades"> الدرجات</label>
-              <div><label class="f">درجة مقطع الإكمال</label><input type="number" id="compGrade" min="0" max="20"></div>
-              <div><label class="f">المجموع (فارغ = تلقائي)</label><input type="text" id="totalOverride"></div>
-            </div>
-            <div style="margin-top:8px"><label class="f">عبارة تحت الدرجة</label><input type="text" id="gradeNote"></div>
+
             <label class="chk" style="margin-top:10px"><input type="checkbox" id="meanHint" checked> ذكر بداية الآية في أسئلة «اذكري الآية التي…» (أيسر للدارسات)</label>
             <div style="margin-top:10px"><label class="f">ذكر اسم السورة قبل كل سؤال</label><select id="surahPrefix"><option value="auto">تلقائي (عند تعدد السور في الورقة)</option><option value="always">دائمًا</option><option value="never">لا</option></select></div>
             <div style="margin-top:12px"><label class="f">عناوين الأسئلة</label><div id="dirsBox" class="dirs"></div></div>
@@ -1163,7 +1181,7 @@ function readUI() {
     title: $('sheetTitle').value.trim(), no: $('sheetNo').value.trim(), sub: $('sheetSub').value.trim(),
     open: $('openTxt').value.trim(), close: $('closeTxt').value.trim(), sign: $('signTxt').value.trim(),
     bism: $('showBism').checked, name: $('showName').checked, group: false, date: $('showDate').checked,
-    grades: $('showGrades').checked, total: $('totalOverride').value.trim(), gradeNote: $('gradeNote').value.trim(),
+    grades: $('showGrades').checked, totalTarget: Math.max(0, +$('totalOverride').value || 0), gradeNote: $('gradeNote').value.trim(),
     theme: PREF.theme || 'rose', color: PREF.color || '', font: $('fontSel').value, size: +$('sizeSel').value,
     frame: $('frameSel').value, ornStyle: $('ornSel').value || 'khatam', orn: ($('ornSel').value || 'khatam') !== 'none', gradeShape: $('gradeSel').value || 'octa',
     dateVal: $('sheetDate').value, logo: $('showLogo').checked ? currentLogo() : '',
@@ -1218,8 +1236,16 @@ function buildModel(U) {
   if (!U.compFirst) { const c = sections.filter(s => s.kind === 'comp'); sections.splice(0, c.length); sections.push(...c); }
   encourageFirst(sections);
   applyDraft(sections);
-  const total = sections.reduce((t, s) => t + s.items.reduce((x, i) => x + (+i.grade || 0), 0), 0);
-  return { U, sections, total: U.total || String(total), ids: sections.flatMap(s => s.items.filter(i => i.id).map(i => i.id)) };
+  // التوزيع التناسبي إن حُدّدت الدرجة الكلية (بأنصاف الدرجات، والفرق يُضبط على أكبر بند)
+  const allItems = sections.flatMap(s => s.items);
+  if (U.totalTarget > 0 && allItems.length) {
+    const base = allItems.map(i => Math.max(+i.grade || 0, 0.0001)), sum = base.reduce((a, b) => a + b, 0);
+    allItems.forEach((it, k) => { it.grade = Math.max(0.5, Math.round(base[k] * U.totalTarget / sum * 2) / 2); });
+    const diff = U.totalTarget - allItems.reduce((t, i) => t + i.grade, 0);
+    if (diff) { const big = allItems.reduce((m, i) => (i.grade > m.grade ? i : m), allItems[0]); big.grade = Math.max(0.5, big.grade + diff); }
+  }
+  const total = Math.round(allItems.reduce((x, i) => x + (+i.grade || 0), 0) * 2) / 2;
+  return { U, sections, total: String(total), ids: sections.flatMap(s => s.items.filter(i => i.id).map(i => i.id)) };
 }
 function currentLogo() { return S.tempLogo || sv('الشعار', 'رابط الشعار', '') || S.repoLogo || ''; }
 /* ----- المسودة: تعديلات المعلمة على بنود الورقة (نص، إجابة، أسطر، درجة، ترتيب، إخفاء) ----- */
@@ -1626,6 +1652,22 @@ document.addEventListener('click', e => {
     e.target.closest('.mr').remove(); const v = memEditorValue(ed); ed.outerHTML = memEditorHTML(v); document.dispatchEvent(new CustomEvent('memedchange'));
   }
 });
+/* ----- لوحة الدرجات ----- */
+function plainSnippet(t) { return renderTokens(String(t || ''), 'text').replace(/\s+/g, ' ').trim().slice(0, 70); }
+function renderGrades(M) {
+  $('gSum').textContent = AD(M.total);
+  $('gradeBody').classList.toggle('hidden', !$('showGrades').checked);
+  if ($('gList').contains(document.activeElement)) return;
+  let h = '';
+  M.sections.forEach((sec, si) => {
+    h += '<div class="gsec">السؤال ' + ord(si) + '</div>';
+    sec.items.forEach((it, ii) => {
+      const label = it.kind === 'blank' ? 'فراغات الإكمال' : it.mut ? 'متشابه: ' + it.surahs.map(sName).join('، ') : plainSnippet(it.branches ? it.branches.map(b => b.text).join(' / ') : it.text);
+      h += '<div class="grow"><span class="chip">' + AD(ii + 1) + '</span><span class="gt" title="' + esc(label) + '">' + esc(label) + '</span><input type="number" min="0" max="100" step="0.5" data-gk="' + esc(it.key || '') + '" value="' + esc(it.grade) + '"></div>';
+    });
+  });
+  $('gList').innerHTML = h || '<p class="hint">لا أسئلة بعد.</p>';
+}
 function syncCounts() { ['segCount', 'mutCount', 'qMax'].forEach(id => { const el = $('cv_' + id); if (el) el.textContent = AD(+$(id).value || 0); }); }
 function renderExtraRanges() {
   const xs = PREF.extraRanges || [], so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
@@ -1673,6 +1715,7 @@ async function refresh(full) {
 }
 function paint(M) {
   lastModel = M;
+  renderGrades(M);
   if (S.draftView && !$('draftBox').contains(document.activeElement)) renderDraft(M);
   const f = $('paper');
   f.onload = () => { try { const d = f.contentDocument; const fit = () => { f.style.height = Math.max(1123, d.documentElement.scrollHeight) + 'px'; scalePaper(); }; fit(); (d.fonts ? d.fonts.ready : Promise.resolve()).then(fit); setTimeout(fit, 600); } catch (e) { } };
@@ -1822,7 +1865,7 @@ function wireBuilder() {
   segInit('themeSeg', v => { PREF.theme = v; PREF.color = ''; $('colorPick').value = THEMES.find(t => t.id === v).c1; savePref(); schedule(); });
   segInit('viewSeg', v => { viewKey = v === 'key'; S.draftView = v === 'draft'; $('draftBox').classList.toggle('hidden', !S.draftView); $('paperClip').classList.toggle('hidden', S.draftView); if (S.draftView && lastModel) renderDraft(lastModel); else schedule(); });
   wireDraft();
-  ['segCount', 'segLen', 'blankRatio', 'blankPos', 'compGrade', 'compFirst', 'sheetTitle', 'openTxt', 'closeTxt', 'showBism', 'showName', 'showGroup', 'showDate', 'showGrades', 'totalOverride', 'gradeNote', 'showOrn'].forEach(id => $(id).addEventListener('input', () => { PREF.orn = $('showOrn').checked; savePref(); schedule(); }));
+  ['segCount', 'segLen', 'blankRatio', 'blankPos', 'compGrade', 'compFirst', 'sheetTitle', 'openTxt', 'closeTxt', 'showBism', 'showName', 'showGroup', 'showDate', 'showGrades', 'gradeNote', 'showOrn'].forEach(id => $(id).addEventListener('input', () => { PREF.orn = $('showOrn').checked; savePref(); schedule(); }));
   $('sheetNo').addEventListener('input', () => { PREF.sheetNo = $('sheetNo').value; savePref(); schedule(); });
   $('sheetSub').addEventListener('input', () => { subTouched = true; schedule(); });
   $('signTxt').addEventListener('input', () => { signTouched = true; schedule(); });
@@ -1860,6 +1903,20 @@ function wireBuilder() {
   $('addRange').onclick = () => { const xs = PREF.extraRanges = PREF.extraRanges || []; const last = xs.length ? +xs[xs.length - 1][1] : +$('toS').value; const f = Math.min(114, last + 2); xs.push([f, Math.min(114, f + 2)]); savePref(); renderExtraRanges(); schedule(true); };
   $('extraRanges').addEventListener('change', e => { const row = e.target.closest('.xr'); if (!row) return; const i = +row.dataset.x; PREF.extraRanges[i] = [+row.querySelector('[data-xf]').value, +row.querySelector('[data-xt]').value]; savePref(); schedule(true); });
   $('extraRanges').addEventListener('click', e => { if (!e.target.closest('[data-xdel]')) return; const i = +e.target.closest('.xr').dataset.x; PREF.extraRanges.splice(i, 1); savePref(); renderExtraRanges(); schedule(true); });
+  let gt = 0;
+  $('totalOverride').value = PREF.gTotal || '';
+  $('totalOverride').addEventListener('input', () => { PREF.gTotal = $('totalOverride').value; savePref(); clearTimeout(gt); gt = setTimeout(() => refresh(false), 300); });
+  $('gAuto').onclick = () => { $('totalOverride').value = ''; PREF.gTotal = ''; const D = draftState(); Object.keys(D.edits).forEach(k => { delete D.edits[k].grade; }); (S.adhoc || []).forEach(x => { x.grade = 1; }); saveAdhoc(); savePref(); refresh(false); toast('أُعيدت الدرجات الافتراضية.'); };
+  $('showGrades').addEventListener('change', () => { $('gradeBody').classList.toggle('hidden', !$('showGrades').checked); });
+  $('gList').addEventListener('input', e => {
+    const k = e.target.dataset.gk; if (!k) return;
+    const D = draftState();
+    // تعديل بند يجعل التوزيع يدويًا: تُثبَّت الدرجات الحالية لكل البنود ثم يُعدَّل هذا البند
+    if (+$('totalOverride').value > 0 && lastModel) { lastModel.sections.forEach(sec => sec.items.forEach(it => { if (it.key) (D.edits[it.key] = D.edits[it.key] || {}).grade = it.grade; })); $('totalOverride').value = ''; PREF.gTotal = ''; }
+    if (k.startsWith('h:')) { const i = +k.slice(2); if (S.adhoc[i]) { S.adhoc[i].grade = e.target.value; saveAdhoc(); } }
+    else (D.edits[k] = D.edits[k] || {}).grade = e.target.value;
+    savePref(); clearTimeout(gt); gt = setTimeout(() => refresh(false), 300);
+  });
   $('surahPrefix').onchange = () => { PREF.surahPrefix = $('surahPrefix').value; savePref(); schedule(); };
   $('adhocAdd').onclick = () => { S.adhoc.push({ text: '', ans: '', lines: 3, grade: 1 }); saveAdhoc(); renderAdhoc(); const t = $('adhocList').querySelectorAll('textarea'); if (t.length) t[t.length - 2].focus(); };
   $('adhocList').addEventListener('input', e => { const i = +e.target.closest('.adhoc').dataset.i, f = e.target.dataset.f; if (!f) return; S.adhoc[i][f] = e.target.value; saveAdhoc(); schedule(); });
