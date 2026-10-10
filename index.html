@@ -516,13 +516,14 @@ details.fold[open] > summary{margin-bottom:6px}
           </details>
         </div>
 
-        <div class="mbar" id="mbar"><button class="btn" id="mPrev">معاينة الورقة</button><button class="btn pri" id="mPrint">طباعة / حفظ PDF</button></div>
+        <div class="mbar" id="mbar"><button class="btn" id="mPrev">معاينة</button><button class="btn" id="mPrint">طباعة</button><button class="btn pri" id="mPdf">⬇ تحميل PDF</button></div>
         <div class="preview-wrap" id="previewWrap">
           <div class="preview-bar">
             <div class="seg" id="viewSeg"><button data-v="sheet" class="on">الورقة</button><button data-v="key">نموذج الإجابة</button><button data-v="draft">✎ المسودة</button></div>
             <span class="sp"></span>
             <span id="textNote" class="hint hidden">جارٍ تحميل نصوص الآيات…</span>
-            <button class="btn pri" id="printBtn">طباعة / حفظ PDF</button>
+            <button class="btn pri" id="pdfBtn">⬇ تحميل PDF</button>
+            <button class="btn" id="printBtn">طباعة</button>
           </div>
           <div id="draftBox" class="draft hidden"></div>
           <div class="paper-clip" id="paperClip"><div class="paper-holder" id="paperHolder"><iframe id="paper" title="معاينة الورقة"></iframe></div></div>
@@ -2059,6 +2060,97 @@ function scalePaper() {
   clip.style.direction = 'rtl';
   h.style.marginInlineStart = '0';
 }
+/* =====================================================================
+   تحميل PDF مباشر: تقسيم الورقة إلى صفحات A4 داخل المنصة، ثم تحويلها إلى ملف
+   ===================================================================== */
+const PDF_LIBS = { h2i: 'https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js', jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js' };
+const libCache = {};
+async function libText(url) { if (!libCache[url]) libCache[url] = fetch(url).then(r => { if (!r.ok) throw new Error('lib'); return r.text(); }); return libCache[url]; }
+function injectScript(doc, code) { const sc = doc.createElement('script'); sc.textContent = code; doc.head.appendChild(sc); }
+function pdfFileName(M, key) { const t = String(M.U.title || 'ورقة عمل').trim(), sub = String(M.U.sub || '').trim(); return (t + (sub ? ' - ' + sub : '') + (key ? ' - نموذج الإجابة' : '')).replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 90) + '.pdf'; }
+async function downloadPDF(key) {
+  busy(true, 'جارٍ تجهيز ملف PDF…');
+  let fr;
+  try {
+    clearTimeout(refreshT); await refresh(false);
+    const M = lastModel; if (!M) return;
+    const [h2i, jsp] = await Promise.all([libText(PDF_LIBS.h2i), libText(PDF_LIBS.jspdf)]);
+    fr = document.createElement('iframe');
+    fr.style.cssText = 'position:fixed;left:-12000px;top:0;width:794px;height:1123px;border:0;visibility:hidden';
+    document.body.appendChild(fr);
+    await new Promise(res => { fr.onload = res; fr.srcdoc = sheetHTML(M, key, false); });
+    const d = fr.contentDocument, w = fr.contentWindow;
+    try { await d.fonts.ready; } catch (e) { }
+    await new Promise(r => setTimeout(r, 400));
+    injectScript(d, h2i); injectScript(d, jsp);
+    // ١) أنماط الصفحات
+    const st = d.createElement('style');
+    st.textContent = '.pgx{position:relative;width:210mm;height:297mm;overflow:hidden;background:#fff;margin:0 0 6mm}' +
+      '.pgx .fx{position:absolute;top:8mm;bottom:8mm;left:8mm;right:8mm;border-radius:3px}' +
+      '.pgx .corner{position:absolute!important}' +
+      '.pgx .pc{position:absolute;top:13mm;left:15mm;right:15mm;bottom:' + (M.U.pages ? '17mm' : '13mm') + ';overflow:hidden}' +
+      '.pgx .pn{position:absolute;bottom:9.5mm;left:0;right:0;text-align:center;font:9pt Tajawal,sans-serif;color:#777}';
+    d.head.appendChild(st);
+    const td = d.querySelector('table.pg tbody td'), frameEl = d.querySelector('.frame');
+    const border = frameEl ? w.getComputedStyle(frameEl).border : 'none';
+    const corners = [...d.querySelectorAll('.corner')];
+    // ٢) تفكيك المحتوى إلى كتل لا تنقسم
+    const blocks = [];
+    [...td.children].forEach(el => {
+      if (el.classList.contains('sec')) { [...el.children].forEach((c, i) => blocks.push({ el: c, sec: el, head: c.classList.contains('sec-h') })); }
+      else blocks.push({ el });
+    });
+    const holder = d.createElement('div'); d.body.appendChild(holder);
+    d.querySelector('table.pg').style.display = 'none'; if (frameEl) frameEl.style.display = 'none'; corners.forEach(c => c.style.display = 'none');
+    const pages = [];
+    const newPage = () => {
+      const pg = d.createElement('div'); pg.className = 'pgx';
+      if (frameEl && border && !/none/.test(border)) { const fx = d.createElement('div'); fx.className = 'fx'; fx.style.border = border; pg.appendChild(fx); }
+      corners.forEach(c => { const k = c.cloneNode(true); k.style.display = ''; pg.appendChild(k); });
+      const pc = d.createElement('div'); pc.className = 'pc'; pg.appendChild(pc);
+      holder.appendChild(pg); pages.push(pg); return pc;
+    };
+    let pc = newPage(), curSec = null, curWrap = null;
+    const fits = () => pc.scrollHeight <= pc.clientHeight + 1;
+    for (let i = 0; i < blocks.length; i++) {
+      const b = blocks[i];
+      const place = () => {
+        if (b.sec) {
+          if (curSec !== b.sec || !curWrap || curWrap.parentNode !== pc) { curWrap = b.sec.cloneNode(false); pc.appendChild(curWrap); curSec = b.sec; }
+          curWrap.appendChild(b.el.cloneNode(true));
+        } else { curSec = null; curWrap = null; pc.appendChild(b.el.cloneNode(true)); }
+      };
+      const snapshot = pc.innerHTML;
+      place();
+      // عنوان السؤال لا يبقى وحده آخر الصفحة: يُختبر مع أول بند بعده
+      let ok = fits();
+      if (ok && b.head && blocks[i + 1] && blocks[i + 1].sec === b.sec) { const n = blocks[i + 1].el.cloneNode(true); curWrap.appendChild(n); ok = fits(); n.remove(); }
+      if (!ok && pc.children.length > 1) { pc.innerHTML = snapshot; curWrap = null; curSec = null; pc = newPage(); place(); }
+    }
+    const n = pages.length;
+    if (M.U.pages) pages.forEach((pg, i) => { const f = d.createElement('div'); f.className = 'pn'; f.textContent = 'صفحة ' + AD(i + 1) + ' من ' + AD(n); pg.appendChild(f); });
+    // ٣) التحويل إلى ملف
+    const { jsPDF } = w.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+    for (let i = 0; i < n; i++) {
+      $('loadingMsg').textContent = 'جارٍ تجهيز ملف PDF… (صفحة ' + AD(i + 1) + ' من ' + AD(n) + ')';
+      // المتصفح نفسه يرسم النص (تشكيل ورسم عثماني سليم)، والخطوط تُضمَّن تلقائيًا
+      const opt = { pixelRatio: 2.2, backgroundColor: '#ffffff', quality: 0.9, cacheBust: false };
+      let img = await w.htmlToImage.toJpeg(pages[i], opt);
+      if (i === 0) img = await w.htmlToImage.toJpeg(pages[i], opt); // الرسم الثاني يضمن تحميل الخطوط في سفاري
+      if (i) pdf.addPage();
+      pdf.addImage(img, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+    }
+    const blob = pdf.output('blob'), url = URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+    const a = document.createElement('a'); a.href = url; a.download = pdfFileName(M, key); document.body.appendChild(a); a.click();
+    setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 4000);
+    if (!key) S.rows.filter(q => S.picked.has(q.id)).forEach(q => { q.uses = (+q.uses || 0) + 1; });
+    toast('نُزّل ملف PDF (' + AD(n) + ' ' + (n === 1 ? 'صفحة' : n === 2 ? 'صفحتان' : 'صفحات') + ').');
+  } catch (e) {
+    console.error(e);
+    toast('تعذّر إنشاء الملف مباشرة؛ استعملي زر «طباعة» ثم «حفظ بتنسيق PDF».', true);
+  } finally { if (fr) fr.remove(); busy(false); }
+}
 async function doPrint(key) {
   const w = window.open('', '_blank');
   if (!w) { toast('المتصفح منع فتح نافذة الطباعة. اسمحي بالنوافذ المنبثقة لهذه الصفحة ثم أعيدي المحاولة.', true); return; }
@@ -2216,6 +2308,8 @@ function wireBuilder() {
   $('dirsBox').addEventListener('input', e => { const k = e.target.dataset.dir; if (k === undefined) return; PREF.dirs = PREF.dirs || {}; PREF.dirs[k] = e.target.value; savePref(); schedule(); });
   $('dirsBox').addEventListener('click', e => { if (e.target.id === 'dirsReset') { PREF.dirs = {}; savePref(); $('dirsBox').innerHTML = ''; schedule(); } });
   $('printBtn').onclick = () => doPrint(viewKey && !S.draftView);
+  $('pdfBtn').onclick = () => downloadPDF(viewKey && !S.draftView);
+  $('mPdf').onclick = () => downloadPDF(false);
   $('mPrint').onclick = () => doPrint(viewKey);
   $('mPrev').onclick = () => $('previewWrap').scrollIntoView({ behavior: 'smooth' });
   $('copyText').onclick = () => lastModel && copy(plainText(lastModel), 'نُسخ نص الورقة. يمكن لصقه في Word.');
