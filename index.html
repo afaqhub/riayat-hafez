@@ -261,6 +261,38 @@ details.fold[open] > summary{margin-bottom:6px}
 .fp b{font-size:18px;color:var(--ink)}
 .fp span{font-size:14px;color:var(--muted)}
 .fp.on{border:2px solid var(--pri);background:var(--soft)}
+.tcs .chip{margin:1px;font-size:11.5px}
+.ghero{background:linear-gradient(135deg,var(--pri),#c96b96);color:#fff;border-radius:20px;padding:18px 18px 16px;box-shadow:0 10px 30px rgba(162,61,106,.25)}
+.ghero h2{color:#fff;margin:0 0 4px}.ghero p{margin:0 0 12px;opacity:.92}
+.ghero input{background:rgba(255,255,255,.95);border:0;border-radius:12px;min-height:44px}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.gcard{position:relative;border-radius:18px;padding:14px 12px 12px;color:#fff;cursor:pointer;overflow:hidden;min-height:118px;
+  background:linear-gradient(150deg,hsl(var(--h),48%,46%),hsl(calc(var(--h) + 35),52%,36%));box-shadow:0 6px 18px rgba(0,0,0,.12);
+  transition:transform .18s ease,box-shadow .18s ease;animation:gin .35s ease both}
+.gcard:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 26px rgba(0,0,0,.18)}
+.gcard:before{content:"";position:absolute;inset:auto -30px -40px auto;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.12)}
+.gcard .gn{font:700 12px Tajawal,sans-serif;background:rgba(255,255,255,.22);border-radius:999px;padding:2px 9px;display:inline-block}
+.gcard .gt{font-family:'Amiri Quran',serif;font-size:27px;line-height:1.6;margin:4px 0 2px}
+.gcard .gb{display:flex;gap:5px;flex-wrap:wrap;font-size:11.5px}
+.gcard .gb span{background:rgba(0,0,0,.18);border-radius:999px;padding:1px 8px}
+@keyframes gin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.gone-hero{border-radius:22px;padding:20px 18px;color:#fff;background:linear-gradient(140deg,hsl(var(--h),50%,42%),hsl(calc(var(--h) + 40),55%,30%));box-shadow:0 12px 30px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.gone-hero .gt{font-family:'Amiri Quran',serif;font-size:44px;line-height:1.5}
+.gone-hero .gstats{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.gone-hero .gstats span{background:rgba(255,255,255,.18);border-radius:12px;padding:6px 10px;font-weight:700;font-size:13.5px}
+.gacts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.gsec{background:var(--paper);border:1px solid var(--line);border-radius:18px;margin-top:12px;overflow:hidden}
+.gsec > summary{list-style:none;cursor:pointer;padding:12px 14px;font-weight:800;color:var(--head);display:flex;align-items:center;gap:8px}
+.gsec > summary::-webkit-details-marker{display:none}
+.gsec > summary .chip{margin-inline-start:auto}
+.gbody{padding:0 14px 12px}
+.gmut{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:8px;background:var(--soft)}
+.gmut .gl{padding:5px 0;border-bottom:1px dashed var(--line);font-size:17px;line-height:2}
+.gmut .gl:last-child{border:0}
+.gmut .gl.here{background:var(--paper);border-radius:10px;padding:5px 8px;box-shadow:inset 3px 0 0 var(--pri)}
+.gmut .lbl{font:700 12px Tajawal,sans-serif;color:var(--pri);margin-inline-start:6px}
+.gq{border-bottom:1px solid var(--soft);padding:8px 0;font-size:15.5px;line-height:1.9}
+.gq details summary{font-size:13px;color:var(--muted);cursor:pointer}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -562,6 +594,16 @@ details.fold[open] > summary{margin-bottom:6px}
     </section>
 
     <!-- ========== ملخص السور ========== -->
+    <section id="tab-guide" class="hidden">
+      <div id="guideHome">
+        <div class="ghero"><h2>دليل السور</h2><p>بطاقة لكل سورة: متشابهاتها وأسئلتها وفوائدها، للتصفح والمراجعة والطباعة والمشاركة.</p>
+          <input type="search" id="gSearch" placeholder="ابحثي عن سورة… (مثل: نور، ٢٤)"></div>
+        <div class="seg" id="gFilter" style="margin:10px 0"><button data-v="all" class="on">كل السور</button><button data-v="q">فيها أسئلة</button><button data-v="m">فيها متشابهات</button></div>
+        <div id="gGrid" class="ggrid"></div>
+      </div>
+      <div id="guideOne" class="hidden"></div>
+    </section>
+
     <section id="tab-summary" class="hidden">
       <h2>ملخص السور</h2>
       <p class="lead">حال بنك الأسئلة في كل سورة. اضغط على سورة لعرض أسئلتها.</p>
@@ -602,6 +644,7 @@ details.fold[open] > summary{margin-bottom:6px}
   <button data-tab="build" class="on"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 13h7 M9 17h7"/></svg><span>إعداد ورقة</span></button>
   <button data-tab="bank"><svg viewBox="0 0 24 24"><path d="M4 6h16 M4 12h16 M4 18h10"/></svg><span>بنك الأسئلة</span></button>
   <button data-tab="add" data-admin><svg viewBox="0 0 24 24"><path d="M12 5v14 M5 12h14"/></svg><span>إضافة</span></button>
+  <button data-tab="guide"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z M4 19V5 M8 7h7 M8 11h6"/></svg><span>دليل السور</span></button>
   <button data-tab="summary"><svg viewBox="0 0 24 24"><path d="M5 20V10 M12 20V4 M19 20v-7"/></svg><span>ملخص السور</span></button>
   <button data-tab="settings" data-admin><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"/></svg><span>الإعدادات</span></button>
 </nav>
@@ -2505,11 +2548,100 @@ function renderAdd() {
 /* =====================================================================
    ملخص السور
    ===================================================================== */
+let _mcKey = '', _mc = null;
+function mutCountBySurah() {
+  const key = (S.mut || []).length + ':' + (S.mut || []).filter(g => g.status === 'مستبعد').length;
+  if (_mc && _mcKey === key) return _mc;
+  const c = {}; (S.mut || []).forEach(g => { if (String(g.status || '').trim() === 'مستبعد') return; new Set(parseMutLocs(g.locs).map(l => l.s)).forEach(x => { c[x] = (c[x] || 0) + 1; }); });
+  _mc = c; _mcKey = key; return c;
+}
+/* =====================================================================
+   دليل السور: بطاقة تفاعلية لكل سورة (للعرض والتصفح والطباعة والمشاركة)
+   ===================================================================== */
+const gHue = n => (n * 47) % 360;
+function surahJuz(n) { const a = SSTART[n]; let j = 1; JUZ_ABS.forEach((x, i) => { if (a >= x) j = i + 1; }); return j; }
+function guideData(n) {
+  const qs = S.rows.filter(q => q.status !== 'مستبعد' && (q.sn === n || q.locs.some(([a, b]) => surahOfAbs(a) === n)));
+  const muts = (S.mut || []).map((g, gi) => ({ g, gi, locs: parseMutLocs(g.locs) })).filter(x => String(x.g.status || '').trim() !== 'مستبعد' && x.locs.some(l => l.s === n));
+  return { qs, muts };
+}
+function renderGuideHome() {
+  $('guideOne').classList.add('hidden'); $('guideHome').classList.remove('hidden');
+  const MC = mutCountBySurah(), QC = {}; S.rows.forEach(q => { if (q.sn && q.status !== 'مستبعد') QC[q.sn] = (QC[q.sn] || 0) + 1; });
+  const qv = norm($('gSearch').value || '').replace(/^ال/, ''), f = segVal('gFilter');
+  let h = '';
+  for (let n = 1; n <= 114; n++) {
+    const nm = sName(n);
+    if (qv && !(norm(nm).includes(qv) || String(n) === String(toInt($('gSearch').value)))) continue;
+    if (f === 'q' && !QC[n]) continue; if (f === 'm' && !MC[n]) continue;
+    h += '<div class="gcard" style="--h:' + gHue(n) + ';animation-delay:' + Math.min(n, 30) * 12 + 'ms" data-gs="' + n + '"><span class="gn">' + AD(n) + '</span><div class="gt">' + esc(nm) + '</div><div class="gb"><span>' + AD(ACOUNT(n)) + ' آية</span>' + (QC[n] ? '<span>أسئلة ' + AD(QC[n]) + '</span>' : '') + (MC[n] ? '<span>متشابهات ' + AD(MC[n]) + '</span>' : '') + '<span>الجزء ' + AD(surahJuz(n)) + '</span></div></div>';
+  }
+  $('gGrid').innerHTML = h || '<p class="hint">لا نتائج.</p>';
+}
+async function openGuide(n) {
+  S.guideSurah = n; history.replaceState(null, '', '#guide=' + n);
+  $('guideHome').classList.add('hidden'); const box = $('guideOne'); box.classList.remove('hidden');
+  const { qs, muts } = guideData(n), nm = sName(n);
+  box.innerHTML = '<div class="gone-hero" style="--h:' + gHue(n) + '"><button class="btn sm" id="gBack" style="background:rgba(255,255,255,.2);color:#fff;border:0">→ كل السور</button><div class="gt">سورة ' + esc(nm) + '</div><div class="gstats"><span>رقمها ' + AD(n) + '</span><span>' + AD(ACOUNT(n)) + ' آية</span><span>الجزء ' + AD(surahJuz(n)) + '</span><span>' + AD(muts.length) + ' متشابهات</span><span>' + AD(qs.length) + ' سؤالًا</span></div></div>' +
+    '<div class="gacts"><button class="btn pri" id="gPrint">⬇ طباعة / حفظ الدليل PDF</button><button class="btn" id="gShare">مشاركة الرابط</button><button class="btn" id="gSheet">ورقة عمل لهذه السورة</button></div>' +
+    '<div id="gBody"><p class="hint">جارٍ تحميل نصوص الآيات…</p></div>';
+  const need = new Set([n]); muts.forEach(m => m.locs.forEach(l => need.add(l.s))); qs.forEach(q => tokSurahs(q.text + ' ' + q.ans + ' ' + q.tam, need));
+  await ensureSurahs(need);
+  if (S.guideSurah !== n) return;
+  $('gBody').innerHTML = guideBodyHTML(n, qs, muts, true);
+  window.scrollTo(0, 0);
+}
+function guideBodyHTML(n, qs, muts, screen) {
+  let h = '';
+  const mutHTML = m => '<div class="gmut">' + m.locs.map(l => '<div class="gl' + (l.s === n ? ' here' : '') + '">' + renderTokens('{مطلع:' + sName(l.s) + ':' + l.a + ':9}') + '<span class="lbl">' + esc(sName(l.s)) + ' ' + AD(l.a) + '</span></div>').join('') + '</div>';
+  const MAXM = screen && !S.guideAll ? 40 : 1e6;
+  h += (screen ? '<details class="gsec" open><summary>المتشابهات<span class="chip">' + AD(muts.length) + '</span></summary>' : '<h2>المتشابهات (' + AD(muts.length) + ')</h2>') + '<div class="gbody">' +
+    (muts.length ? muts.slice(0, MAXM).map(mutHTML).join('') + (muts.length > MAXM ? '<button class="btn sm" id="gMore" style="margin-top:8px">عرض البقية (' + AD(muts.length - MAXM) + ')</button>' : '') : '<p class="hint">لا توجد متشابهات مسجلة لهذه السورة.</p>') + '</div>' + (screen ? '</details>' : '');
+  const byT = {}; qs.forEach(q => { (byT[q.tpl || 'غير محدد'] = byT[q.tpl || 'غير محدد'] || []).push(q); });
+  Object.keys(byT).sort((a, b) => tplOrder(a) - tplOrder(b)).forEach(t => {
+    const list = byT[t].sort((a, b) => a.anchor - b.anchor);
+    h += (screen ? '<details class="gsec"><summary>' + esc(t) + '<span class="chip">' + AD(list.length) + '</span></summary>' : '<h2>' + esc(t) + ' (' + AD(list.length) + ')</h2>') + '<div class="gbody">' +
+      list.map(q => '<div class="gq">' + (q.tam ? '<div class="hint">' + renderTokens(q.tam) + '</div>' : '') + renderTokens(q.text) + (q.ans ? (screen ? '<details><summary>الإجابة</summary>' + renderTokens(q.ans) + '</details>' : '<div class="ga">الإجابة: ' + renderTokens(q.ans) + '</div>') : '') + (q.imani ? '<div class="hint">✿ ' + esc(q.imani) + '</div>' : '') + '</div>').join('') + '</div>' + (screen ? '</details>' : '');
+  });
+  if (!qs.length) h += screen ? '<p class="hint" style="margin-top:10px">لا أسئلة في البنك لهذه السورة بعد.</p>' : '';
+  return h;
+}
+function printGuide(n) {
+  const { qs, muts } = guideData(n), nm = sName(n), w = window.open('', '_blank');
+  if (!w) { toast('اسمحي بالنوافذ المنبثقة لهذه الصفحة ثم أعيدي المحاولة.', true); return; }
+  const body = guideBodyHTML(n, qs, muts, false);
+  w.document.write('<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>دليل سورة ' + nm + '</title><link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet"><style>' +
+    '@page{size:A4;margin:14mm 13mm 16mm}body{font-family:Tajawal,sans-serif;color:#222;margin:0}.q{font-family:"Amiri Quran",serif}h1{font-size:30px;margin:0;color:#8C3359;font-family:"Amiri Quran",serif}h2{font-size:17px;color:#8C3359;border-bottom:2px solid #e9c7d6;padding-bottom:4px;margin:18px 0 8px;page-break-after:avoid}' +
+    '.top{border:2px solid #A23D6A;border-radius:14px;padding:12px 16px;margin-bottom:10px;background:#fbf2f6}.st span{display:inline-block;margin:4px 0 0 8px;font-weight:700;color:#5a2a40}.gmut{border:1px solid #ead3de;border-radius:10px;padding:6px 10px;margin:6px 0;page-break-inside:avoid}.gl{padding:3px 0;font-size:17px;line-height:1.95}.gl.here{color:#000;font-weight:700}.lbl{font:700 11px Tajawal;color:#A23D6A;margin-right:6px}.gq{padding:6px 0;border-bottom:1px solid #f1e3ea;font-size:14.5px;line-height:1.9;page-break-inside:avoid}.ga{color:#555;font-size:13.5px}.hint{color:#777;font-size:13px}.tool{position:fixed;top:8px;left:8px;right:8px;display:flex;gap:6px;flex-wrap:wrap}.tool div{flex:1 1 100%;background:#fbeef4;border:1px solid #e9c7d6;border-radius:10px;padding:8px 12px;font-weight:600;color:#5a2a40}.tool button{font:inherit;padding:6px 14px;border-radius:8px;border:1px solid #bbb;background:#fff}.tool .p{background:#A23D6A;color:#fff;border-color:#A23D6A}@media print{.tool{display:none}}' + sheetTokenCSS() +
+    '</style></head><body><div class="tool"><div>لحفظ الدليل ملفًّا: اختاري في نافذة الطباعة «حفظ بتنسيق PDF» ثم «حفظ».</div><button class="p" onclick="window.print()">⬇ حفظ PDF / طباعة</button><button onclick="window.close()">إغلاق</button></div><div style="height:70px" class="tool-sp"></div>' +
+    '<div class="top"><h1>دليل سورة ' + nm + '</h1><div class="st"><span>رقمها ' + AD(n) + '</span><span>' + AD(ACOUNT(n)) + ' آية</span><span>الجزء ' + AD(surahJuz(n)) + '</span><span>' + AD(muts.length) + ' متشابهات</span><span>' + AD(qs.length) + ' سؤالًا</span></div></div>' + body +
+    '<p class="hint" style="text-align:center;margin-top:20px">' + esc(sv('المنصة', 'اسم المنصة', 'أوراق مراجعة القرآن')) + '</p><script>document.fonts.ready.then(()=>setTimeout(()=>window.print(),400))<\/script><style>@media print{.tool-sp{display:none}}</style></body></html>');
+  w.document.close();
+}
+function sheetTokenCSS() { return '.qt,.aya{font-family:"Amiri Quran",serif}.anum{color:#A23D6A;font-size:.8em}'; }
+function wireGuide() {
+  $('gSearch').addEventListener('input', renderGuideHome);
+  segInit('gFilter', () => renderGuideHome());
+  $('gGrid').addEventListener('click', e => { const c = e.target.closest('[data-gs]'); if (c) openGuide(+c.dataset.gs); });
+  $('guideOne').addEventListener('click', e => {
+    const id = e.target.id, n = S.guideSurah;
+    if (id === 'gBack') { S.guideSurah = 0; history.replaceState(null, '', location.pathname + location.search); renderGuideHome(); window.scrollTo(0, 0); }
+    else if (id === 'gPrint') printGuide(n);
+    else if (id === 'gShare') {
+      const url = location.href.split('#')[0] + '#guide=' + n, title = 'دليل سورة ' + sName(n);
+      if (navigator.share) navigator.share({ title, url }).catch(() => { }); else copy(url, 'نُسخ رابط دليل السورة.');
+    }
+    else if (id === 'gSheet') { $('wholeSurahs').checked = true; $('fromS').value = n; $('fromS').onchange(); $('toS').value = n; $('toS').onchange(); showTab('build'); }
+    else if (id === 'gMore') { S.guideAll = true; const { qs, muts } = guideData(n); $('gBody').innerHTML = guideBodyHTML(n, qs, muts, true); S.guideAll = false; }
+  });
+}
 function renderSummary() {
   const thr = toInt(sv('البنك', 'حدّ «السورة المستوفاة»', '8')) || 8;
   const live = S.rows.filter(q => q.status !== 'مستبعد');
   const per = SUR.map(() => ({ t: 0, ok: 0, w: 0, off: 0, tpls: new Set(), sim: 0 }));
-  S.rows.forEach(q => { if (!q.sn) return; const p = per[q.sn - 1]; p.t++; if (q.status === 'معتمد') p.ok++; else if (q.status === 'مستبعد') p.off++; else p.w++; if (q.status !== 'مستبعد') { p.tpls.add(q.tpl); if (/متشابه/.test(q.tpl)) p.sim++; } });
+  const MC = mutCountBySurah();
+  S.rows.forEach(q => { if (!q.sn) return; const p = per[q.sn - 1]; p.t++; if (q.status === 'معتمد') p.ok++; else if (q.status === 'مستبعد') p.off++; else p.w++; if (q.status !== 'مستبعد') { p.tc = p.tc || {}; p.tc[q.tpl] = (p.tc[q.tpl] || 0) + 1; } });
+  per.forEach((p, i) => { p.sim = MC[i + 1] || 0; });
   const covered = per.filter(p => p.t - p.off > 0).length, full = per.filter(p => p.ok >= thr).length;
   $('sumStats').innerHTML = '<div><b>' + AD(live.length) + '</b><span>سؤالًا فعّالًا</span></div><div><b>' + AD(S.rows.filter(q => q.status === 'معتمد').length) + '</b><span>معتمدًا</span></div>' + (S.role === 'admin' ? '<div><b>' + AD(S.rows.filter(q => q.status === 'لم يُراجع').length) + '</b><span>بانتظار المراجعة</span></div>' : '') + '<div><b>' + AD(covered) + ' / ١١٤</b><span>سورة فيها أسئلة</span></div><div><b>' + AD(full) + '</b><span>سورة مستوفاة (' + AD(thr) + ' معتمدة فأكثر)</span></div>';
   const only = $('sumOnly').checked;
@@ -2517,7 +2649,7 @@ function renderSummary() {
   per.forEach((p, i) => {
     if (only && !p.t) return;
     const lab = !p.t || p.t === p.off ? ['لا أسئلة', 'lb-none'] : p.ok >= thr ? ['مستوفاة', 'lb-full'] : !p.sim ? ['ينقصها متشابهات', 'lb-miss'] : ['قيد البناء', 'lb-build'];
-    h += '<tr data-s="' + (i + 1) + '"><td>' + AD(i + 1) + '</td><td>' + SUR[i][0] + '</td><td>' + AD(p.t) + '</td><td>' + AD(p.ok) + '</td>' + (S.role === 'admin' ? '<td>' + AD(p.w) + '</td><td>' + AD(p.off) + '</td>' : '') + '<td>' + AD(p.tpls.size) + '</td><td>' + AD(p.sim) + '</td><td><span class="st-label ' + lab[1] + '">' + lab[0] + '</span></td></tr>';
+    h += '<tr data-s="' + (i + 1) + '"><td>' + AD(i + 1) + '</td><td>' + SUR[i][0] + '</td><td>' + AD(p.t) + '</td><td>' + AD(p.ok) + '</td>' + (S.role === 'admin' ? '<td>' + AD(p.w) + '</td><td>' + AD(p.off) + '</td>' : '') + '<td class="tcs">' + (Object.entries(p.tc || {}).sort((x, y) => y[1] - x[1]).map(([k, v]) => '<span class="chip">' + esc(k) + ' ' + AD(v) + '</span>').join(' ') || '—') + '</td><td>' + AD(p.sim) + '</td><td><span class="st-label ' + lab[1] + '">' + lab[0] + '</span></td></tr>';
   });
   $('sumTable').innerHTML = h + '</tbody>';
 }
@@ -2714,12 +2846,13 @@ function showTab(t) {
   if (S.role !== 'admin' && (t === 'add' || t === 'settings')) t = 'build';
   S.tab = t;
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
-  ['build', 'bank', 'add', 'summary', 'settings'].forEach(x => $('tab-' + x).classList.toggle('hidden', x !== t));
+  ['build', 'bank', 'add', 'guide', 'summary', 'settings'].forEach(x => $('tab-' + x).classList.toggle('hidden', x !== t));
   $('mbar').style.display = t === 'build' ? '' : 'none';
   if (t === 'build') { schedule(); setTimeout(scalePaper, 50); }
   if (t === 'bank') renderBank();
   if (t === 'add' && segVal('addMode') === 'manual') renderAdd();
   if (t === 'summary') renderSummary();
+  if (t === 'guide') { if (S.guideSurah) openGuide(S.guideSurah); else renderGuideHome(); }
   if (t === 'settings') renderSettings();
   window.scrollTo(0, 0);
 }
@@ -2775,7 +2908,8 @@ async function enter(pass, demo) {
   backgroundLoad();
 }
 function boot() {
-  wireBuilder(); wireBank(); wireSettings(); wirePaste();
+  wireBuilder(); wireBank(); wireSettings(); wirePaste(); wireGuide();
+  { const m = location.hash.match(/^#guide=(\d+)/); if (m) { S.guideSurah = Math.min(114, Math.max(1, +m[1])); S.tab = 'guide'; } }
   try { const u = new URL('logo.png', location.href).href; if (/^https?:/.test(u)) { const im = new Image(); im.onload = () => { S.repoLogo = u; if ($('logoInfo')) { syncLogoInfo(); schedule(); } }; im.src = u + '?v=' + Date.now().toString().slice(0, 7); } } catch (e) { }
   $('tabs').addEventListener('click', e => { const b = e.target.closest('button[data-tab]'); if (b) showTab(b.dataset.tab); });
   $('loginBtn').onclick = () => { const p = $('passInput').value.trim(); if (!p) { $('loginErr').textContent = 'اكتبي كلمة المرور.'; return; } enter(p, false); };
