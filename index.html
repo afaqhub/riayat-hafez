@@ -2582,7 +2582,7 @@ async function openGuide(n) {
   S.guideSurah = n; history.replaceState(null, '', '#guide=' + n);
   $('guideHome').classList.add('hidden'); const box = $('guideOne'); box.classList.remove('hidden');
   const { qs, muts } = guideData(n), nm = sName(n);
-  box.innerHTML = '<div class="gone-hero" style="--h:' + gHue(n) + '"><button class="btn sm" id="gBack" style="background:rgba(255,255,255,.2);color:#fff;border:0">→ كل السور</button><div class="gt">سورة ' + esc(nm) + '</div><div class="gstats"><span>رقمها ' + AD(n) + '</span><span>' + AD(ACOUNT(n)) + ' آية</span><span>الجزء ' + AD(surahJuz(n)) + '</span><span>' + AD(muts.length) + ' متشابهات</span><span>' + AD(qs.length) + ' سؤالًا</span></div></div>' +
+  box.innerHTML = '<div class="gone-hero" style="--h:' + gHue(n) + '"><button class="btn" id="gBack" style="position:relative;z-index:3;background:rgba(255,255,255,.22);color:#fff;border:0;min-height:44px;padding:0 18px;font-size:16px">→ كل السور</button><div class="gt">سورة ' + esc(nm) + '</div><div class="gstats"><span>رقمها ' + AD(n) + '</span><span>' + AD(ACOUNT(n)) + ' آية</span><span>الجزء ' + AD(surahJuz(n)) + '</span><span>' + AD(muts.length) + ' متشابهات</span><span>' + AD(qs.length) + ' سؤالًا</span></div></div>' +
     '<div class="gacts"><button class="btn pri" id="gPrint">⬇ طباعة / حفظ الدليل PDF</button><button class="btn" id="gShare">مشاركة الرابط</button><button class="btn" id="gSheet">ورقة عمل لهذه السورة</button></div>' +
     '<div id="gBody"><p class="hint">جارٍ تحميل نصوص الآيات…</p></div>';
   const need = new Set([n]); muts.forEach(m => m.locs.forEach(l => need.add(l.s))); qs.forEach(q => tokSurahs(q.text + ' ' + q.ans + ' ' + q.tam, need));
@@ -2595,7 +2595,7 @@ function guideBodyHTML(n, qs, muts, screen) {
   let h = '';
   const mutHTML = m => '<div class="gmut">' + m.locs.map(l => '<div class="gl' + (l.s === n ? ' here' : '') + '">' + renderTokens('{مطلع:' + sName(l.s) + ':' + l.a + ':9}') + '<span class="lbl">' + esc(sName(l.s)) + ' ' + AD(l.a) + '</span></div>').join('') + '</div>';
   const MAXM = screen && !S.guideAll ? 40 : 1e6;
-  h += (screen ? '<details class="gsec" open><summary>المتشابهات<span class="chip">' + AD(muts.length) + '</span></summary>' : '<h2>المتشابهات (' + AD(muts.length) + ')</h2>') + '<div class="gbody">' +
+  h += (screen ? '<details class="gsec"><summary>المتشابهات<span class="chip">' + AD(muts.length) + '</span></summary>' : '<h2>المتشابهات (' + AD(muts.length) + ')</h2>') + '<div class="gbody">' +
     (muts.length ? muts.slice(0, MAXM).map(mutHTML).join('') + (muts.length > MAXM ? '<button class="btn sm" id="gMore" style="margin-top:8px">عرض البقية (' + AD(muts.length - MAXM) + ')</button>' : '') : '<p class="hint">لا توجد متشابهات مسجلة لهذه السورة.</p>') + '</div>' + (screen ? '</details>' : '');
   const byT = {}; qs.forEach(q => { (byT[q.tpl || 'غير محدد'] = byT[q.tpl || 'غير محدد'] || []).push(q); });
   Object.keys(byT).sort((a, b) => tplOrder(a) - tplOrder(b)).forEach(t => {
@@ -2624,7 +2624,8 @@ function wireGuide() {
   segInit('gFilter', () => renderGuideHome());
   $('gGrid').addEventListener('click', e => { const c = e.target.closest('[data-gs]'); if (c) openGuide(+c.dataset.gs); });
   $('guideOne').addEventListener('click', e => {
-    const id = e.target.id, n = S.guideSurah;
+    const btn = e.target.closest('button'); if (!btn) return;
+    const id = btn.id, n = S.guideSurah;
     if (id === 'gBack') { S.guideSurah = 0; history.replaceState(null, '', location.pathname + location.search); renderGuideHome(); window.scrollTo(0, 0); }
     else if (id === 'gPrint') printGuide(n);
     else if (id === 'gShare') {
