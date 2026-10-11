@@ -293,6 +293,14 @@ details.fold[open] > summary{margin-bottom:6px}
 .gmut .lbl{font:700 12px Tajawal,sans-serif;color:var(--pri);margin-inline-start:6px}
 .gq{border-bottom:1px solid var(--soft);padding:8px 0;font-size:15.5px;line-height:1.9}
 .gq details summary{font-size:13px;color:var(--muted);cursor:pointer}
+.mcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px}
+.mcard.off{opacity:.6;background:var(--soft)}
+.mcard .mh{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.mcard .mh .sp{flex:1}
+.mcard .ml{font-size:17px;line-height:2;border-bottom:1px dashed var(--line);padding:2px 0}
+.mcard .ml:last-of-type{border:0}
+.mcard .ml b{font:700 12px Tajawal,sans-serif;color:var(--pri);margin-inline-start:6px}
+.mcard .md{font-size:13px;color:var(--muted);margin-top:4px}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -566,6 +574,18 @@ details.fold[open] > summary{margin-bottom:6px}
     <!-- ========== بنك الأسئلة ========== -->
     <section id="tab-bank" class="hidden">
       <div class="row" style="align-items:center;margin-bottom:4px"><h2 style="flex:1 1 auto;margin:0">بنك الأسئلة</h2><button class="btn pri" id="bankQuickAdd" data-admin style="flex:0 0 auto">＋ سؤال جديد</button></div>
+      <div class="seg" id="bankMode" style="margin:6px 0 10px"><button data-v="q" class="on">الأسئلة</button><button data-v="m">المتشابهات</button></div>
+      <div id="mutBank" class="hidden">
+        <div class="filters">
+          <input type="text" id="mbSearch" placeholder="بحث: اسم سورة، أو رقم آية (البقرة:34)، أو كلمة من موضع الاختلاف">
+          <select id="mbSurah"><option value="">كل السور</option></select>
+          <select id="mbStatus"><option value="">كل الحالات</option><option>فعّال</option><option>مستبعد</option></select>
+          <button class="btn pri" id="mbAdd" data-admin>＋ مجموعة جديدة</button>
+        </div>
+        <p class="hint" id="mbInfo" style="margin:6px 0"></p>
+        <div id="mbList"></div>
+      </div>
+      <div id="qBank">
       <p class="lead" id="bankLead"></p>
       <div class="filters">
         <input type="text" id="bSearch" placeholder="بحث في نص السؤال أو الإجابة أو الوسوم أو المعرّف">
@@ -577,6 +597,7 @@ details.fold[open] > summary{margin-bottom:6px}
       <div class="stats" id="bStats"></div>
       <div id="bList"></div>
       <div class="pager" id="bPager"></div>
+    </div>
     </section>
 
     <!-- ========== إضافة سؤال ========== -->
@@ -930,7 +951,9 @@ function demoApi(fn, a) {
     renameSetting: () => { const x = DEMO.settings.find(s => s.group === a.group && s.key === a.key); if (x) x.key = a.newKey; return DEMO.settings; },
     deleteSetting: () => { DEMO.settings = DEMO.settings.filter(s => !(s.group === a.group && s.key === a.key)); return DEMO.settings; },
     listOp: () => { const L = DEMO.lists; if (a.list === 'القوالب') { const i = L.templates.findIndex(t => t.name === a.value); if (i < 0) throw new Error('غير موجود'); if (a.op === 'delete') L.templates.splice(i, 1); else if (a.op === 'rename') L.templates[i].name = a.newValue; else L.templates[i].direction = a.extra; } else { const arr = L.lists[a.list] || []; const i = arr.indexOf(a.value); if (i < 0) throw new Error('غير موجود'); if (a.op === 'delete') arr.splice(i, 1); else if (a.op === 'rename') arr[i] = a.newValue; } return L; },
-    addMut: () => { DEMO.mut.push({ bab: a.bab, no: '', locs: a.locs, diff: '', status: 'فعّال' }); return { ok: true }; },
+    addMut: () => ({ ok: true }),
+    updateMut: () => ({ ok: true }),
+    deleteMut: () => ({ ok: true }),
     setMutStatus: () => { const g = DEMO.mut.find(x => x.locs === a.locs); if (g) g.status = a.status; return { ok: true }; },
     setDefault: () => { DEMO.settings.forEach(s => { if (s.group === a.group) s.isDefault = s.key === a.key; }); return DEMO.settings; },
     addListItem: () => { if (a.list === 'القوالب') DEMO.lists.templates.push({ name: a.value, direction: a.extra || '', desc: '' }); else (DEMO.lists.lists[a.list] = DEMO.lists.lists[a.list] || []).push(a.value); return DEMO.lists; }
@@ -1155,9 +1178,16 @@ function mutAnalyze(c) {
     const g1 = Math.max(1, n - 1); return { ...x, ok: true, w1: Math.max(1, n - 7), w2: n, g1, g2: n };
   });
 }
+function parseMutWords(str) {
+  const out = {}; String(str || '').split('؛').forEach(p => { const m = p.trim().match(/^(.+?):(\d+)=(\d+)-(\d+)\/(\d+)-(\d+)$/); if (m) { const sn = sNum(m[1].trim()); if (sn) out[sn + ':' + (+m[2])] = { w1: +m[3], w2: +m[4], g1: +m[5], g2: +m[6] }; } });
+  return out;
+}
 function mutItem(c, space, mode, rand) {
   const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const A = mutAnalyze(c), names = [...new Set(c.locs.map(l => sName(l.s)))];
+  // الكلمات التي اختارتها المعلمة لهذه المجموعة (من عمود «الكلمات المختارة»)
+  const WD = parseMutWords(c.g && c.g.words);
+  A.forEach(x => { const o = WD[x.l.s + ':' + x.l.a]; if (o && x.W && x.W.length) Object.assign(x, { ok: true, w1: o.w1, w2: Math.min(o.w2, x.W.length), g1: o.g1, g2: o.g2, custom: true }); });
   const ready = A.every(x => x.ok);
   const plainW = (x) => x.W.slice(x.g1 - 1, x.g2).join(' ').replace(/[\u06D6-\u06ED]/g, '').replace(/\s+/g, ' ').trim();
   const choices = ready ? [...new Set(A.map(plainW))] : [];
@@ -1166,9 +1196,9 @@ function mutItem(c, space, mode, rand) {
   const subs = [], opts = [], keys = [], ans = [];
   A.forEach(x => {
     const l = x.l, nm = sName(l.s), label = ' [' + nm + ': ' + AD(l.a) + ']';
-    if (x.ok && x.g1 - 1 <= 12) x.w1 = 1; // بداية الآية ظاهرة ما دام موضع الاختلاف قريبًا منها
-    const head = x.ok && x.w1 > 1 ? '{مطلع:' + nm + ':' + l.a + ':4} ' : '';
-    const gapTok = x.ok ? head + '{فجوة:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + ':' + x.g1 + '-' + x.g2 + '}' : '{مطلع:' + nm + ':' + l.a + ':5}';
+    if (x.ok && !x.custom && x.g1 - 1 <= 12) x.w1 = 1; // بداية الآية ظاهرة ما دام موضع الاختلاف قريبًا منها
+    const head = x.ok && !x.custom && x.w1 > 1 ? '{مطلع:' + nm + ':' + l.a + ':4} ' : '';
+    const gapTok = x.custom && !x.g1 ? '{مقتطف:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + '}' : x.ok ? head + '{فجوة:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + ':' + x.g1 + '-' + x.g2 + '}' : '{مطلع:' + nm + ':' + l.a + ':5}';
     if (mode === 'surah') { subs.push(x.ok ? '{مقتطف:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + '}' : '{مطلع:' + nm + ':' + l.a + ':8}'); opts.push(shuffle(names)); keys.push(nm); }
     else if (mode === 'choice') { subs.push(gapTok + label); opts.push(shuffle(choices)); keys.push(plainW(x)); }
     else { subs.push(gapTok + label); opts.push(null); keys.push(null); }
@@ -1765,6 +1795,22 @@ function mmEntry(e) { // يقبل الصيغة القديمة (نص) والجد�
   return e || { locs: [] };
 }
 function mmLabel(e) { return mmEntry(e).locs.map(l => sName(l.s) + ' ' + AD(l.a)).join(' · '); }
+/* نقرة على كلمة: ظاهرة ← فراغ ← محذوفة (الحذف يقصّ من أقرب طرف، والإظهار يمدّ النطاق إليها) */
+function cycleWord(r, n, i) {
+  let { w1, w2, g1, g2 } = r.w1 ? r : { w1: 1, w2: n, g1: 0, g2: 0 }; const k = i + 1;
+  const trim = () => { if (g1 ? k < g1 : (k - w1 <= w2 - k)) w1 = k + 1; else w2 = k - 1; };
+  if (k < w1 || k > w2) { w1 = Math.min(w1, k); w2 = Math.max(w2, k); }          // محذوفة ← ظاهرة
+  else if (g1 && k >= g1 && k <= g2) {                                             // فراغ ← محذوفة
+    if (k === g1 && k === g2) { g1 = g2 = 0; } else if (k === g1) g1++; else if (k === g2) g2--; else g2 = k - 1;
+    if (k - w1 <= w2 - k) w1 = Math.max(w1, k + 1); else w2 = Math.min(w2, k - 1);
+  }
+  else if (!g1) { g1 = g2 = k; }                                                   // أول فراغ
+  else if (k === g1 - 1 || k === g2 + 1) { g1 = Math.min(g1, k); g2 = Math.max(g2, k); } // يجاور الفراغ ← يمتد
+  else trim();                                                                     // بعيد عن الفراغ ← حذف حتى الطرف
+  if (w1 > w2) return null;
+  if (g1) { g1 = Math.max(g1, w1); g2 = Math.min(g2, w2); if (g1 > g2) g1 = g2 = 0; }
+  return { w1, w2, g1, g2 };
+}
 function renderManualMuts() {
   const list = PREF.manualMut || [], admin = S.role === 'admin';
   $('manualMutList').innerHTML = list.map((e, i) => '<div class="grow"><span class="chip">متشابه</span><span class="gt">' + esc(mmLabel(e)) + '</span><button class="btn sm" data-mm="edit" data-i="' + i + '" style="flex:none">تعديل</button>' + (admin ? '<button class="btn sm" data-mm="save" data-i="' + i + '" style="flex:none">حفظ في الجدول</button>' : '') + '<button class="btn sm off" data-mm="del" data-i="' + i + '" style="flex:none">✕</button></div>').join('');
@@ -1834,13 +1880,7 @@ function openMutEditor(idx) {
     const W = wordsWithMarks(ayahText(r.s, r.a) || '');
     if (e.target.closest('[data-all]')) { Object.assign(r, { w1: 1, w2: W.length, g1: 0, g2: 0, custom: true }); draw(); return; }
     const chip = e.target.closest('[data-w]'); if (!chip) return;
-    const st = r.w1 ? statesFromRange(W.length, r.w1, r.w2, r.g1, r.g2) : W.map(() => 0);
-    const i = +chip.dataset.w - 1; st[i] = (st[i] + 1) % 3;
-    // الفراغ متصل: ما بين أول فراغ وآخره يصير فراغًا
-    const gi = st.map((v, x) => v === 1 ? x : -1).filter(x => x >= 0);
-    if (gi.length) for (let x = gi[0]; x <= gi[gi.length - 1]; x++) st[x] = 1;
-    const rg = rangeFromStates(st); if (!rg) return;
-    Object.assign(r, rg, { custom: true }); draw();
+    const rg = cycleWord(r, W.length, +chip.dataset.w - 1); if (!rg) return; Object.assign(r, rg, { custom: true }); draw();
   });
   $('mAddLoc').onclick = () => { rows.push({ s: rows[rows.length - 1].s, a: (+rows[rows.length - 1].a || 1) + 1 }); autoFill(); };
   $('mOk').onclick = () => {
@@ -1905,9 +1945,7 @@ async function openWordEditor(tokStr, onSave) {
   $('weNoGap').onclick = () => { r.g1 = r.g2 = 0; draw(); };
   $('weChips').onclick = e => {
     const c = e.target.closest('[data-w]'); if (!c) return;
-    const st = statesFromRange(W.length, r.w1, r.w2, r.g1, r.g2), i = +c.dataset.w - 1; st[i] = (st[i] + 1) % 3;
-    const gi = st.map((v, x) => v === 1 ? x : -1).filter(x => x >= 0); if (gi.length) for (let x = gi[0]; x <= gi[gi.length - 1]; x++) st[x] = 1;
-    const rg = rangeFromStates(st); if (rg) { r = rg; draw(); }
+    const rg = cycleWord(r, W.length, +c.dataset.w - 1); if (rg) { r = rg; draw(); }
   };
   $('weOk').onclick = () => { $('wmodal').classList.add('hidden'); onSave(rangeToTok(p.s, p.a, r, W.length)); };
 }
@@ -2328,7 +2366,119 @@ function openQuickAdd() {
   bindEditor($('edRoot'), null, 'add', () => { closeModal(); if (S.tab === 'bank') renderBank(); });
   const t = $('edRoot').querySelector('[name=text]'); if (t) t.focus();
 }
+/* =====================================================================
+   المتشابهات داخل «بنك الأسئلة»: عرض وتحرير واعتماد واستبعاد وحذف وإضافة
+   ===================================================================== */
+let mbShown = 40;
+function mbFiltered() {
+  const q = norm($('mbSearch').value || ''), sn = +$('mbSurah').value || 0, st = $('mbStatus').value;
+  return (S.mut || []).map((g, gi) => ({ g, gi, locs: parseMutLocs(g.locs) })).filter(x => {
+    const status = String(x.g.status || 'فعّال').trim() === 'مستبعد' ? 'مستبعد' : 'فعّال';
+    if (st && status !== st) return false;
+    if (sn && !x.locs.some(l => l.s === sn)) return false;
+    if (q) { const hay = norm(x.g.locs + ' ' + (x.g.diff || '') + ' ' + (x.g.bab || '')); if (!hay.includes(q.replace(/\s+/g, ' '))) return false; }
+    return true;
+  });
+}
+async function renderMutBank() {
+  const all = mbFiltered(), list = all.slice(0, mbShown), admin = S.role === 'admin';
+  $('mbInfo').textContent = 'المجموعات: ' + AD(all.length) + (all.length > list.length ? ' — المعروض ' + AD(list.length) : '');
+  const draw = () => {
+    $('mbList').innerHTML = list.map(x => {
+      const off = String(x.g.status || '').trim() === 'مستبعد';
+      return '<div class="mcard' + (off ? ' off' : '') + '" data-gi="' + x.gi + '"><div class="mh"><span class="chip">' + esc(x.g.bab || '') + ' ' + AD(x.g.no || '') + '</span><span class="st-label ' + (off ? 'lb-none' : 'lb-full') + '">' + (off ? 'مستبعد' : 'فعّال') + '</span>' + (x.g.words ? '<span class="chip">كلمات معدّلة</span>' : '') + '<span class="sp"></span>' +
+        (admin ? '<button class="btn sm" data-mb="edit">تعديل</button><button class="btn sm" data-mb="toggle">' + (off ? 'تفعيل' : 'استبعاد') + '</button><button class="btn sm off" data-mb="del">حذف</button>' : '') + '</div>' +
+        x.locs.map(l => '<div class="ml">' + (QT[l.s] ? renderTokens('{مطلع:' + sName(l.s) + ':' + l.a + ':8}') : '…') + '<b>' + esc(sName(l.s)) + ' ' + AD(l.a) + '</b></div>').join('') +
+        (x.g.diff ? '<div class="md">موضع الاختلاف: ' + esc(String(x.g.diff).slice(0, 160)) + '</div>' : '') + '</div>';
+    }).join('') + (all.length > list.length ? '<button class="btn" id="mbMore" style="margin-top:10px;width:100%">عرض المزيد</button>' : '') + (all.length ? '' : '<p class="hint">لا نتائج.</p>');
+  };
+  draw();
+  const need = new Set(); list.forEach(x => x.locs.forEach(l => need.add(l.s)));
+  if ([...need].some(x => !QT[x])) { await ensureSurahs(need); draw(); }
+}
+function openMutGroupEditor(gi) {
+  const g = gi != null ? S.mut[gi] : null, R = getRange();
+  const WD = parseMutWords(g && g.words);
+  let rows = (g ? parseMutLocs(g.locs) : [{ s: surahOfAbs(R.A), a: 1 }, { s: surahOfAbs(R.A), a: 2 }]).map(l => { const o = WD[l.s + ':' + l.a]; return Object.assign({ s: l.s, a: l.a }, o ? Object.assign({ custom: true }, o) : {}); });
+  const so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
+  $('modalBox').innerHTML = '<h3>' + (g ? 'تعديل مجموعة متشابهات' : 'مجموعة متشابهات جديدة') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+    '<p class="hint" style="margin-top:0">أضيفي المواضع أو احذفيها، واضغطي على أي كلمة لتغيير حالتها: <span class="wst w0">ظاهرة</span> ← <span class="wst w1">فراغ</span> ← <span class="wst w2">محذوفة</span>. تبدأ كل آية مضبوطة تلقائيًا، وما تعدّلينه يُحفظ في الجدول ويظهر في كل الأوراق.</p>' +
+    '<div id="mgLocs"></div><button class="btn sm" id="mgAdd" style="margin-top:8px">＋ موضع</button>' +
+    '<details class="more" style="margin-top:10px"><summary>موضع الاختلاف (نص اختياري) والحالة</summary><textarea id="mgDiff" rows="2" style="margin-top:8px">' + esc(g ? g.diff || '' : '') + '</textarea>' +
+    '<select id="mgStatus" style="margin-top:8px"><option' + (g && String(g.status).trim() === 'مستبعد' ? '' : ' selected') + '>فعّال</option><option' + (g && String(g.status).trim() === 'مستبعد' ? ' selected' : '') + '>مستبعد</option></select></details>' +
+    '<label class="f" style="margin-top:10px">معاينة السؤال</label><div id="mgPrev" class="dprev"></div><div id="mgErr" class="tokfail"></div>' +
+    '<div class="row" style="margin-top:12px"><button class="btn pri" id="mgSave" style="flex:0 0 auto">حفظ في جدول المتشابهات</button></div>';
+  $('modal').classList.remove('hidden');
+  const autoFill = async () => {
+    await ensureSurahs(new Set(rows.map(r => r.s))); if (!$('mgLocs')) return;
+    const locs = rows.map(r => { const a = Math.max(1, Math.min(ACOUNT(r.s), +r.a || 1)); r.a = a; return { s: r.s, a, b: a, A: ABS(r.s, a), B: ABS(r.s, a) }; });
+    if (locs.length >= 2) mutAnalyze({ locs, all: locs, diffs: [] }).forEach((x, k) => {
+      if (rows[k].custom) return;
+      if (!x.ok) { Object.assign(rows[k], { w1: 1, w2: Math.min(8, (x.W || []).length || 8), g1: 0, g2: 0 }); return; }
+      Object.assign(rows[k], { w1: x.g1 - 1 <= 12 ? 1 : x.w1, w2: x.w2, g1: x.g1, g2: x.g2 });
+    });
+    draw();
+  };
+  const draw = () => {
+    if (!$('mgLocs')) return;
+    $('mgLocs').innerHTML = rows.map((r, k) => {
+      const t = ayahText(r.s, r.a), W = t ? wordsWithMarks(t) : [];
+      const st = r.w1 ? statesFromRange(W.length, r.w1, r.w2, r.g1, r.g2) : W.map(() => 0);
+      return '<div class="mbox" data-k="' + k + '"><div class="xr"><select data-ms>' + so(r.s) + '</select><span class="hint" style="flex:0 0 auto">آية</span><input type="number" min="1" data-ma value="' + r.a + '" style="flex:0 0 76px"><button type="button" class="btn sm off" data-mdel style="flex:0 0 auto"' + (rows.length > 2 ? '' : ' disabled') + ' title="حذف هذا الموضع">✕</button></div>' +
+        '<div class="wchips">' + (W.length ? W.map((w, i) => '<span class="wst w' + st[i] + '" data-w="' + (i + 1) + '">' + esc(w) + '</span>').join(' ') : '<span class="hint">جارٍ تحميل نص الآية…</span>') + '</div>' +
+        '<div class="row" style="margin-top:4px"><button type="button" class="btn sm" data-auto style="flex:0 0 auto">تلقائي</button><button type="button" class="btn sm" data-all style="flex:0 0 auto">الآية كاملة</button>' + (r.custom ? '<span class="chip" style="flex:0 0 auto;align-self:center">معدّل</span>' : '') + '</div></div>';
+    }).join('');
+    const subs = rows.filter(r => r.w1).map(r => (r.g1 ? '{فجوة:' + sName(r.s) + ':' + r.a + ':' + r.w1 + '-' + r.w2 + ':' + r.g1 + '-' + r.g2 + '}' : '{مقتطف:' + sName(r.s) + ':' + r.a + ':' + r.w1 + '-' + r.w2 + '}') + ' [' + sName(r.s) + ': ' + AD(r.a) + ']');
+    $('mgPrev').innerHTML = subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') || '<span class="hint">اختاري المواضع.</span>';
+  };
+  $('mgLocs').addEventListener('change', e => {
+    const box = e.target.closest('.mbox'); if (!box) return; const r = rows[+box.dataset.k];
+    r.s = +box.querySelector('[data-ms]').value; r.a = Math.max(1, Math.min(ACOUNT(r.s), +box.querySelector('[data-ma]').value || 1));
+    r.custom = false; r.w1 = 0; autoFill();
+  });
+  $('mgLocs').addEventListener('click', e => {
+    const box = e.target.closest('.mbox'); if (!box) return; const k = +box.dataset.k, r = rows[k];
+    if (e.target.closest('[data-mdel]')) { if (rows.length > 2) { rows.splice(k, 1); autoFill(); } return; }
+    if (e.target.closest('[data-auto]')) { r.custom = false; r.w1 = 0; autoFill(); return; }
+    const W = wordsWithMarks(ayahText(r.s, r.a) || '');
+    if (e.target.closest('[data-all]')) { Object.assign(r, { w1: 1, w2: W.length, g1: 0, g2: 0, custom: true }); draw(); return; }
+    const chip = e.target.closest('[data-w]'); if (!chip) return;
+    const rg = cycleWord(r, W.length, +chip.dataset.w - 1); if (!rg) return; Object.assign(r, rg, { custom: true }); draw();
+  });
+  $('mgAdd').onclick = () => { const last = rows[rows.length - 1] || { s: 1, a: 1 }; rows.push({ s: last.s, a: (+last.a || 1) + 1 }); autoFill(); };
+  $('mgSave').onclick = async () => {
+    const sorted = rows.slice().sort((x, y) => x.s - y.s || x.a - y.a), keys = [...new Set(sorted.map(r => sName(r.s) + ':' + r.a))];
+    if (keys.length < 2) { $('mgErr').textContent = 'أضيفي موضعين مختلفين على الأقل.'; return; }
+    const str = keys.join(' ؛ '), bab = sName(sorted[0].s), diff = $('mgDiff').value.trim(), status = $('mgStatus').value;
+    const words = sorted.filter(r => r.custom && r.w1).map(r => sName(r.s) + ':' + r.a + '=' + r.w1 + '-' + r.w2 + '/' + (r.g1 || 0) + '-' + (r.g2 || 0)).join(' ؛ ');
+    if ((!g || String(g.locs).replace(/\s+/g, '') !== str.replace(/\s+/g, '')) && S.mut.some(x => x !== g && String(x.locs).replace(/\s+/g, '') === str.replace(/\s+/g, ''))) { $('mgErr').textContent = 'هذه المجموعة موجودة بالمواضع نفسها.'; return; }
+    try {
+      if (g) { await api('updateMut', { oldLocs: g.locs, locs: str, diff, status, bab, words }); Object.assign(g, { locs: str, diff, status, bab, words }); }
+      else { await api('addMut', { bab, locs: str, diff, note: 'يدوي', words }); S.mut.push({ bab, no: '', locs: str, diff, status: 'فعّال', words }); if (status === 'مستبعد') { await api('setMutStatus', { locs: str, status }); S.mut[S.mut.length - 1].status = status; } }
+      _mc = null; closeModal(); renderMutBank(); if (S.tab === 'build') refresh(false); toast('حُفظت المجموعة في جدول المتشابهات.');
+    } catch (err) { $('mgErr').textContent = err.message; }
+  };
+  autoFill();
+}
+function wireMutBank() {
+  segInit('bankMode', v => { $('mutBank').classList.toggle('hidden', v !== 'm'); $('qBank').classList.toggle('hidden', v === 'm'); $('bankQuickAdd').classList.toggle('hidden', v === 'm'); if (v === 'm') { mbShown = 40; renderMutBank(); } });
+  $('mbSurah').innerHTML = '<option value="">كل السور</option>' + SUR.map((y, i) => '<option value="' + (i + 1) + '">' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
+  let t = 0; const re = () => { clearTimeout(t); t = setTimeout(() => { mbShown = 40; renderMutBank(); }, 250); };
+  $('mbSearch').addEventListener('input', re); $('mbSurah').onchange = re; $('mbStatus').onchange = re;
+  $('mbAdd').onclick = () => openMutGroupEditor(null);
+  $('mbList').addEventListener('click', async e => {
+    if (e.target.id === 'mbMore') { mbShown += 40; renderMutBank(); return; }
+    const b = e.target.closest('button[data-mb]'); if (!b) return;
+    const gi = +b.closest('.mcard').dataset.gi, g = S.mut[gi]; if (!g) return;
+    try {
+      if (b.dataset.mb === 'edit') openMutGroupEditor(gi);
+      else if (b.dataset.mb === 'toggle') { const st = String(g.status).trim() === 'مستبعد' ? 'فعّال' : 'مستبعد'; await api('setMutStatus', { locs: g.locs, status: st }); g.status = st; _mc = null; renderMutBank(); toast(st === 'مستبعد' ? 'استُبعدت المجموعة.' : 'فُعّلت المجموعة.'); }
+      else if (b.dataset.mb === 'del') { if (!confirm('حذف هذه المجموعة نهائيًا من جدول المتشابهات؟ (البديل الأسلم: «استبعاد»)')) return; await api('deleteMut', { locs: g.locs }); S.mut.splice(gi, 1); S.mutPicked = null; _mc = null; renderMutBank(); toast('حُذفت المجموعة.'); }
+    } catch (err) { toast(err.message, true); }
+  });
+}
 function wireBank() {
+  wireMutBank();
   $('bankQuickAdd').onclick = openQuickAdd;
   ['bSearch', 'bSurah', 'bTpl', 'bStatus', 'bSort'].forEach(id => $(id).addEventListener('input', () => { S.bankPage = 0; renderBank(); }));
   $('bPager').onclick = e => { const p = e.target.dataset.p; if (!p) return; S.bankPage += +p; renderBank(); window.scrollTo(0, 0); };
@@ -2850,7 +3000,7 @@ function showTab(t) {
   ['build', 'bank', 'add', 'guide', 'summary', 'settings'].forEach(x => $('tab-' + x).classList.toggle('hidden', x !== t));
   $('mbar').style.display = t === 'build' ? '' : 'none';
   if (t === 'build') { schedule(); setTimeout(scalePaper, 50); }
-  if (t === 'bank') renderBank();
+  if (t === 'bank') { renderBank(); if (segVal('bankMode') === 'm') renderMutBank(); }
   if (t === 'add' && segVal('addMode') === 'manual') renderAdd();
   if (t === 'summary') renderSummary();
   if (t === 'guide') { if (S.guideSurah) openGuide(S.guideSurah); else renderGuideHome(); }
