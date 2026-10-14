@@ -304,6 +304,50 @@ details.fold[open] > summary{margin-bottom:6px}
 .fszr{display:flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);overflow:hidden;flex:0 0 auto}
 .fszr button{border:0;background:none;min-width:40px;height:36px;font:800 16px Tajawal,sans-serif;color:var(--pri);cursor:pointer}
 .fszr b{min-width:52px;text-align:center;font-size:14px}
+.controls.easy-on > :not(#easy){display:none!important}
+.controls:not(.easy-on) #easy{display:none}
+#easy{display:flex;flex-direction:column;gap:14px}
+.ez-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+.ez-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ez-h h3{margin:0;font-size:20px;color:var(--head)}
+.ez-n{width:36px;height:36px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+.ez-big{width:100%;min-height:62px;border-radius:16px;border:2px solid var(--pri);background:var(--soft);font:800 24px 'Amiri Quran',Tajawal,serif;color:var(--head);display:flex;align-items:center;justify-content:space-between;padding:0 18px;cursor:pointer}
+.ez-arrow{font:700 18px Tajawal,sans-serif;color:var(--pri)}
+.ez-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.ez-link{background:none;border:0;color:var(--pri);font:700 15px Tajawal,sans-serif;cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:4px}
+.ez-ayahs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;font-weight:700}
+.ez-ayahs input{width:80px;min-height:44px;font-size:18px;text-align:center}
+.ez-cnt{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--soft)}
+.ez-cnt:last-child{border:0}
+.ez-cnt > div:first-child{flex:1;min-width:0}
+.ez-cnt b{display:block;font-size:18px}
+.ez-cnt small{display:block;color:var(--muted);font-size:13.5px;line-height:1.5}
+.ez-stp{display:flex;align-items:center;gap:6px;flex:none}
+.ez-stp button{width:48px;height:48px;border-radius:50%;border:2px solid var(--pri);background:var(--paper);color:var(--pri);font:800 26px Tajawal,sans-serif;cursor:pointer;line-height:1}
+.ez-stp span{min-width:34px;text-align:center;font-size:24px;font-weight:800}
+.ez-tip{margin:-4px 0 10px;color:var(--muted);font-size:14.5px}
+.ez-q{border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:10px;background:var(--soft)}
+.ez-q .ez-tag{display:inline-block;font:700 12.5px Tajawal,sans-serif;color:#fff;background:var(--pri);border-radius:999px;padding:2px 10px;margin-bottom:6px}
+.ez-q .ez-txt{font-size:16.5px;line-height:1.95;max-height:7.8em;overflow:hidden}
+.ez-q .ez-acts{display:flex;gap:8px;margin-top:10px}
+.ez-q .ez-acts button{flex:1;min-height:46px;border-radius:12px;font:700 15.5px Tajawal,sans-serif;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.ez-q .ez-acts button.sw{border-color:var(--pri);color:var(--pri)}
+.ez-q .ez-acts button.dl{color:#b03030}
+.ez-adds{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.ez-add{min-height:54px;border-radius:14px;border:2px dashed var(--pri);background:var(--paper);color:var(--pri);font:800 15px Tajawal,sans-serif;cursor:pointer}
+.ez-final{display:flex;flex-direction:column;gap:10px}
+.ez-print{min-height:64px;border-radius:16px;border:0;background:var(--pri);color:#fff;font:800 21px Tajawal,sans-serif;cursor:pointer;box-shadow:0 8px 20px rgba(162,61,106,.3)}
+.ez-row2{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.ez-row2 .btn{min-height:46px;font-size:16px}
+.ez-adv{background:none;border:1px dashed var(--line);border-radius:14px;min-height:50px;color:var(--muted);font:700 15px Tajawal,sans-serif;cursor:pointer;width:100%}
+.ez-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;max-height:56vh;overflow:auto;margin-top:10px}
+.ez-grid button{min-height:52px;border-radius:12px;border:1px solid var(--line);background:var(--paper);font:700 17px 'Amiri Quran',Tajawal,serif;cursor:pointer;color:var(--ink)}
+.ez-grid button small{display:block;font:600 11px Tajawal,sans-serif;color:var(--muted)}
+.ez-grid button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.ez-pick{border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px;background:var(--soft)}
+.ez-pick .ez-txt{font-size:15.5px;line-height:1.9;max-height:6em;overflow:hidden}
+.ez-pick button{margin-top:8px;min-height:44px;width:100%;border-radius:12px;border:0;background:var(--pri);color:#fff;font:800 15px Tajawal,sans-serif;cursor:pointer}
+@media (max-width:520px){.ez-adds{grid-template-columns:1fr}.ez-big{font-size:22px}}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -370,7 +414,37 @@ details.fold[open] > summary{margin-bottom:6px}
     <!-- ========== إعداد ورقة ========== -->
     <section id="tab-build">
       <div class="builder">
-        <div class="controls">
+        <div class="controls easy-on" id="controls">
+          <div id="easy">
+            <div class="ez-card">
+              <div class="ez-h"><span class="ez-n">١</span><h3>اختاري السورة</h3></div>
+              <button class="ez-big" id="ezSurah"><span id="ezSurahName">اختاري السورة</span><span class="ez-arrow">▾</span></button>
+              <div class="ez-links"><button class="ez-link" id="ezMore">＋ سورة أخرى معها</button><button class="ez-link" id="ezAyahsBtn">آيات معيّنة فقط</button></div>
+              <div id="ezAyahs" class="ez-ayahs hidden"><span>من الآية</span><input type="number" min="1" id="ezA1"><span>إلى الآية</span><input type="number" min="1" id="ezA2"><button class="btn sm" id="ezAyahsOk">تطبيق</button></div>
+            </div>
+            <div class="ez-card">
+              <div class="ez-h"><span class="ez-n">٢</span><h3>كم سؤالًا تريدين؟</h3></div>
+              <div class="ez-cnt"><div><b>إكمال الآيات</b><small>تكتب الطالبة الآيات من موضع إلى موضع</small></div><div class="ez-stp"><button data-ez="segCount" data-d="-1">−</button><span id="ez_segCount">٢</span><button data-ez="segCount" data-d="1">+</button></div></div>
+              <div class="ez-cnt"><div><b>المتشابهات</b><small>آيات متشابهة تكمل الطالبة الفرق بينها</small></div><div class="ez-stp"><button data-ez="mutCount" data-d="-1">−</button><span id="ez_mutCount">٢</span><button data-ez="mutCount" data-d="1">+</button></div></div>
+              <div class="ez-cnt"><div><b>أسئلة متنوعة</b><small>معانٍ وقصص وتقسيمات من بنك الأسئلة</small></div><div class="ez-stp"><button data-ez="qMax" data-d="-1">−</button><span id="ez_qMax">٢</span><button data-ez="qMax" data-d="1">+</button></div></div>
+            </div>
+            <div class="ez-card">
+              <div class="ez-h"><span class="ez-n">٣</span><h3>أسئلة ورقتك</h3></div>
+              <p class="ez-tip">لا يعجبك سؤال؟ اضغطي «غيّري» فيأتي غيره. ويمكنك التعديل أو الحذف أو الإضافة.</p>
+              <div id="ezList"></div>
+              <div class="ez-adds"><button class="ez-add" id="ezAddQ">＋ سؤال من البنك</button><button class="ez-add" id="ezAddM">＋ متشابه</button><button class="ez-add" id="ezAddW">＋ اكتبي سؤالًا</button></div>
+            </div>
+            <div class="ez-card">
+              <div class="ez-h"><span class="ez-n">٤</span><h3>الورقة جاهزة</h3></div>
+              <div class="ez-final">
+                <button class="ez-print" id="ezPrint">⬇ حفظ PDF أو طباعة</button>
+                <div class="ez-row2"><button class="btn" id="ezView">👁 معاينة الورقة</button><button class="btn" id="ezKey">نموذج الإجابة</button></div>
+                <div class="ez-row2"><span class="hint">حجم الخط</span><button class="btn sm" data-ezfz="-1">أ−</button><b id="ezFz">١٠٠٪</b><button class="btn sm" data-ezfz="1">أ+</button></div>
+              </div>
+            </div>
+            <button class="ez-adv" id="ezAdv">⚙ خيارات متقدمة (العنوان، الشكل، الدرجات، المحفوظ…)</button>
+          </div>
+          <button class="ez-adv hidden" id="ezBack">← العودة إلى الطريقة السهلة</button>
           <div class="panel">
             <div class="step-h"><b>١</b><h3>نطاق المراجعة</h3></div>
             <div class="row">
@@ -1299,9 +1373,16 @@ function buildModel(U) {
   if (U.content === 'both' || U.content === 'comp') {
     const rand = rnd32(S.seed);
     if (U.compMode === 'seg') {
-      const tp = partsPages(U.R) || 1; let left = U.segCount, segs = [];
-      U.R.parts.forEach(([a, b], i) => { const k = i === U.R.parts.length - 1 ? left : Math.max(0, Math.min(left, Math.round(U.segCount * pagesOf(a, b) / tp))); left -= k; if (k > 0) segs = segs.concat(genSegments(a, b, k, U.segLen, rand)); });
-      sections.push({ kind: 'comp', key: '__seg', dir: dirFor('__seg', tplDir('إكمال من موضع خفي', 'أكملي الآيات الآتية:')), items: segs.map(([a, b]) => segItem(a, b, U.space, U.compGrade)) });
+      const tp = partsPages(U.R) || 1; let left = U.segCount, segItems = [];
+      const DD = draftState(), hidden = key => DD.edits[key] && DD.edits[key].hidden;
+      U.R.parts.forEach(([a, b], i) => {
+        const k = i === U.R.parts.length - 1 ? left : Math.max(0, Math.min(left, Math.round(U.segCount * pagesOf(a, b) / tp))); left -= k; if (k <= 0) return;
+        // مخزون أكبر من المقاطع، يُختار منه العدد المطلوب موزّعًا؛ فتبديل مقطع لا يغيّر البقية
+        const pool = genSegments(a, b, Math.max(k * 3, k + 6), U.segLen, rand).map(([x, y]) => segItem(x, y, U.space, U.compGrade)).filter((it, j, arr) => !hidden(it.key) && arr.findIndex(z => z.key === it.key) === j);
+        const pick = []; for (let j = 0; j < k && pool.length; j++) { const it = pool[Math.min(pool.length - 1, Math.round((j + 0.5) * pool.length / k - 0.5))]; if (!pick.includes(it)) pick.push(it); }
+        segItems = segItems.concat(pick);
+      });
+      sections.push({ kind: 'comp', key: '__seg', dir: dirFor('__seg', tplDir('إكمال من موضع خفي', 'أكملي الآيات الآتية:')), items: segItems.map(x => x) });
     } else {
       const bl = genBlanks(U.R.parts[0][0], U.R.parts[0][1], U.blankRatio, U.blankPos, rand);
       bl.multi = new Set(bl.list.map(x => x.s)).size > 1;
@@ -1839,7 +1920,7 @@ function openMutEditor(idx) {
   $('modalBox').innerHTML = '<h3>متشابه يدوي<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
     '<p class="hint" style="margin-top:0">١) اختاري المواضع. ٢) اضغطي على أي كلمة لتغيير حالتها: <span class="wst w0">ظاهرة</span> ← <span class="wst w1">فراغ</span> ← <span class="wst w2">محذوفة</span>. تبدأ كل آية مضبوطة تلقائيًا عند موضع الاختلاف.</p>' +
     '<div id="mlocs"></div><button class="btn sm" id="mAddLoc" style="margin-top:8px">＋ موضع</button>' +
-    '<label class="f" style="margin-top:12px">معاينة السؤال</label><div id="mPrev" class="dprev"></div><div id="mErr" class="tokfail"></div>' +
+    '<label class="f" style="margin-top:12px">معاينة السؤال</label><div id="mmPrev" class="dprev"></div><div id="mErr" class="tokfail"></div>' +
     '<div class="row" style="margin-top:12px"><button class="btn pri" id="mOk" style="flex:0 0 auto">' + (idx != null ? 'حفظ التعديل' : 'إضافة إلى الورقة') + '</button></div>';
   $('modal').classList.remove('hidden');
   const autoFill = async (only) => {
@@ -1868,7 +1949,7 @@ function openMutEditor(idx) {
   };
   const preview = () => {
     const subs = rows.map(r => { const tk = mmToken(r); return tk ? tk + ' [' + sName(r.s) + ': ' + AD(r.a) + ']' : null; }).filter(Boolean);
-    $('mPrev').innerHTML = subs.length ? subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') : '<span class="hint">اختاري المواضع.</span>';
+    $('mmPrev').innerHTML = subs.length ? subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') : '<span class="hint">اختاري المواضع.</span>';
     const blanks = rows.filter(r => r.g1).length;
     $('mErr').textContent = rows.length >= 2 && !blanks ? 'تنبيه: لا يوجد فراغ في أي موضع؛ اضغطي على كلمة لتصير فراغًا (أو اتركيه سؤال تذكّر بلا فراغ).' : '';
   };
@@ -1980,6 +2061,143 @@ function fontPickHTML(cur, attr) {
   return '<div class="fontpick">' + FONTS.map(f => '<button type="button" ' + attr + '="' + esc(f[0]) + '" class="fp' + (f[0] === cur ? ' on' : '') + '" style="font-family:\'' + f[0] + '\',serif"><b>' + esc(f[1]) + '</b><span>بسم الله الرحمن الرحيم</span></button>').join('') + '</div>';
 }
 function renderFontPick() { const box = $('fontPick'); if (box) box.innerHTML = fontPickHTML($('fontSel').value, 'data-font'); }
+/* =====================================================================
+   الطريقة السهلة: سورة ← عدد الأسئلة ← أسئلة الورقة (غيّري/عدّلي/احذفي/أضيفي) ← طباعة
+   ===================================================================== */
+const EZ_TAG = it => it.kind === 'seg' ? 'إكمال الآيات' : it.kind === 'blank' ? 'فراغات' : it.mut ? 'متشابه' : it.adhoc != null ? 'سؤالك' : (it.tpl || 'سؤال');
+function ezText(it) {
+  if (it.kind === 'blank') return 'فراغات داخل نص الآيات';
+  if (it.subs) return it.subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>');
+  if (it.branches) return (it.tam ? renderTokens(it.tam) + '<br>' : '') + it.branches.map((b, k) => LET[k] + ') ' + renderTokens(b.text)).join('<br>');
+  return (it.tam ? '<span class="hint">' + renderTokens(it.tam) + '</span><br>' : '') + renderTokens(it.text || '');
+}
+function ezSync() {
+  try { $('ezSurahName').textContent = rangeName(getRange()); } catch (e) { }
+  ['segCount', 'mutCount', 'qMax'].forEach(id => { const el = $('ez_' + id); if (el) el.textContent = AD(+$(id).value || 0); });
+  if ($('ezFz')) $('ezFz').textContent = AD(+PREF.fs || 100) + '٪';
+}
+function renderEasy(M) {
+  ezSync();
+  const box = $('ezList'); if (!box || !$('controls').classList.contains('easy-on')) return;
+  const items = []; M.sections.forEach(sec => sec.items.forEach(it => items.push({ it, sec })));
+  if (!items.length) { box.innerHTML = '<p class="hint">لا أسئلة بعد. زيدي العدد في الخطوة ٢، أو أضيفي سؤالًا.</p>'; return; }
+  box.innerHTML = items.map(({ it, sec }, i) => {
+    const canSwap = it.kind === 'seg' || (it.id && !it.adhoc) || (it.mut && typeof it.gi === 'number');
+    return '<div class="ez-q" data-i="' + i + '"><span class="ez-tag">' + AD(i + 1) + ' · ' + esc(EZ_TAG(it)) + '</span><div class="ez-txt">' + ezText(it) + '</div><div class="ez-acts">' +
+      (canSwap ? '<button class="sw" data-ea="swap">🔄 غيّري</button>' : '') + (it.kind !== 'blank' ? '<button data-ea="edit">✎ عدّلي</button>' : '') + '<button class="dl" data-ea="del">✕ احذفي</button></div></div>';
+  }).join('');
+  S.ezItems = items;
+}
+function ezSetCount(id, v) { $(id).value = Math.max(0, v); PREF[id] = +$(id).value; savePref(); syncCounts(); ezSync(); }
+function ezMutSet() { return S.mutPicked || new Set(currentMutAuto().map(c => c.gi)); }
+async function ezAction(act, it) {
+  const D = draftState(), R = getRange();
+  if (act === 'swap') {
+    if (it.kind === 'seg') { (D.edits[it.key] = D.edits[it.key] || {}).hidden = true; savePref(); }
+    else if (it.mut) {
+      const set = ezMutSet(), pool = mutCandidates(R).filter(c => !set.has(c.gi));
+      if (!pool.length) { toast('لا يوجد متشابه آخر متاح لهذا النطاق.', true); return; }
+      set.delete(it.gi); set.add(pool[Math.floor(Math.random() * pool.length)].gi); S.mutPicked = set;
+    } else {
+      const pool = candidates(R).filter(q => !S.picked.has(q.id) && !/إكمال/.test(q.tpl)), same = pool.filter(q => q.tpl === it.tpl), from = same.length ? same : pool;
+      if (!from.length) { toast('لا يوجد سؤال آخر في البنك لهذا النطاق.', true); return; }
+      S.picked.delete(it.id); S.picked.add(from[Math.floor(Math.random() * from.length)].id);
+    }
+    await refresh(false); toast('غُيّر السؤال.'); return;
+  }
+  if (act === 'del') {
+    if (it.kind === 'seg') { (D.edits[it.key] = D.edits[it.key] || {}).hidden = true; ezSetCount('segCount', (+$('segCount').value || 1) - 1); }
+    else if (it.kind === 'blank') { ezSetCount('segCount', 0); }
+    else if (it.adhoc != null) { S.adhoc.splice(it.adhoc, 1); saveAdhoc(); renderAdhoc(); }
+    else if (it.mut && typeof it.gi === 'string') { const i = +String(it.gi).slice(1); (PREF.manualMut || []).splice(i, 1); savePref(); renderManualMuts(); }
+    else if (it.mut) { const set = ezMutSet(); set.delete(it.gi); S.mutPicked = set; ezSetCount('mutCount', set.size); }
+    else if (it.id) { S.picked.delete(it.id); ezSetCount('qMax', S.picked.size); }
+    savePref(); await refresh(false); return;
+  }
+  if (act === 'edit') ezEdit(it);
+}
+function ezEdit(it) {
+  const D = draftState(), isSubs = !!it.subs, txt = isSubs ? (it.text || it.subs.join(' — ')) : it.branches ? it.branches.map(b => b.text).join('\n') : (it.text || '');
+  $('modalBox').innerHTML = '<h3>تعديل السؤال<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+    '<p class="hint" style="margin-top:0">اكتبي التعديل كما تريدين. ولتغيير كلمات آية اضغطي زرها «✎» تحت الخانة.</p>' +
+    '<label class="f">نص السؤال</label><textarea id="ezT" rows="4" style="font-size:16px">' + esc(txt) + '</textarea><div class="chipsbox" data-cf="ezT">' + tokChipsHTML(txt) + '</div>' +
+    '<label class="f" style="margin-top:8px">الإجابة (اختياري)</label><textarea id="ezA" rows="2">' + esc(it.ans || '') + '</textarea>' +
+    '<label class="f" style="margin-top:8px">كما سيظهر</label><div class="dprev" id="ezP"></div>' +
+    '<div class="row" style="margin-top:12px"><button class="btn pri" id="ezSave" style="flex:0 0 auto;min-height:48px;font-size:17px">حفظ التعديل</button></div>';
+  $('modal').classList.remove('hidden');
+  const prev = () => { const v = $('ezT').value; $('ezP').innerHTML = isSubs ? v.split(/\s+—\s+/).map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') : renderTokens(v).replace(/\n/g, '<br>'); const cb = $('modalBox').querySelector('.chipsbox'); cb.innerHTML = tokChipsHTML(v); };
+  $('ezT').addEventListener('input', prev); prev();
+  bindTokChips($('modalBox'), () => $('ezT'));
+  $('ezSave').onclick = async () => {
+    const v = $('ezT').value, a = $('ezA').value;
+    if (it.adhoc != null) { S.adhoc[it.adhoc].text = v; S.adhoc[it.adhoc].ans = a; saveAdhoc(); }
+    else { const ed = D.edits[it.key] = D.edits[it.key] || {}; if (it.branches) ed.branches = v.split('\n'); else ed.text = v; ed.ans = a; savePref(); }
+    closeModal(); await refresh(false); toast('حُفظ التعديل في هذه الورقة.');
+  };
+}
+function ezSurahPicker(addMode) {
+  const cur = surahOfAbs(getRange().A);
+  $('modalBox').innerHTML = '<h3>' + (addMode ? 'أضيفي سورة أخرى' : 'اختاري السورة') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><input type="search" id="ezSS" placeholder="اكتبي اسم السورة أو رقمها…" style="min-height:48px;font-size:17px"><div class="ez-grid" id="ezSG"></div>';
+  $('modal').classList.remove('hidden');
+  const draw = () => {
+    const q = norm($('ezSS').value || '').replace(/^ال/, ''), qn = toInt($('ezSS').value);
+    $('ezSG').innerHTML = SUR.map((y, i) => { const n = i + 1; if (q && !(norm(y[0]).includes(q) || n === qn)) return ''; return '<button data-n="' + n + '"' + (!addMode && n === cur ? ' class="on"' : '') + '>' + esc(y[0]) + '<small>' + AD(n) + '</small></button>'; }).join('');
+  };
+  $('ezSS').addEventListener('input', draw); draw(); setTimeout(() => $('ezSS').focus(), 50);
+  $('ezSG').onclick = e => {
+    const b = e.target.closest('[data-n]'); if (!b) return; const n = +b.dataset.n;
+    if (addMode) { (PREF.extraRanges = PREF.extraRanges || []).push([n, n]); savePref(); renderExtraRanges(); }
+    else { PREF.extraRanges = []; savePref(); renderExtraRanges(); $('wholeSurahs').checked = true; syncWhole(); $('fromS').value = n; $('fromS').onchange(); $('toS').value = n; $('toS').onchange(); }
+    S.mutPicked = null; closeModal(); schedule(true); setTimeout(ezSync, 400);
+  };
+}
+function ezAddFromBank() {
+  const R = getRange(), pool = candidates(R).filter(q => !S.picked.has(q.id));
+  $('modalBox').innerHTML = '<h3>أضيفي سؤالًا من البنك<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><input type="search" id="ezBS" placeholder="ابحثي بكلمة…" style="min-height:46px"><p class="hint" id="ezBI"></p><div id="ezBL"></div>';
+  $('modal').classList.remove('hidden');
+  const draw = async () => {
+    const q = norm($('ezBS').value || ''), list = pool.filter(x => !q || norm(x.text + ' ' + x.tam + ' ' + x.tpl).includes(q)).slice(0, 30);
+    $('ezBI').textContent = pool.length ? 'متاح ' + AD(pool.length) + ' سؤالًا لهذا النطاق' + (list.length < pool.length ? ' — المعروض ' + AD(list.length) : '') : 'لا توجد أسئلة أخرى في البنك لهذا النطاق.';
+    const need = new Set(); list.forEach(x => tokSurahs(x.text + ' ' + x.tam, need)); await ensureSurahs(need);
+    if (!$('ezBL')) return;
+    $('ezBL').innerHTML = list.map(x => '<div class="ez-pick"><span class="ez-tag" style="display:inline-block;font:700 12px Tajawal;color:#fff;background:var(--pri);border-radius:999px;padding:2px 10px">' + esc(x.tpl) + '</span><div class="ez-txt">' + (x.tam ? renderTokens(x.tam) + '<br>' : '') + renderTokens(x.text) + '</div><button data-id="' + esc(x.id) + '">＋ أضيفيه إلى الورقة</button></div>').join('');
+  };
+  $('ezBS').addEventListener('input', () => { clearTimeout(S.ezT); S.ezT = setTimeout(draw, 250); }); draw();
+  $('ezBL').onclick = async e => { const b = e.target.closest('[data-id]'); if (!b) return; S.picked.add(b.dataset.id); ezSetCount('qMax', S.picked.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
+}
+function ezAddMut() {
+  const R = getRange(), set = ezMutSet(), pool = mutCandidates(R).filter(c => !set.has(c.gi));
+  $('modalBox').innerHTML = '<h3>أضيفي متشابهًا<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint">' + (pool.length ? 'متاح ' + AD(pool.length) + ' متشابهًا لهذا النطاق. أو <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.' : 'لا توجد متشابهات أخرى لهذا النطاق. <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.') + '</p><div id="ezML"></div>';
+  $('modal').classList.remove('hidden');
+  const list = pool.slice(0, 25);
+  (async () => {
+    const need = new Set(); list.forEach(c => c.locs.forEach(l => need.add(l.s))); await ensureSurahs(need); if (!$('ezML')) return;
+    $('ezML').innerHTML = list.map(c => '<div class="ez-pick"><div class="ez-txt">' + c.locs.map(l => renderTokens('{مطلع:' + sName(l.s) + ':' + l.a + ':7}') + ' <b class="hint">' + esc(sName(l.s)) + ' ' + AD(l.a) + '</b>').join('<br>') + '</div><button data-gi="' + c.gi + '">＋ أضيفيه إلى الورقة</button></div>').join('');
+  })();
+  $('ezML').onclick = async e => { const b = e.target.closest('[data-gi]'); if (!b) return; const s2 = ezMutSet(); s2.add(+b.dataset.gi); S.mutPicked = s2; ezSetCount('mutCount', s2.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
+  const own = $('ezOwnMut'); if (own) own.onclick = e => { e.preventDefault(); closeModal(); openMutEditor(); };
+}
+function ezWrite() {
+  $('modalBox').innerHTML = '<h3>اكتبي سؤالًا من عندك<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><label class="f">السؤال</label><textarea id="ezWQ" rows="4" style="font-size:16px" placeholder="مثال: اذكري الآية التي فيها…"></textarea><label class="f" style="margin-top:8px">الإجابة (اختياري)</label><textarea id="ezWA" rows="2"></textarea><div class="row" style="margin-top:8px;align-items:flex-end"><div style="flex:0 1 140px"><label class="f">أسطر الإجابة</label><input type="number" id="ezWL" value="3" min="1" max="15"></div><div style="flex:0 1 120px"><label class="f">الدرجة</label><input type="number" id="ezWG" value="2" min="0" max="20"></div></div><div class="row" style="margin-top:12px"><button class="btn pri" id="ezWOk" style="flex:0 0 auto;min-height:48px;font-size:17px">أضيفيه إلى الورقة</button></div>';
+  $('modal').classList.remove('hidden'); setTimeout(() => $('ezWQ').focus(), 50);
+  $('ezWOk').onclick = async () => { const t = $('ezWQ').value.trim(); if (!t) { $('ezWQ').focus(); return; } S.adhoc.push({ text: t, ans: $('ezWA').value.trim(), lines: +$('ezWL').value || 3, grade: +$('ezWG').value || 1 }); saveAdhoc(); renderAdhoc(); closeModal(); await refresh(false); toast('أُضيف سؤالك إلى الورقة.'); };
+}
+function wireEasy() {
+  const ctl = $('controls');
+  const setMode = easy => { ctl.classList.toggle('easy-on', easy); $('ezBack').classList.toggle('hidden', easy); PREF.ui = easy ? 'easy' : 'adv'; savePref(); if (easy && lastModel) renderEasy(lastModel); window.scrollTo(0, 0); };
+  setMode(PREF.ui !== 'adv');
+  $('ezAdv').onclick = () => setMode(false); $('ezBack').onclick = () => setMode(true);
+  $('ezSurah').onclick = () => ezSurahPicker(false); $('ezMore').onclick = () => ezSurahPicker(true);
+  $('ezAyahsBtn').onclick = () => { $('ezAyahs').classList.toggle('hidden'); const s1 = surahOfAbs(getRange().A); $('ezA1').value = $('fromA').value || 1; $('ezA2').value = ACOUNT(s1); $('ezA1').max = $('ezA2').max = ACOUNT(s1); };
+  $('ezAyahsOk').onclick = () => { const s1 = +$('fromS').value, a1 = Math.max(1, Math.min(ACOUNT(s1), +$('ezA1').value || 1)), a2 = Math.max(a1, Math.min(ACOUNT(s1), +$('ezA2').value || a1)); $('toS').value = s1; $('toS').onchange(); $('fromA').value = a1; $('fromA').onchange(); $('toA').value = a2; $('toA').onchange(); setTimeout(ezSync, 400); };
+  document.querySelectorAll('[data-ez]').forEach(bt => bt.onclick = () => { const t = document.querySelector('.counts button[data-step="' + bt.dataset.ez + '"][data-d="' + bt.dataset.d + '"]'); if (t) t.click(); ezSync(); });
+  document.querySelectorAll('[data-ezfz]').forEach(bt => bt.onclick = () => { const t = document.querySelector('[data-fz="' + bt.dataset.ezfz + '"]'); if (t) t.click(); ezSync(); });
+  $('ezList').addEventListener('click', e => { const b = e.target.closest('[data-ea]'); if (!b) return; const i = +b.closest('.ez-q').dataset.i, x = (S.ezItems || [])[i]; if (x) ezAction(b.dataset.ea, x.it); });
+  $('ezAddQ').onclick = ezAddFromBank; $('ezAddM').onclick = ezAddMut; $('ezAddW').onclick = ezWrite;
+  $('ezPrint').onclick = () => downloadPDF(false);
+  $('ezKey').onclick = () => doPrint(true);
+  $('ezView').onclick = () => { const w = $('previewWrap'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); const m = $('mPrev'); if (m && getComputedStyle($('mbar')).display !== 'none') m.click(); };
+}
 function syncCounts() { ['segCount', 'mutCount', 'qMax'].forEach(id => { const el = $('cv_' + id); if (el) el.textContent = AD(+$(id).value || 0); }); }
 function renderExtraRanges() {
   const xs = PREF.extraRanges || [], so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
@@ -2028,6 +2246,7 @@ async function refresh(full) {
 function paint(M) {
   lastModel = M;
   renderGrades(M);
+  try { renderEasy(M); } catch (e) { console.error(e); }
   if (S.draftView && !$('draftBox').contains(document.activeElement)) renderDraft(M);
   const f = $('paper');
   f.onload = () => { try { const d = f.contentDocument; const fit = () => { f.style.height = Math.max(1123, d.documentElement.scrollHeight) + 'px'; scalePaper(); }; fit(); (d.fonts ? d.fonts.ready : Promise.resolve()).then(fit); setTimeout(fit, 600); } catch (e) { } };
@@ -3077,7 +3296,7 @@ function boot() {
   $('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginBtn').click(); });
   // ٢) تهيئة كل تبويب معزولة: إن تعثّرت واحدة أكملت البقية
   const safe = (name, fn) => { try { fn(); } catch (e) { console.error(name, e); S.bootErrs = (S.bootErrs || []).concat(name + ': ' + (e && e.message || e)); } };
-  safe('builder', wireBuilder); safe('bank', wireBank); safe('settings', wireSettings); safe('paste', wirePaste); safe('guide', wireGuide);
+  safe('builder', wireBuilder); safe('bank', wireBank); safe('settings', wireSettings); safe('paste', wirePaste); safe('guide', wireGuide); safe('easy', wireEasy);
   { const m = location.hash.match(/^#guide=(\d+)/); if (m) { S.guideSurah = Math.min(114, Math.max(1, +m[1])); S.tab = 'guide'; } }
   try { const u = new URL('logo.png', location.href).href; if (/^https?:/.test(u)) { const im = new Image(); im.onload = () => { S.repoLogo = u; if ($('logoInfo')) { syncLogoInfo(); schedule(); } }; im.src = u + '?v=' + Date.now().toString().slice(0, 7); } } catch (e) { }
   $('tabs').addEventListener('click', e => { const b = e.target.closest('button[data-tab]'); if (b) showTab(b.dataset.tab); });
