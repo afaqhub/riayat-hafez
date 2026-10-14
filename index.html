@@ -348,6 +348,18 @@ details.fold[open] > summary{margin-bottom:6px}
 .ez-pick .ez-txt{font-size:15.5px;line-height:1.9;max-height:6em;overflow:hidden}
 .ez-pick button{margin-top:8px;min-height:44px;width:100%;border-radius:12px;border:0;background:var(--pri);color:#fff;font:800 15px Tajawal,sans-serif;cursor:pointer}
 @media (max-width:520px){.ez-adds{grid-template-columns:1fr}.ez-big{font-size:22px}}
+.ez-ayahs{flex-direction:column;align-items:stretch}
+.ez-ar{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.ez-ar span{font-weight:700}
+.ez-pbar{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ez-pbar #ezSelInfo{flex:1 1 100%}
+.ez-guide{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:8px 10px;margin-bottom:8px}
+.ez-guide b{font-size:14.5px;margin-inline-end:4px}
+.ez-guide button{border:1px solid var(--pri);background:var(--paper);color:var(--pri);border-radius:999px;padding:5px 12px;font:700 14px Tajawal,sans-serif;cursor:pointer}
+.ez-q .ez-acts{display:grid;grid-template-columns:repeat(4,1fr)}
+@media (max-width:520px){.ez-q .ez-acts{grid-template-columns:1fr 1fr}}
+.ez-q.open .ez-txt{max-height:none}
+.ez-more{background:none;border:0;color:var(--pri);font:700 14.5px Tajawal,sans-serif;cursor:pointer;padding:6px 0 0}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -419,8 +431,8 @@ details.fold[open] > summary{margin-bottom:6px}
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">١</span><h3>اختاري السورة</h3></div>
               <button class="ez-big" id="ezSurah"><span id="ezSurahName">اختاري السورة</span><span class="ez-arrow">▾</span></button>
-              <div class="ez-links"><button class="ez-link" id="ezMore">＋ سورة أخرى معها</button><button class="ez-link" id="ezAyahsBtn">آيات معيّنة فقط</button></div>
-              <div id="ezAyahs" class="ez-ayahs hidden"><span>من الآية</span><input type="number" min="1" id="ezA1"><span>إلى الآية</span><input type="number" min="1" id="ezA2"><button class="btn sm" id="ezAyahsOk">تطبيق</button></div>
+              <div class="ez-links"><button class="ez-link" id="ezMore">＋ أكثر من سورة</button><button class="ez-link" id="ezAyahsBtn">آيات معيّنة فقط</button></div>
+              <div id="ezAyahs" class="ez-ayahs hidden"><div class="ez-ar"><span id="ezAL1">من الآية</span><input type="number" min="1" id="ezA1"></div><div class="ez-ar"><span id="ezAL2">إلى الآية</span><input type="number" min="1" id="ezA2"></div><button class="btn pri" id="ezAyahsOk">تطبيق</button><small id="ezAN" class="hint"></small></div>
             </div>
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">٢</span><h3>كم سؤالًا تريدين؟</h3></div>
@@ -430,7 +442,8 @@ details.fold[open] > summary{margin-bottom:6px}
             </div>
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">٣</span><h3>أسئلة ورقتك</h3></div>
-              <p class="ez-tip">لا يعجبك سؤال؟ اضغطي «غيّري» فيأتي غيره. ويمكنك التعديل أو الحذف أو الإضافة.</p>
+              <div class="ez-guide"><b>أضيفي ما تشائين:</b><button data-ezgo="q">من البنك</button><button data-ezgo="m">متشابه</button><button data-ezgo="w">سؤالك</button></div>
+              <p class="ez-tip">تحت كل سؤال: <b>غيّري</b> (يأتي غيره) · <b>اختاري بنفسك</b> (من قائمة) · <b>عدّلي</b> · <b>احذفي</b>. وأزرار الإضافة أيضًا في آخر القائمة ↓</p>
               <div id="ezList"></div>
               <div class="ez-adds"><button class="ez-add" id="ezAddQ">＋ سؤال من البنك</button><button class="ez-add" id="ezAddM">＋ متشابه</button><button class="ez-add" id="ezAddW">＋ اكتبي سؤالًا</button></div>
             </div>
@@ -1382,6 +1395,7 @@ function buildModel(U) {
         const pick = []; for (let j = 0; j < k && pool.length; j++) { const it = pool[Math.min(pool.length - 1, Math.round((j + 0.5) * pool.length / k - 0.5))]; if (!pick.includes(it)) pick.push(it); }
         segItems = segItems.concat(pick);
       });
+      (PREF.manualSegs || []).forEach((m, mi) => { try { const it = segItem(ABS(m.s, m.a), ABS(m.s, m.b), U.space, U.compGrade); it.manualSeg = mi; if (!segItems.some(z => z.key === it.key)) segItems.push(it); } catch (e) { } });
       sections.push({ kind: 'comp', key: '__seg', dir: dirFor('__seg', tplDir('إكمال من موضع خفي', 'أكملي الآيات الآتية:')), items: segItems.map(x => x) });
     } else {
       const bl = genBlanks(U.R.parts[0][0], U.R.parts[0][1], U.blankRatio, U.blankPos, rand);
@@ -1546,7 +1560,7 @@ table.pg > thead td{height:13mm;padding:0}
 table.pg > tfoot td{height:${U.pages ? '6mm' : '13mm'};padding:0}
 table.pg > tbody > tr > td{padding:0 15mm}
 .hd{display:grid;grid-template-columns:24mm 1fr 24mm;align-items:center;gap:4mm;min-height:20mm}
-.titles{text-align:center;margin-top:1mm}
+.titles{text-align:center;margin-top:4mm}
 .hd .logo img{max-width:24mm;max-height:22mm;object-fit:contain}
 .hd .mid{text-align:center}
 .t1{display:inline-block;font-weight:700;font-size:1.32em;color:var(--c1);border:1.5px solid var(--c1);border-radius:14px;padding:.08em 1.1em}
@@ -1555,7 +1569,7 @@ table.pg > tbody > tr > td{padding:0 15mm}
 .gnote{font-size:.72em;text-align:center;color:#444;margin-top:-1mm}
 .fields{display:flex;justify-content:space-between;gap:8mm;margin:3mm 0 1mm;font-size:.95em}
 .fields .dots{display:inline-block;min-width:48mm;border-bottom:1.3px dotted #555;transform:translateY(-.25em)}
-.bism{text-align:center;font-family:var(--quran);font-size:1.75em;color:var(--c1);line-height:1.5;margin:0}
+.bism{text-align:center;font-family:var(--quran);font-size:1.75em;color:var(--c1);line-height:1.6;margin:0 0 1.5mm}
 .orn{display:block;width:100%;height:6mm;margin:2.5mm 0}
 .open{font-weight:700;margin:1.5mm 0 3mm;font-size:1.04em}
 .open:before{content:"❀ ";color:var(--c1)}
@@ -2083,10 +2097,12 @@ function renderEasy(M) {
   if (!items.length) { box.innerHTML = '<p class="hint">لا أسئلة بعد. زيدي العدد في الخطوة ٢، أو أضيفي سؤالًا.</p>'; return; }
   box.innerHTML = items.map(({ it, sec }, i) => {
     const canSwap = it.kind === 'seg' || (it.id && !it.adhoc) || (it.mut && typeof it.gi === 'number');
-    return '<div class="ez-q" data-i="' + i + '"><span class="ez-tag">' + AD(i + 1) + ' · ' + esc(EZ_TAG(it)) + '</span><div class="ez-txt">' + ezText(it) + '</div><div class="ez-acts">' +
-      (canSwap ? '<button class="sw" data-ea="swap">🔄 غيّري</button>' : '') + (it.kind !== 'blank' ? '<button data-ea="edit">✎ عدّلي</button>' : '') + '<button class="dl" data-ea="del">✕ احذفي</button></div></div>';
+    const canChoose = it.kind === 'seg' || canSwap;
+    return '<div class="ez-q" data-i="' + i + '"><span class="ez-tag">' + AD(i + 1) + ' · ' + esc(EZ_TAG(it)) + '</span><div class="ez-txt">' + ezText(it) + '</div><button class="ez-more hidden" data-ea="more">عرض السؤال كاملًا ▾</button><div class="ez-acts">' +
+      (canSwap ? '<button class="sw" data-ea="swap" title="يأتي سؤال آخر من النوع نفسه">🔄 غيّري</button>' : '') + (canChoose ? '<button class="sw" data-ea="choose" title="اختاري البديل بنفسك من القائمة">☰ اختاري بنفسك</button>' : '') + (it.kind !== 'blank' ? '<button data-ea="edit">✎ عدّلي</button>' : '') + '<button class="dl" data-ea="del">✕ احذفي</button></div></div>';
   }).join('');
   S.ezItems = items;
+  requestAnimationFrame(() => box.querySelectorAll('.ez-q').forEach(q => { const t = q.querySelector('.ez-txt'); if (t.scrollHeight > t.clientHeight + 6) q.querySelector('.ez-more').classList.remove('hidden'); }));
 }
 function ezSetCount(id, v) { $(id).value = Math.max(0, v); PREF[id] = +$(id).value; savePref(); syncCounts(); ezSync(); }
 function ezMutSet() { return S.mutPicked || new Set(currentMutAuto().map(c => c.gi)); }
@@ -2106,7 +2122,8 @@ async function ezAction(act, it) {
     await refresh(false); toast('غُيّر السؤال.'); return;
   }
   if (act === 'del') {
-    if (it.kind === 'seg') { (D.edits[it.key] = D.edits[it.key] || {}).hidden = true; ezSetCount('segCount', (+$('segCount').value || 1) - 1); }
+    if (it.kind === 'seg' && it.manualSeg != null) { (PREF.manualSegs || []).splice(it.manualSeg, 1); savePref(); }
+    else if (it.kind === 'seg') { (D.edits[it.key] = D.edits[it.key] || {}).hidden = true; ezSetCount('segCount', (+$('segCount').value || 1) - 1); }
     else if (it.kind === 'blank') { ezSetCount('segCount', 0); }
     else if (it.adhoc != null) { S.adhoc.splice(it.adhoc, 1); saveAdhoc(); renderAdhoc(); }
     else if (it.mut && typeof it.gi === 'string') { const i = +String(it.gi).slice(1); (PREF.manualMut || []).splice(i, 1); savePref(); renderManualMuts(); }
@@ -2115,6 +2132,28 @@ async function ezAction(act, it) {
     savePref(); await refresh(false); return;
   }
   if (act === 'edit') ezEdit(it);
+  if (act === 'choose') {
+    if (it.kind === 'seg') ezChooseSeg(it); else if (it.mut) ezAddMut(it); else ezAddFromBank(it);
+  }
+}
+function ezChooseSeg(it) {
+  const set = ezCurrentSurahs(), cur = it.sn || [...set][0];
+  const so = [...set].sort((a, b) => a - b).map(n => '<option value="' + n + '"' + (n === cur ? ' selected' : '') + '>' + esc(sName(n)) + '</option>').join('');
+  $('modalBox').innerHTML = '<h3>اختاري مقطع الإكمال بنفسك<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint" style="margin-top:0">حدّدي السورة والآيات التي تكتبها الطالبة.</p>' +
+    '<div class="ez-ar"><span>السورة</span><select id="ezCS" style="max-width:60%">' + so + '</select></div>' +
+    '<div class="ez-ar" style="margin-top:8px"><span>من الآية</span><input type="number" min="1" id="ezCA" value="' + (it.from || 1) + '" style="width:90px;min-height:44px;font-size:18px;text-align:center"></div>' +
+    '<div class="ez-ar" style="margin-top:8px"><span>إلى الآية</span><input type="number" min="1" id="ezCB" value="' + (it.to || 3) + '" style="width:90px;min-height:44px;font-size:18px;text-align:center"></div>' +
+    '<label class="f" style="margin-top:10px">كما سيظهر</label><div class="dprev" id="ezCP"></div>' +
+    '<div class="row" style="margin-top:12px"><button class="btn pri" id="ezCOk" style="flex:0 0 auto;min-height:48px;font-size:17px">اعتمدي هذا المقطع</button></div>';
+  $('modal').classList.remove('hidden');
+  const read = () => { const sn = +$('ezCS').value, n = ACOUNT(sn); let a = Math.max(1, Math.min(n, +$('ezCA').value || 1)), b = Math.max(a, Math.min(n, +$('ezCB').value || a)); return { s: sn, a, b }; };
+  const prev = async () => { const r = read(); await ensureSurahs(new Set([r.s])); if (!$('ezCP')) return; const x = segItem(ABS(r.s, r.a), ABS(r.s, r.b), 1, 1); $('ezCP').innerHTML = renderTokens(x.text); };
+  ['ezCS', 'ezCA', 'ezCB'].forEach(id => $(id).addEventListener('input', prev)); $('ezCS').addEventListener('change', prev); prev();
+  $('ezCOk').onclick = async () => {
+    const r = read(), D = draftState(), list = PREF.manualSegs = PREF.manualSegs || [];
+    if (it.manualSeg != null) list[it.manualSeg] = r; else { (D.edits[it.key] = D.edits[it.key] || {}).hidden = true; list.push(r); ezSetCount('segCount', Math.max(0, (+$('segCount').value || 1) - 1)); }
+    savePref(); closeModal(); await refresh(false); toast('اعتُمد المقطع.');
+  };
 }
 function ezEdit(it) {
   const D = draftState(), isSubs = !!it.subs, txt = isSubs ? (it.text || it.subs.join(' — ')) : it.branches ? it.branches.map(b => b.text).join('\n') : (it.text || '');
@@ -2135,46 +2174,69 @@ function ezEdit(it) {
     closeModal(); await refresh(false); toast('حُفظ التعديل في هذه الورقة.');
   };
 }
-function ezSurahPicker(addMode) {
-  const cur = surahOfAbs(getRange().A);
-  $('modalBox').innerHTML = '<h3>' + (addMode ? 'أضيفي سورة أخرى' : 'اختاري السورة') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><input type="search" id="ezSS" placeholder="اكتبي اسم السورة أو رقمها…" style="min-height:48px;font-size:17px"><div class="ez-grid" id="ezSG"></div>';
+function ezCurrentSurahs() { const R = getRange(), set = new Set(); R.parts.forEach(([a, b]) => { for (let x = surahOfAbs(a); x <= surahOfAbs(b); x++) set.add(x); }); return set; }
+function ezApplySurahs(set) {
+  const L = [...set].sort((a, b) => a - b); if (!L.length) return;
+  const parts = []; L.forEach(n => { const p = parts[parts.length - 1]; if (p && n === p[1] + 1) p[1] = n; else parts.push([n, n]); });
+  PREF.extraRanges = parts.slice(1); savePref(); renderExtraRanges();
+  $('wholeSurahs').checked = true; syncWhole();
+  $('fromS').value = parts[0][0]; $('fromS').onchange(); $('toS').value = parts[0][1]; $('toS').onchange();
+  S.mutPicked = null; schedule(true); setTimeout(ezSync, 400);
+}
+function ezSurahPicker() {
+  const sel = ezCurrentSurahs();
+  const so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
+  $('modalBox').innerHTML = '<h3>اختاري السور<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+    '<div class="seg" id="ezPM" style="margin-bottom:10px"><button data-v="m" class="on">سورة أو أكثر</button><button data-v="r">من سورة إلى سورة</button></div>' +
+    '<div id="ezPMm"><p class="hint" style="margin:0 0 6px">اضغطي على كل سورة تريدينها (يمكن أكثر من سورة، ولو متباعدة). والضغط مرة ثانية يلغيها.</p><input type="search" id="ezSS" placeholder="ابحثي باسم السورة أو رقمها…" style="min-height:46px;font-size:17px"><div class="ez-grid" id="ezSG"></div></div>' +
+    '<div id="ezPMr" class="hidden"><p class="hint" style="margin:0 0 6px">مثلًا: من سورة الكهف إلى سورة الناس.</p><div class="row"><div><label class="f">من سورة</label><select id="ezR1">' + so([...sel][0] || 1) + '</select></div><div><label class="f">إلى سورة</label><select id="ezR2">' + so([...sel].slice(-1)[0] || 1) + '</select></div></div></div>' +
+    '<div class="ez-pbar"><span id="ezSelInfo" class="hint"></span><button class="btn off" id="ezClr">مسح الاختيار</button><button class="btn pri" id="ezOk" style="min-height:48px;font-size:17px">تم ✔</button></div>';
   $('modal').classList.remove('hidden');
+  const info = () => { const L = [...sel].sort((a, b) => a - b); $('ezSelInfo').textContent = L.length ? 'المختار: ' + (L.length > 4 ? AD(L.length) + ' سور' : L.map(sName).join('، ')) : 'لم تختاري سورة بعد'; };
   const draw = () => {
     const q = norm($('ezSS').value || '').replace(/^ال/, ''), qn = toInt($('ezSS').value);
-    $('ezSG').innerHTML = SUR.map((y, i) => { const n = i + 1; if (q && !(norm(y[0]).includes(q) || n === qn)) return ''; return '<button data-n="' + n + '"' + (!addMode && n === cur ? ' class="on"' : '') + '>' + esc(y[0]) + '<small>' + AD(n) + '</small></button>'; }).join('');
+    $('ezSG').innerHTML = SUR.map((y, i) => { const n = i + 1; if (q && !(norm(y[0]).includes(q) || n === qn)) return ''; return '<button data-n="' + n + '"' + (sel.has(n) ? ' class="on"' : '') + '>' + (sel.has(n) ? '✔ ' : '') + esc(y[0]) + '<small>' + AD(n) + '</small></button>'; }).join('');
+    info();
   };
-  $('ezSS').addEventListener('input', draw); draw(); setTimeout(() => $('ezSS').focus(), 50);
-  $('ezSG').onclick = e => {
-    const b = e.target.closest('[data-n]'); if (!b) return; const n = +b.dataset.n;
-    if (addMode) { (PREF.extraRanges = PREF.extraRanges || []).push([n, n]); savePref(); renderExtraRanges(); }
-    else { PREF.extraRanges = []; savePref(); renderExtraRanges(); $('wholeSurahs').checked = true; syncWhole(); $('fromS').value = n; $('fromS').onchange(); $('toS').value = n; $('toS').onchange(); }
-    S.mutPicked = null; closeModal(); schedule(true); setTimeout(ezSync, 400);
+  segInit('ezPM', v => { $('ezPMm').classList.toggle('hidden', v !== 'm'); $('ezPMr').classList.toggle('hidden', v !== 'r'); });
+  $('ezSS').addEventListener('input', draw); draw();
+  $('ezSG').onclick = e => { const b = e.target.closest('[data-n]'); if (!b) return; const n = +b.dataset.n; sel.has(n) ? sel.delete(n) : sel.add(n); draw(); };
+  $('ezClr').onclick = () => { sel.clear(); draw(); };
+  $('ezOk').onclick = () => {
+    if (segVal('ezPM') === 'r') { const a = +$('ezR1').value, b = +$('ezR2').value; sel.clear(); for (let x = Math.min(a, b); x <= Math.max(a, b); x++) sel.add(x); }
+    if (!sel.size) { $('ezSelInfo').textContent = 'اختاري سورة واحدة على الأقل.'; return; }
+    closeModal(); ezApplySurahs(sel);
   };
 }
-function ezAddFromBank() {
-  const R = getRange(), pool = candidates(R).filter(q => !S.picked.has(q.id));
-  $('modalBox').innerHTML = '<h3>أضيفي سؤالًا من البنك<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><input type="search" id="ezBS" placeholder="ابحثي بكلمة…" style="min-height:46px"><p class="hint" id="ezBI"></p><div id="ezBL"></div>';
+function ezAddFromBank(rep) {
+  const R = getRange(); let pool = candidates(R).filter(q => !S.picked.has(q.id));
+  if (rep) pool = pool.filter(q => q.tpl === rep.tpl).concat(pool.filter(q => q.tpl !== rep.tpl));
+  $('modalBox').innerHTML = '<h3>' + (rep ? 'اختاري سؤالًا بدلًا منه' : 'أضيفي سؤالًا من البنك') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><input type="search" id="ezBS" placeholder="ابحثي بكلمة…" style="min-height:46px"><p class="hint" id="ezBI"></p><div id="ezBL"></div>';
   $('modal').classList.remove('hidden');
   const draw = async () => {
     const q = norm($('ezBS').value || ''), list = pool.filter(x => !q || norm(x.text + ' ' + x.tam + ' ' + x.tpl).includes(q)).slice(0, 30);
     $('ezBI').textContent = pool.length ? 'متاح ' + AD(pool.length) + ' سؤالًا لهذا النطاق' + (list.length < pool.length ? ' — المعروض ' + AD(list.length) : '') : 'لا توجد أسئلة أخرى في البنك لهذا النطاق.';
     const need = new Set(); list.forEach(x => tokSurahs(x.text + ' ' + x.tam, need)); await ensureSurahs(need);
     if (!$('ezBL')) return;
-    $('ezBL').innerHTML = list.map(x => '<div class="ez-pick"><span class="ez-tag" style="display:inline-block;font:700 12px Tajawal;color:#fff;background:var(--pri);border-radius:999px;padding:2px 10px">' + esc(x.tpl) + '</span><div class="ez-txt">' + (x.tam ? renderTokens(x.tam) + '<br>' : '') + renderTokens(x.text) + '</div><button data-id="' + esc(x.id) + '">＋ أضيفيه إلى الورقة</button></div>').join('');
+    $('ezBL').innerHTML = list.map(x => '<div class="ez-pick"><span class="ez-tag" style="display:inline-block;font:700 12px Tajawal;color:#fff;background:var(--pri);border-radius:999px;padding:2px 10px">' + esc(x.tpl) + '</span><div class="ez-txt">' + (x.tam ? renderTokens(x.tam) + '<br>' : '') + renderTokens(x.text) + '</div><button data-id="' + esc(x.id) + '">' + (rep ? '✔ اختاري هذا بدلًا منه' : '＋ أضيفيه إلى الورقة') + '</button></div>').join('');
   };
   $('ezBS').addEventListener('input', () => { clearTimeout(S.ezT); S.ezT = setTimeout(draw, 250); }); draw();
-  $('ezBL').onclick = async e => { const b = e.target.closest('[data-id]'); if (!b) return; S.picked.add(b.dataset.id); ezSetCount('qMax', S.picked.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
+  $('ezBL').onclick = async e => { const b = e.target.closest('[data-id]'); if (!b) return;
+    if (rep) { S.picked.delete(rep.id); S.picked.add(b.dataset.id); closeModal(); await refresh(false); toast('اختير السؤال.'); return; }
+    S.picked.add(b.dataset.id); ezSetCount('qMax', S.picked.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
 }
-function ezAddMut() {
+function ezAddMut(rep) {
   const R = getRange(), set = ezMutSet(), pool = mutCandidates(R).filter(c => !set.has(c.gi));
-  $('modalBox').innerHTML = '<h3>أضيفي متشابهًا<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint">' + (pool.length ? 'متاح ' + AD(pool.length) + ' متشابهًا لهذا النطاق. أو <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.' : 'لا توجد متشابهات أخرى لهذا النطاق. <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.') + '</p><div id="ezML"></div>';
+  $('modalBox').innerHTML = '<h3>' + (rep ? 'اختاري متشابهًا بدلًا منه' : 'أضيفي متشابهًا') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint">' + (pool.length ? 'متاح ' + AD(pool.length) + ' متشابهًا لهذا النطاق. أو <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.' : 'لا توجد متشابهات أخرى لهذا النطاق. <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.') + '</p><div id="ezML"></div>';
   $('modal').classList.remove('hidden');
   const list = pool.slice(0, 25);
   (async () => {
     const need = new Set(); list.forEach(c => c.locs.forEach(l => need.add(l.s))); await ensureSurahs(need); if (!$('ezML')) return;
-    $('ezML').innerHTML = list.map(c => '<div class="ez-pick"><div class="ez-txt">' + c.locs.map(l => renderTokens('{مطلع:' + sName(l.s) + ':' + l.a + ':7}') + ' <b class="hint">' + esc(sName(l.s)) + ' ' + AD(l.a) + '</b>').join('<br>') + '</div><button data-gi="' + c.gi + '">＋ أضيفيه إلى الورقة</button></div>').join('');
+    $('ezML').innerHTML = list.map(c => '<div class="ez-pick"><div class="ez-txt">' + c.locs.map(l => renderTokens('{مطلع:' + sName(l.s) + ':' + l.a + ':7}') + ' <b class="hint">' + esc(sName(l.s)) + ' ' + AD(l.a) + '</b>').join('<br>') + '</div><button data-gi="' + c.gi + '">' + (rep ? '✔ اختاري هذا بدلًا منه' : '＋ أضيفيه إلى الورقة') + '</button></div>').join('');
   })();
-  $('ezML').onclick = async e => { const b = e.target.closest('[data-gi]'); if (!b) return; const s2 = ezMutSet(); s2.add(+b.dataset.gi); S.mutPicked = s2; ezSetCount('mutCount', s2.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
+  $('ezML').onclick = async e => { const b = e.target.closest('[data-gi]'); if (!b) return; const s2 = ezMutSet();
+    if (rep) { s2.delete(rep.gi); s2.add(+b.dataset.gi); S.mutPicked = s2; closeModal(); await refresh(false); toast('اختير المتشابه.'); return; }
+    s2.add(+b.dataset.gi); S.mutPicked = s2; ezSetCount('mutCount', s2.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
   const own = $('ezOwnMut'); if (own) own.onclick = e => { e.preventDefault(); closeModal(); openMutEditor(); };
 }
 function ezWrite() {
@@ -2187,13 +2249,25 @@ function wireEasy() {
   const setMode = easy => { ctl.classList.toggle('easy-on', easy); $('ezBack').classList.toggle('hidden', easy); PREF.ui = easy ? 'easy' : 'adv'; savePref(); if (easy && lastModel) renderEasy(lastModel); window.scrollTo(0, 0); };
   setMode(PREF.ui !== 'adv');
   $('ezAdv').onclick = () => setMode(false); $('ezBack').onclick = () => setMode(true);
-  $('ezSurah').onclick = () => ezSurahPicker(false); $('ezMore').onclick = () => ezSurahPicker(true);
-  $('ezAyahsBtn').onclick = () => { $('ezAyahs').classList.toggle('hidden'); const s1 = surahOfAbs(getRange().A); $('ezA1').value = $('fromA').value || 1; $('ezA2').value = ACOUNT(s1); $('ezA1').max = $('ezA2').max = ACOUNT(s1); };
-  $('ezAyahsOk').onclick = () => { const s1 = +$('fromS').value, a1 = Math.max(1, Math.min(ACOUNT(s1), +$('ezA1').value || 1)), a2 = Math.max(a1, Math.min(ACOUNT(s1), +$('ezA2').value || a1)); $('toS').value = s1; $('toS').onchange(); $('fromA').value = a1; $('fromA').onchange(); $('toA').value = a2; $('toA').onchange(); setTimeout(ezSync, 400); };
+  $('ezSurah').onclick = () => ezSurahPicker(); $('ezMore').onclick = () => ezSurahPicker();
+  $('ezAyahsBtn').onclick = () => {
+    $('ezAyahs').classList.toggle('hidden');
+    const s1 = +$('fromS').value, s2 = +$('toS').value;
+    $('ezAL1').textContent = 'من سورة ' + sName(s1) + '، الآية'; $('ezAL2').textContent = 'إلى سورة ' + sName(s2) + '، الآية';
+    $('ezA1').value = $('wholeSurahs').checked ? 1 : (+$('fromA').value || 1); $('ezA2').value = $('wholeSurahs').checked ? ACOUNT(s2) : (+$('toA').value || ACOUNT(s2));
+    $('ezA1').max = ACOUNT(s1); $('ezA2').max = ACOUNT(s2);
+    $('ezAN').textContent = (PREF.extraRanges || []).length ? 'تنبيه: تحديد الآيات يخص المجموعة الأولى من السور المختارة.' : '';
+  };
+  $('ezAyahsOk').onclick = () => {
+    const s1 = +$('fromS').value, s2 = +$('toS').value, a1 = Math.max(1, Math.min(ACOUNT(s1), +$('ezA1').value || 1)), a2 = Math.max(1, Math.min(ACOUNT(s2), +$('ezA2').value || 1));
+    $('fromA').value = a1; $('fromA').onchange(); $('toA').value = a2; $('toA').onchange(); setTimeout(ezSync, 400); toast('حُدّدت الآيات.');
+  };
   document.querySelectorAll('[data-ez]').forEach(bt => bt.onclick = () => { const t = document.querySelector('.counts button[data-step="' + bt.dataset.ez + '"][data-d="' + bt.dataset.d + '"]'); if (t) t.click(); ezSync(); });
   document.querySelectorAll('[data-ezfz]').forEach(bt => bt.onclick = () => { const t = document.querySelector('[data-fz="' + bt.dataset.ezfz + '"]'); if (t) t.click(); ezSync(); });
-  $('ezList').addEventListener('click', e => { const b = e.target.closest('[data-ea]'); if (!b) return; const i = +b.closest('.ez-q').dataset.i, x = (S.ezItems || [])[i]; if (x) ezAction(b.dataset.ea, x.it); });
-  $('ezAddQ').onclick = ezAddFromBank; $('ezAddM').onclick = ezAddMut; $('ezAddW').onclick = ezWrite;
+  $('ezList').addEventListener('click', e => { const b = e.target.closest('[data-ea]'); if (!b) return;
+    if (b.dataset.ea === 'more') { const q = b.closest('.ez-q'), open = q.classList.toggle('open'); b.textContent = open ? 'إخفاء ▴' : 'عرض السؤال كاملًا ▾'; return; } const i = +b.closest('.ez-q').dataset.i, x = (S.ezItems || [])[i]; if (x) ezAction(b.dataset.ea, x.it); });
+  $('ezAddQ').onclick = () => ezAddFromBank(); $('ezAddM').onclick = () => ezAddMut(); $('ezAddW').onclick = ezWrite;
+  document.querySelectorAll('[data-ezgo]').forEach(b => b.onclick = () => ({ q: () => ezAddFromBank(), m: () => ezAddMut(), w: ezWrite })[b.dataset.ezgo]());
   $('ezPrint').onclick = () => downloadPDF(false);
   $('ezKey').onclick = () => doPrint(true);
   $('ezView').onclick = () => { const w = $('previewWrap'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); const m = $('mPrev'); if (m && getComputedStyle($('mbar')).display !== 'none') m.click(); };
