@@ -360,6 +360,11 @@ details.fold[open] > summary{margin-bottom:6px}
 @media (max-width:520px){.ez-q .ez-acts{grid-template-columns:1fr 1fr}}
 .ez-q.open .ez-txt{max-height:none}
 .ez-more{background:none;border:0;color:var(--pri);font:700 14.5px Tajawal,sans-serif;cursor:pointer;padding:6px 0 0}
+.ez-saved{width:100%;min-height:44px;margin-bottom:10px;border-radius:12px;border:1px solid var(--line);background:var(--soft);font:700 15.5px Tajawal,sans-serif;color:var(--head);cursor:pointer}
+.ez-keep{min-height:50px;border-radius:14px;border:2px solid var(--pri);background:var(--paper);color:var(--pri);font:800 16px Tajawal,sans-serif;cursor:pointer}
+.svitem{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:8px;background:var(--soft)}
+.svitem .svt{flex:1;min-width:0}.svitem .svt b{display:block;font-size:16.5px}.svitem .svt small{color:var(--muted)}
+.svitem button{min-height:44px}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -431,6 +436,7 @@ details.fold[open] > summary{margin-bottom:6px}
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">١</span><h3>اختاري السورة</h3></div>
               <button class="ez-big" id="ezSurah"><span id="ezSurahName">اختاري السورة</span><span class="ez-arrow">▾</span></button>
+              <button class="ez-saved hidden" id="ezOpenSaved">📂 أوراقي المحفوظة <span id="ezSavedN"></span></button>
               <div class="ez-links"><button class="ez-link" id="ezMore">＋ أكثر من سورة</button><button class="ez-link" id="ezAyahsBtn">آيات معيّنة فقط</button></div>
               <div id="ezAyahs" class="ez-ayahs hidden"><div class="ez-ar"><span id="ezAL1">من الآية</span><input type="number" min="1" id="ezA1"></div><div class="ez-ar"><span id="ezAL2">إلى الآية</span><input type="number" min="1" id="ezA2"></div><button class="btn pri" id="ezAyahsOk">تطبيق</button><small id="ezAN" class="hint"></small></div>
             </div>
@@ -451,6 +457,7 @@ details.fold[open] > summary{margin-bottom:6px}
               <div class="ez-h"><span class="ez-n">٤</span><h3>الورقة جاهزة</h3></div>
               <div class="ez-final">
                 <button class="ez-print" id="ezPrint">⬇ حفظ PDF أو طباعة</button>
+                <button class="ez-keep" id="ezKeep">💾 احفظي هذه الورقة لترجعي إليها لاحقًا</button>
                 <div class="ez-row2"><button class="btn" id="ezView">👁 معاينة الورقة</button><button class="btn" id="ezKey">نموذج الإجابة</button></div>
                 <div class="ez-row2"><span class="hint">حجم الخط</span><button class="btn sm" data-ezfz="-1">أ−</button><b id="ezFz">١٠٠٪</b><button class="btn sm" data-ezfz="1">أ+</button></div>
               </div>
@@ -898,10 +905,18 @@ function tokOut(t, raw, html) {
     const W = wordsWithMarks(ayahText(t.s, t.a)), x = Math.max(1, t.w1), y = Math.min(W.length, t.w2);
     const parts = [];
     for (let i = x; i <= y; i++) {
-      if (i === t.g1) { const hid = W.slice(t.g1 - 1, t.g2).join(' '); parts.push(html ? '<span class="gap" style="width:' + Math.max(4, Math.round(hid.length * 0.5)) + 'em"></span>' : '..........'); i = t.g2; continue; }
+      if (i === t.g1) {
+        // الفراغ على قدر المحذوف: قصير للكلمة والكلمتين، وسطر كامل (أو أكثر) للعبارة الطويلة
+        const hid = W.slice(t.g1 - 1, t.g2).join(' ').replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, ''), n = hid.length;
+        if (!html) parts.push('..........');
+        else if (n > 40) parts.push('<span class="gapL">' + '<span class="gap"></span>'.repeat(Math.min(4, Math.ceil(n / 55))) + '</span>');
+        else parts.push('<span class="gap" style="width:' + Math.max(5, Math.min(22, Math.round(n * 0.62 + 2))) + 'em"></span>');
+        i = t.g2; continue;
+      }
       parts.push(E(W[i - 1]));
     }
-    body = (x > 1 ? '… ' : '') + parts.join(' ') + (y < W.length ? ' …' : '');
+    const ell = html ? '<span class="ell">…</span>' : '…';
+    body = (x > 1 ? ell + ' ' : '') + parts.join(' ') + (y < W.length ? ' ' + ell : '');
   }
   else if (t.k === 'مقتطف') { const W = wordsWithMarks(ayahText(t.s, t.a)), x = Math.max(1, t.w1), y = Math.min(W.length, t.w2); body = (x > 1 ? '… ' : '') + E(W.slice(x - 1, y).join(' ')) + ' …'; }
   else { const xs = []; for (let a = t.a; a <= t.b; a++) xs.push(E(ayahText(t.s, a)) + num(a)); body = xs.join(' '); }
@@ -1269,6 +1284,8 @@ function mutAnalyze(c) {
     const g1 = Math.max(1, n - 1); return { ...x, ok: true, w1: Math.max(1, n - 7), w2: n, g1, g2: n };
   });
 }
+/* عدد أسطر «الآية التالية» على قدر طولها */
+function nextAyahLines(sn, a) { const t = a < ACOUNT(sn) ? ayahText(sn, a + 1) : ''; if (!t) return 1; return Math.max(1, Math.min(4, Math.ceil(t.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '').length / 70))); }
 function parseMutWords(str) {
   const out = {}; String(str || '').split('؛').forEach(p => { const m = p.trim().match(/^(.+?):(\d+)=(\d+)-(\d+)\/(\d+)-(\d+)$/); if (m) { const sn = sNum(m[1].trim()); if (sn) out[sn + ':' + (+m[2])] = { w1: +m[3], w2: +m[4], g1: +m[5], g2: +m[6] }; } });
   return out;
@@ -1296,7 +1313,8 @@ function mutItem(c, space, mode, rand) {
     ans.push('{آية:' + nm + ':' + l.a + '}' + label);
   });
   const dir = mode === 'surah' ? 'حدّدي السورة التي ورد فيها كل موضع من المواضع المتشابهة الآتية:' : mode === 'choice' ? 'اختاري الكلمات الصحيحة لكل فراغ في المواضع المتشابهة الآتية:' : null;
-  return { kind: 'q', key: 'm:' + c.gi, mut: true, mode, dir, tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: opts, subKeys: keys, subLines: mode === 'comp' ? 1 : 0, letters: true, ans: ans.join(' — '), grade: c.locs.length, surahs: [...new Set(c.locs.map(l => l.s))], anchor: c.anchor, gi: c.gi };
+  const nextLines = c.locs.map(l => nextAyahLines(l.s, l.a));
+  return { kind: 'q', key: 'm:' + c.gi, mut: true, mode, dir, nextLines, tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: opts, subKeys: keys, subLines: mode === 'comp' ? 1 : 0, letters: true, ans: ans.join(' — '), grade: c.locs.length, surahs: [...new Set(c.locs.map(l => l.s))], anchor: c.anchor, gi: c.gi };
 }
 /* توزيع المتشابهات على سور النطاق بالتساوي: دورة على السور، واختيار عشوائي داخل كل سورة */
 function pickMut(cands, n, rand) {
@@ -1408,22 +1426,22 @@ function buildModel(U) {
     const chosen = S.rows.filter(q => S.picked.has(q.id)).sort((a, b) => a.anchor - b.anchor);
     const byT = {};
     chosen.forEach(q => { (byT[q.tpl] = byT[q.tpl] || []).push(quesItem(q, U.space, defGrade)); });
-    const extra = [];
+    const extra = [], mutComp = [];
     // المتشابهات اليدوية لهذه الورقة
     (PREF.manualMut || []).forEach((str, ui) => {
       if (str && typeof str === 'object' && str.locs && str.locs.some(l => l.w1)) {
         // متشابه يدوي بكلمات اختارتها المعلمة
         const L = str.locs.filter(l => l.w1);
         const subs = L.map(l => (l.g1 ? '{فجوة:' + sName(l.s) + ':' + l.a + ':' + l.w1 + '-' + l.w2 + ':' + l.g1 + '-' + l.g2 + '}' : '{مقتطف:' + sName(l.s) + ':' + l.a + ':' + l.w1 + '-' + l.w2 + '}') + ' [' + sName(l.s) + ': ' + AD(l.a) + ']');
-        const it = { kind: 'q', key: 'm:u' + ui, mut: true, mode: 'comp', tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: L.map(() => null), subKeys: L.map(() => null), subLines: 1, letters: true, ans: L.map(l => '{آية:' + sName(l.s) + ':' + l.a + '}').join(' — '), grade: L.length, surahs: [...new Set(L.map(l => l.s))], anchor: Math.min(...L.map(l => ABS(l.s, l.a))), gi: 'u' + ui };
-        byT['متشابهات'] = (byT['متشابهات'] || []).concat([it]);
+        const it = { kind: 'q', key: 'm:u' + ui, mut: true, mode: 'comp', nextLines: L.map(l => nextAyahLines(l.s, l.a)), tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: L.map(() => null), subKeys: L.map(() => null), subLines: 1, letters: true, ans: L.map(l => '{آية:' + sName(l.s) + ':' + l.a + '}').join(' — '), grade: L.length, surahs: [...new Set(L.map(l => l.s))], anchor: Math.min(...L.map(l => ABS(l.s, l.a))), gi: 'u' + ui };
+        mutComp.push(it);
         return;
       }
       const locs = parseMutLocs(typeof str === 'string' ? str : (str.locs || []).map(l => sName(l.s) + ':' + l.a).join(' ؛ ')); if (locs.length < 2) return;
       const c = { gi: 'u' + ui, g: { diff: '' }, locs, all: locs, diffs: [], anchor: Math.min(...locs.map(l => l.A)) };
       const md = U.mutMode === 'choice' || U.mutMode === 'mix' ? 'comp' : U.mutMode;
       const it = mutItem(c, U.space, md, rnd32(S.qSeed * 17 + ui));
-      if (it.mode === 'comp') byT['متشابهات'] = (byT['متشابهات'] || []).concat([it]);
+      if (it.mode === 'comp') mutComp.push(it);
       else { const k = '__mut_' + it.mode; let sec = extra.find(x => x.key === k); if (!sec) { sec = { kind: 'ques', key: k, dir: dirFor(k, it.dir), items: [] }; extra.push(sec); } sec.items.push(it); }
     });
     if (U.mutOn && U.mutCount > 0) {
@@ -1433,7 +1451,7 @@ function buildModel(U) {
       picked.forEach((c, i) => {
         const md = U.mutMode === 'choice' ? 'comp' : U.mutMode;
         const it = mutItem(c, U.space, md === 'mix' ? modes[i % 2] : md, rnd32(S.qSeed * 13 + c.gi));
-        if (it.mode === 'comp') byT['متشابهات'] = (byT['متشابهات'] || []).concat([it]);
+        if (it.mode === 'comp') mutComp.push(it);
         else { const k = '__mut_' + it.mode; let sec = extra.find(x => x.key === k); if (!sec) { sec = { kind: 'ques', key: k, dir: dirFor(k, it.dir), items: [] }; extra.push(sec); } sec.items.push(it); }
       });
     }
@@ -1442,6 +1460,7 @@ function buildModel(U) {
       sections.push({ kind: 'ques', key: t, dir: dirFor(t, tplDir(t, 'أجيبي عما يأتي:')), items: byT[t] });
       if (t === 'متشابهات') extra.splice(0).forEach(x => sections.push(x));
     });
+    if (mutComp.length) sections.splice(sections.findIndex(x => x.kind === 'ques') < 0 ? sections.length : sections.findIndex(x => x.kind === 'ques'), 0, { kind: 'ques', key: '__mut_comp', dir: dirFor('__mut_comp', 'أكملي الكلمات الناقصة في كل فراغ، ثم اكتبي الآية التي تلي كل موضع:'), items: mutComp });
     extra.forEach(x => sections.push(x));
   }
   const adhoc = (S.adhoc || []).map((x, i) => [x, i]).filter(([x]) => S.draftView || String(x.text || '').trim());
@@ -1597,7 +1616,11 @@ table.pg > tbody > tr > td{padding:0 15mm}
 .ans{margin-top:1mm;padding:1.2mm 3mm;background:var(--soft);border-inline-start:3px solid var(--c1);border-radius:4px}
 .bl{text-align:justify;line-height:2.55;margin:0}
 .bl-s{font-weight:700;color:var(--c1);margin:2mm 0 0;text-align:center}
-.gap{display:inline-block;border-bottom:1.3px dotted #333;height:1.1em;vertical-align:-.2em;margin:0 .15em}
+.gap{display:inline-block;border-bottom:1.4px dotted #333;height:1.25em;vertical-align:-.25em;margin:0 .2em}
+.gapL{display:block;margin:.2em 0}
+.gapL .gap{display:block;width:100%;margin:0;height:1.9em}
+.ell{color:#aaa}
+.nxl{font:600 .78em var(--f);color:#777;margin-top:1.2mm}
 mark{background:#FFF0A8;padding:0 .1em}
 .end{margin-top:5mm;break-inside:avoid}
 .close{text-align:center;font-weight:700;color:var(--c1);margin:1mm 0}
@@ -1623,7 +1646,8 @@ function itemHTML(it, idx, U, key) {
     body += it.subs.map((s, k) => {
       const o = it.subOpts && it.subOpts[k];
       const opt = o ? '<div class="opts' + (key ? ' key' : '') + '">' + o.map(x => '<span' + (key && it.subKeys && x === it.subKeys[k] ? ' class="ok"' : '') + '>' + esc(x) + '</span>').join('') + '</div>' : '';
-      return '<div class="sub"><b class="lt">' + LET[k] + ')</b> ' + renderTokens(s) + '</div>' + opt + (key || o ? '' : '<div class="ln"></div>'.repeat(it.subLines || 1));
+      const nl = it.mut && it.mode === 'comp' && !key ? '<div class="nxl">الآية التالية:</div>' + '<div class="ln"></div>'.repeat((it.nextLines && it.nextLines[k]) || 1) : (key || o ? '' : '<div class="ln"></div>'.repeat(it.subLines || 1));
+      return '<div class="sub"><b class="lt">' + LET[k] + ')</b> ' + renderTokens(s) + '</div>' + opt + nl;
     }).join('');
     if (key && it.ans) body += '<div class="ans">' + renderTokens(it.ans) + '</div>';
     return '<div class="it"><div class="it-n">' + AD(idx + 1) + ')</div><div>' + body + '</div>' + grade + '</div>';
@@ -2244,7 +2268,60 @@ function ezWrite() {
   $('modal').classList.remove('hidden'); setTimeout(() => $('ezWQ').focus(), 50);
   $('ezWOk').onclick = async () => { const t = $('ezWQ').value.trim(); if (!t) { $('ezWQ').focus(); return; } S.adhoc.push({ text: t, ans: $('ezWA').value.trim(), lines: +$('ezWL').value || 3, grade: +$('ezWG').value || 1 }); saveAdhoc(); renderAdhoc(); closeModal(); await refresh(false); toast('أُضيف سؤالك إلى الورقة.'); };
 }
+/* ----- أوراقي المحفوظة: حفظ الورقة كما هي (السور، والأسئلة المختارة، والتعديلات) لفتحها لاحقًا ----- */
+const SAVED_KEY = 'ws_saved_sheets';
+function savedList() { const v = LS.get(SAVED_KEY, []); return Array.isArray(v) ? v : []; }
+function ezSavedBadge() { const n = savedList().length; $('ezOpenSaved').classList.toggle('hidden', !n); $('ezSavedN').textContent = n ? '(' + AD(n) + ')' : ''; }
+function snapshotSheet(name) {
+  return {
+    name, at: Date.now(), fromS: +$('fromS').value, toS: +$('toS').value, fromA: +$('fromA').value || 1, toA: +$('toA').value || 1, whole: $('wholeSurahs').checked,
+    extraRanges: PREF.extraRanges || [], seg: +$('segCount').value || 0, mut: +$('mutCount').value || 0, q: +$('qMax').value || 0,
+    seed: S.seed, qSeed: S.qSeed, picked: [...S.picked], mutPicked: S.mutPicked ? [...S.mutPicked] : null,
+    adhoc: S.adhoc || [], draft: PREF.draft || null, manualMut: PREF.manualMut || [], manualSegs: PREF.manualSegs || [], dirs: PREF.dirs || {}, fs: PREF.fs || 100, mutMode: $('mutMode').value
+  };
+}
+async function restoreSheet(x) {
+  busy(true, 'جارٍ فتح الورقة…');
+  try {
+    Object.assign(PREF, { extraRanges: x.extraRanges || [], draft: x.draft || null, manualMut: x.manualMut || [], manualSegs: x.manualSegs || [], dirs: x.dirs || {}, fs: x.fs || 100, mutMode: x.mutMode || 'comp', segCount: x.seg, mutCount: x.mut, qMax: x.q });
+    S.adhoc = (x.adhoc || []).map(a => Object.assign({}, a)); PREF.adhoc = S.adhoc; savePref();
+    renderExtraRanges(); renderAdhoc(); renderManualMuts();
+    $('segCount').value = x.seg; $('mutCount').value = x.mut; $('qMax').value = x.q; $('mutMode').value = x.mutMode || 'comp'; syncCounts();
+    $('wholeSurahs').checked = !!x.whole; syncWhole();
+    $('fromS').value = x.fromS; $('fromS').onchange(); $('toS').value = x.toS; $('toS').onchange();
+    await new Promise(r => setTimeout(r, 350));
+    if (!x.whole) { $('fromA').value = x.fromA; $('fromA').onchange(); $('toA').value = x.toA; $('toA').onchange(); $('wholeSurahs').checked = false; syncWhole(); }
+    await new Promise(r => setTimeout(r, 450));
+    clearTimeout(refreshT);
+    S.seed = x.seed; S.qSeed = x.qSeed; S.picked = new Set(x.picked || []); S.mutPicked = x.mutPicked ? new Set(x.mutPicked) : null;
+    await refresh(false); ezSync();
+    toast('فُتحت الورقة «' + x.name + '».');
+  } finally { busy(false); }
+}
+function ezSaveSheet() {
+  const def = (rangeName(getRange()) || 'ورقة') + ' — ' + new Date().toLocaleDateString('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long' });
+  $('modalBox').innerHTML = '<h3>احفظي هذه الورقة<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint" style="margin-top:0">تُحفظ في هذا الجهاز بسورها وأسئلتها وتعديلاتها، فتفتحينها لاحقًا كما هي لتطبعيها أو تعدّلي عليها.</p><label class="f">اسم الورقة</label><input type="text" id="svName" value="' + esc(def) + '" style="min-height:48px;font-size:17px"><div class="row" style="margin-top:12px"><button class="btn pri" id="svOk" style="flex:0 0 auto;min-height:48px;font-size:17px">💾 حفظ</button></div>';
+  $('modal').classList.remove('hidden'); setTimeout(() => { $('svName').focus(); $('svName').select(); }, 50);
+  $('svOk').onclick = () => {
+    const name = $('svName').value.trim() || def, list = savedList().filter(x => x.name !== name);
+    list.unshift(snapshotSheet(name)); LS.set(SAVED_KEY, list.slice(0, 60)); closeModal(); ezSavedBadge(); toast('حُفظت الورقة «' + name + '».');
+  };
+}
+function ezOpenSaved() {
+  const draw = () => {
+    const list = savedList();
+    $('modalBox').innerHTML = '<h3>أوراقي المحفوظة<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' + (list.length ? list.map((x, i) => '<div class="svitem"><div class="svt"><b>' + esc(x.name) + '</b><small>' + esc(new Date(x.at).toLocaleDateString('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' })) + '</small></div><button class="btn pri" data-sv="open" data-i="' + i + '">افتحيها</button><button class="btn sm off" data-sv="del" data-i="' + i + '">✕</button></div>').join('') : '<p class="hint">لا أوراق محفوظة بعد.</p>');
+    $('modal').classList.remove('hidden');
+    $('modalBox').onclick = e => {
+      const b = e.target.closest('[data-sv]'); if (!b) return; const i = +b.dataset.i, L = savedList();
+      if (b.dataset.sv === 'del') { if (!confirm('حذف «' + L[i].name + '» من الأوراق المحفوظة؟')) return; L.splice(i, 1); LS.set(SAVED_KEY, L); ezSavedBadge(); draw(); }
+      else { const x = L[i]; closeModal(); restoreSheet(x); }
+    };
+  };
+  draw();
+}
 function wireEasy() {
+  $('ezKeep').onclick = ezSaveSheet; $('ezOpenSaved').onclick = ezOpenSaved; ezSavedBadge();
   const ctl = $('controls');
   const setMode = easy => { ctl.classList.toggle('easy-on', easy); $('ezBack').classList.toggle('hidden', easy); PREF.ui = easy ? 'easy' : 'adv'; savePref(); if (easy && lastModel) renderEasy(lastModel); window.scrollTo(0, 0); };
   setMode(PREF.ui !== 'adv');
@@ -2297,7 +2374,7 @@ function updateRangePreview() {
 }
 function renderDirs(M) {
   const box = $('dirsBox'), keys = M.sections.map(s => [s.key, s.dir]);
-  box.innerHTML = keys.length ? keys.map(([k, d]) => '<label class="f">' + esc(k === '__seg' ? 'مقاطع الإكمال' : k === '__blank' ? 'فراغات الإكمال' : k === '__mut_surah' ? 'متشابهات: تحديد السورة' : k === '__mut_choice' ? 'متشابهات: اختيار التكملة' : k === '__adhoc' ? 'أسئلة إضافية (يدوية)' : k) + '</label><input type="text" data-dir="' + esc(k) + '" value="' + esc(d) + '">').join('') + '<button class="btn sm" id="dirsReset" style="margin-top:4px">إرجاع العناوين الأصلية</button>' : '<p class="hint">تظهر هنا عناوين أقسام الورقة بعد اختيار المحتوى.</p>';
+  box.innerHTML = keys.length ? keys.map(([k, d]) => '<label class="f">' + esc(k === '__seg' ? 'مقاطع الإكمال' : k === '__blank' ? 'فراغات الإكمال' : k === '__mut_surah' ? 'متشابهات: تحديد السورة' : k === '__mut_comp' ? 'متشابهات: إكمال الفراغ' : k === '__mut_choice' ? 'متشابهات: اختيار التكملة' : k === '__mut_comp' ? 'متشابهات: إكمال الفراغ' : k === '__adhoc' ? 'أسئلة إضافية (يدوية)' : k) + '</label><input type="text" data-dir="' + esc(k) + '" value="' + esc(d) + '">').join('') + '<button class="btn sm" id="dirsReset" style="margin-top:4px">إرجاع العناوين الأصلية</button>' : '<p class="hint">تظهر هنا عناوين أقسام الورقة بعد اختيار المحتوى.</p>';
 }
 let lastModel = null, viewKey = false;
 async function refresh(full) {
@@ -2329,7 +2406,7 @@ function paint(M) {
 /* =====================================================================
    المسودة: تحرير بنود الورقة مباشرة
    ===================================================================== */
-const SEC_LABEL = k => k === '__seg' ? 'إكمال الآيات' : k === '__blank' ? 'فراغات الإكمال' : k === '__adhoc' ? 'أسئلة إضافية' : k === '__mut_surah' ? 'متشابهات: تحديد السورة' : k;
+const SEC_LABEL = k => k === '__seg' ? 'إكمال الآيات' : k === '__blank' ? 'فراغات الإكمال' : k === '__adhoc' ? 'أسئلة إضافية' : k === '__mut_surah' ? 'متشابهات: تحديد السورة' : k === '__mut_comp' ? 'متشابهات: إكمال الفراغ' : k;
 function itemKind(it) { return it.kind === 'blank' ? 'فراغات' : it.kind === 'seg' ? 'إكمال آلي' : it.mut ? 'متشابه' : it.adhoc != null ? 'سؤال يدوي' : it.branches ? 'سؤال بفروع' : 'من البنك'; }
 function renderDraft(M) {
   const box = $('draftBox'), admin = S.role === 'admin', D = draftState();
