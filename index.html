@@ -415,6 +415,32 @@ details.fold[open] > summary{margin-bottom:6px}
 .fbitem{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:8px;background:var(--soft)}
 .fbitem .fbh{display:flex;gap:8px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-bottom:4px}
 .fbitem p{margin:0;white-space:pre-wrap;line-height:1.8}
+.qz-ans .q{color:inherit}
+html[data-mode=dark] .qz-ans{background:#16362f;color:#e3f4ee}
+html[data-mode=dark] .qz-opts button.ok{background:#16362f;color:#bff0dc;border-color:#3aa38a}
+html[data-mode=dark] .qz-opts button.no{background:#3a1717;color:#ffc9c9;border-color:#c0392b}
+html[data-mode=dark] .qz-self .n{background:#3a1717;color:#ffc9c9}
+html[data-mode=dark] .ez-cur{background:#3a3220;border-color:#6b5a2e;color:#f3e6c4}
+/* تحفيز */
+.qz-streak{font:800 14px Tajawal,sans-serif;color:#d35400}
+.qz-snd{border:1px solid var(--line);background:var(--paper);border-radius:999px;width:38px;height:38px;cursor:pointer;font-size:17px}
+.qz-card.shake{animation:qshake .45s}
+@keyframes qshake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.qz-card.glow{box-shadow:0 0 0 3px #3aa38a,0 10px 28px rgba(31,122,100,.25);transition:box-shadow .3s}
+.burst{position:fixed;pointer-events:none;z-index:200;font-size:22px;animation:burst 1s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.6) rotate(var(--r));opacity:0}}
+.qz-badge{font-size:46px;animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(.2)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.ez-gcard{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.ez-gcard b{font-size:16.5px}
+.ez-gbtns{display:flex;gap:8px;flex:1;min-width:220px}
+.ez-gbtns button{flex:1;min-height:48px;border-radius:12px;border:2px solid var(--line);background:var(--paper);font:800 16.5px Tajawal,sans-serif;cursor:pointer;color:var(--ink)}
+.ez-gbtns button.on{border-color:var(--pri);background:var(--pri);color:#fff}
+.ez-look{display:flex;flex-direction:column;gap:10px}
+.ez-look input[type=text],.ez-look select{min-height:46px;font-size:16px}
+.ez-colors{display:flex;gap:8px;flex-wrap:wrap}
+.ez-colors button{width:44px;height:44px;border-radius:50%;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.ez-colors button.on{box-shadow:0 0 0 3px var(--ink)}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -495,7 +521,8 @@ details.fold[open] > summary{margin-bottom:6px}
               <div id="ezAyahs" class="ez-ayahs hidden"><div class="ez-ar"><span id="ezAL1">من الآية</span><input type="number" min="1" id="ezA1"></div><div class="ez-ar"><span id="ezAL2">إلى الآية</span><input type="number" min="1" id="ezA2"></div><button class="btn pri" id="ezAyahsOk">تطبيق</button><small id="ezAN" class="hint"></small></div>
             </div>
             <div class="ez-card">
-              <div class="ez-h"><span class="ez-n">٢</span><h3>كم سؤالًا تريدين؟</h3></div>
+              <div class="ez-h"><span class="ez-n">٢</span><h3>لمن الورقة؟ وكم سؤالًا؟</h3></div>
+              <div class="ez-gcard"><b>الورقة لـ:</b><div class="ez-gbtns" id="ezG" data-nogx><button data-v="f">طالبات</button><button data-v="m">طلاب</button></div><small class="hint" style="flex:1 1 100%">تتغير صيغة الأسئلة ولون الورقة تلقائيًا (أكملي/أكمل).</small></div>
               <div class="ez-cnt"><div><b>إكمال الآيات</b><small>تكتب الطالبة الآيات من موضع إلى موضع</small></div><div class="ez-stp"><button data-ez="segCount" data-d="-1">−</button><span id="ez_segCount">٢</span><button data-ez="segCount" data-d="1">+</button></div></div>
               <div class="ez-cnt"><div><b>المتشابهات</b><small>آيات متشابهة تكمل الطالبة الفرق بينها</small></div><div class="ez-stp"><button data-ez="mutCount" data-d="-1">−</button><span id="ez_mutCount">٢</span><button data-ez="mutCount" data-d="1">+</button></div></div>
               <div class="ez-cnt"><div><b>أسئلة متنوعة</b><small>معانٍ وقصص وتقسيمات من بنك الأسئلة</small></div><div class="ez-stp"><button data-ez="qMax" data-d="-1">−</button><span id="ez_qMax">٢</span><button data-ez="qMax" data-d="1">+</button></div></div>
@@ -508,16 +535,25 @@ details.fold[open] > summary{margin-bottom:6px}
               <div class="ez-adds"><button class="ez-add" id="ezAddQ">＋ سؤال من البنك</button><button class="ez-add" id="ezAddM">＋ متشابه</button><button class="ez-add" id="ezAddW">＋ اكتبي سؤالًا</button></div>
             </div>
             <div class="ez-card">
-              <div class="ez-h"><span class="ez-n">٤</span><h3>الورقة جاهزة</h3></div>
+              <div class="ez-h"><span class="ez-n">٤</span><h3>مظهر الورقة</h3></div>
+              <div class="ez-look">
+                <div><label class="f">عنوان الورقة</label><input type="text" id="ezTitle"></div>
+                <div><label class="f">السطر الثاني</label><input type="text" id="ezSub"></div>
+                <div><label class="f">التوقيع في آخر الورقة</label><div class="accrow"><select id="ezTeacher" style="flex:0 1 46%"></select><input type="text" id="ezSign" placeholder="مثل: المحبة لكم: …"></div></div>
+                <div><label class="f">لون الورقة</label><div class="ez-colors" id="ezColors"></div></div>
+                <div class="accrow"><div style="flex:1"><label class="f">الخط</label><select id="ezFont"></select></div><div style="flex:0 0 auto"><label class="f">الحجم</label><div class="ez-row2" style="justify-content:flex-start"><button class="btn sm" data-ezfz="-1">أ−</button><b id="ezFz">١٠٠٪</b><button class="btn sm" data-ezfz="1">أ+</button></div></div></div>
+                <div class="perms"><label><input type="checkbox" id="ezShowName"> خانة الاسم</label><label><input type="checkbox" id="ezShowDate"> التاريخ</label><label><input type="checkbox" id="ezShowGrades"> الدرجات</label><label><input type="checkbox" id="ezShowBism"> البسملة</label></div>
+              </div>
+            </div>
+            <div class="ez-card">
+              <div class="ez-h"><span class="ez-n">٥</span><h3>الورقة جاهزة</h3></div>
               <div class="ez-final">
                 <button class="ez-print" id="ezPrint">⬇ حفظ PDF أو طباعة</button>
                 <button class="ez-keep" id="ezKeep">💾 احفظي هذه الورقة لترجعي إليها لاحقًا</button>
                 <div class="ez-row2"><button class="btn" id="ezView">👁 معاينة الورقة</button><button class="btn" id="ezKey">نموذج الإجابة</button></div>
-                <div class="ez-row2"><span class="hint">الورقة موجّهة إلى</span><div class="seg" id="ezG"><button data-v="f">طالبات</button><button data-v="m">طلاب</button></div></div>
-                <div class="ez-row2"><span class="hint">حجم الخط</span><button class="btn sm" data-ezfz="-1">أ−</button><b id="ezFz">١٠٠٪</b><button class="btn sm" data-ezfz="1">أ+</button></div>
               </div>
             </div>
-            <button class="ez-adv" id="ezAdv">⚙ خيارات متقدمة (العنوان، الشكل، الدرجات، المحفوظ…)</button>
+            <button class="ez-adv" id="ezAdv">⚙ خيارات متقدمة (الزخارف، الإطار، العبارات، توزيع الدرجات، نطاق الحفظ، المسودة…)</button>
           </div>
           <button class="ez-adv hidden" id="ezBack">← العودة إلى الطريقة السهلة</button>
           <div class="panel">
@@ -661,7 +697,7 @@ details.fold[open] > summary{margin-bottom:6px}
             </div>
 
             <label class="chk" style="margin-top:10px"><input type="checkbox" id="meanHint" checked> ذكر بداية الآية في أسئلة «اذكري الآية التي…» (أيسر للدارسات)</label>
-            <div style="margin-top:10px"><label class="f">صيغة الخطاب في الورقة</label><select id="sheetGSel"><option value="f">للطالبات (أكملي، اذكري…)</option><option value="m">للطلاب (أكمل، اذكر…)</option></select></div>
+            <div style="margin-top:10px"><label class="f">صيغة الخطاب في الورقة</label><select id="sheetGSel" data-nogx><option value="f">للطالبات (أكملي، اذكري…)</option><option value="m">للطلاب (أكمل، اذكر…)</option></select></div>
             <div style="margin-top:10px"><label class="f">ذكر اسم السورة قبل كل سؤال</label><select id="surahPrefix"><option value="auto">تلقائي (عند تعدد السور في الورقة)</option><option value="always">دائمًا</option><option value="never">لا</option></select></div>
             <div style="margin-top:12px"><label class="f">عناوين الأسئلة</label><div id="dirsBox" class="dirs"></div></div>
           </details>
@@ -772,7 +808,7 @@ details.fold[open] > summary{margin-bottom:6px}
     <!-- ========== ملخص السور ========== -->
     <section id="tab-home" class="hidden">
       <div class="home-hi"><h2 id="homeHi">أهلًا وسهلًا</h2><p>ماذا تريدين اليوم؟</p>
-        <div class="gsw"><span>أنا:</span><div class="seg" id="uiG"><button data-v="f">طالبة / معلمة</button><button data-v="m">طالب / معلم</button></div></div></div>
+        <div class="gsw"><span>أنا:</span><div class="seg" id="uiG" data-nogx><button data-v="f">طالبة / معلمة</button><button data-v="m">طالب / معلم</button></div></div></div>
       <div class="home-cards">
         <button class="hcard" data-go="build" style="--h:330"><span class="hi">📝</span><b>إعداد ورقة عمل</b><small>اختاري السورة وعدد الأسئلة، ثم اطبعيها</small></button>
         <button class="hcard" data-go="quiz" style="--h:160"><span class="hi">🎯</span><b>راجعي حفظك</b><small>أسئلة تفاعلية تختبرين بها نفسك وتعرفين نتيجتك</small></button>
@@ -992,7 +1028,7 @@ const GX_WORDS = {
   'حفظك': 'حفظك', 'عليك': 'عليك', 'لك': 'لك', 'بارك الله فيك': 'بارك الله فيك', 'طالبة': 'طالب', 'طالبات': 'طلاب'
 };
 // كلمات تحمل كسرة المخاطَبة: تُقلب الكسرة فتحة فقط (أصبتِ ← أصبتَ، حفظكِ ← حفظكَ)
-const GX_KASRA = ['أصبت', 'أخطأت', 'أحسنت', 'أنت', 'حفظك', 'عليك', 'لك', 'فيك', 'منك', 'بك', 'إليك'];
+const GX_KASRA = ['أصبت', 'أخطأت', 'أحسنت', 'أنت', 'حفظك', 'عليك', 'لك', 'فيك', 'منك', 'بك', 'إليك', 'لاحظت', 'كتبت', 'اخترت', 'أجبت'];
 let CUR_G = 'f';
 const GX_RE = (() => {
   const D = '[\\u064B-\\u0652\\u0670\\u0640]*', keys = Object.keys(GX_WORDS).filter(k => GX_KASRA.indexOf(k) < 0 && !/ /.test(k)).sort((a, b) => b.length - a.length);
@@ -2259,6 +2295,7 @@ function ezText(it) {
   return (it.tam ? '<span class="hint">' + renderTokens(it.tam) + '</span><br>' : '') + renderTokens(it.text || '');
 }
 function ezSync() {
+  try { ezLookSync(); } catch (e) { }
   try { $('ezSurahName').textContent = rangeName(getRange()); } catch (e) { }
   ['segCount', 'mutCount', 'qMax'].forEach(id => { const el = $('ez_' + id); if (el) el.textContent = AD(+$(id).value || 0); });
   if ($('ezFz')) $('ezFz').textContent = AD(+PREF.fs || 100) + '٪';
@@ -2483,7 +2520,29 @@ function ezOpenSaved() {
   };
   draw();
 }
+/* بطاقة «مظهر الورقة»: عناصر مرتبطة بالإعدادات الأصلية نفسها */
+function ezLookSync() {
+  const set = (id, v) => { const el = $(id); if (el && document.activeElement !== el && el.value !== v) el.value = v; };
+  set('ezTitle', $('sheetTitle').value); set('ezSub', $('sheetSub').value); set('ezSign', $('signTxt').value);
+  $('ezTeacher').innerHTML = $('teacherSel').innerHTML; $('ezTeacher').value = $('teacherSel').value;
+  if (!$('ezFont').options.length) $('ezFont').innerHTML = FONTS.map(f => '<option value="' + esc(f[0]) + '">' + esc(f[1]) + '</option>').join('');
+  $('ezFont').value = $('fontSel').value;
+  const eff = PREF.themeSet && PREF.theme ? PREF.theme : (sheetGender() === 'm' ? 'blue' : (PREF.theme || 'rose'));
+  $('ezColors').innerHTML = THEMES.map(t => '<button data-th="' + t.id + '" title="' + esc(t.name) + '" style="background:' + t.c1 + '"' + (t.id === eff ? ' class="on"' : '') + '></button>').join('');
+  [['ezShowName', 'showName'], ['ezShowDate', 'showDate'], ['ezShowGrades', 'showGrades'], ['ezShowBism', 'showBism']].forEach(([a, o]) => { $(a).checked = $(o).checked; });
+}
+function wireEzLook() {
+  const fire = (el, ev) => el.dispatchEvent(new Event(ev, { bubbles: true }));
+  $('ezTitle').addEventListener('input', () => { $('sheetTitle').value = $('ezTitle').value; fire($('sheetTitle'), 'input'); });
+  $('ezSub').addEventListener('input', () => { $('sheetSub').value = $('ezSub').value; fire($('sheetSub'), 'input'); });
+  $('ezSign').addEventListener('input', () => { $('signTxt').value = $('ezSign').value; fire($('signTxt'), 'input'); });
+  $('ezTeacher').onchange = () => { $('teacherSel').value = $('ezTeacher').value; fire($('teacherSel'), 'change'); setTimeout(ezLookSync, 50); };
+  $('ezFont').onchange = () => { $('fontSel').value = $('ezFont').value; PREF.font = $('ezFont').value; savePref(); renderFontPick(); schedule(); };
+  $('ezColors').onclick = e => { const b = e.target.closest('[data-th]'); if (!b) return; const t = document.querySelector('#themeSeg [data-v="' + b.dataset.th + '"]'); if (t) t.click(); else { PREF.theme = b.dataset.th; PREF.themeSet = true; savePref(); schedule(); } setTimeout(ezLookSync, 50); };
+  [['ezShowName', 'showName'], ['ezShowDate', 'showDate'], ['ezShowGrades', 'showGrades'], ['ezShowBism', 'showBism']].forEach(([a, o]) => { $(a).onchange = () => { $(o).checked = $(a).checked; fire($(o), 'input'); fire($(o), 'change'); }; });
+}
 function wireEasy() {
+  wireEzLook();
   $('ezKeep').onclick = ezSaveSheet; $('topSave').onclick = ezSaveSheet; $('ezOpenSaved').onclick = ezOpenSaved; ezSavedBadge(); ezCurSync();
   $('ezCurNew').onclick = () => { PREF.curSaved = ''; PREF.draft = null; PREF.manualSegs = []; PREF.manualMut = []; S.adhoc = []; saveAdhoc(); renderAdhoc(); renderManualMuts(); savePref(); ezCurSync(); S.mutPicked = null; schedule(true); toast('بدأتِ ورقة جديدة.'); };
   const ctl = $('controls');
@@ -2520,11 +2579,11 @@ function sheetGender() { return PREF.sheetGender || (S.role === 'admin' || S.rol
 let gObs = null;
 function gxNode(root) {
   if (uiGender() !== 'm' || !root) return;
-  const skip = el => el.closest && el.closest('.q, textarea, input, script, style, iframe, [contenteditable]');
+  const skip = el => el.closest && el.closest('.q, textarea, input, script, style, iframe, [contenteditable], [data-nogx]');
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => (!n.nodeValue.trim() || skip(n.parentElement)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
   const L = []; while (w.nextNode()) L.push(w.currentNode);
   L.forEach(n => { const v = gx(n.nodeValue, 'm'); if (v !== n.nodeValue) n.nodeValue = v; });
-  (root.querySelectorAll ? root.querySelectorAll('[placeholder],[title]') : []).forEach(el => { ['placeholder', 'title'].forEach(a => { const v = el.getAttribute(a); if (v) { const g = gx(v, 'm'); if (g !== v) el.setAttribute(a, g); } }); });
+  [root].concat(root.querySelectorAll ? [...root.querySelectorAll('[placeholder],[title]')] : []).filter(el => el && el.getAttribute).forEach(el => { ['placeholder', 'title'].forEach(a => { const v = el.getAttribute(a); if (v) { const g = gx(v, 'm'); if (g !== v) el.setAttribute(a, g); } }); });
 }
 function applyUIGender() {
   CUR_G = uiGender();
@@ -3468,14 +3527,34 @@ async function qzBuild(n) {
 function qzDraw() {
   const box = $('qzRun'), x = QZ.list[QZ.i], N = QZ.list.length;
   if (!x) return qzEnd();
-  box.innerHTML = '<div class="qz-top"><b>سؤال ' + AD(QZ.i + 1) + ' من ' + AD(N) + '</b><div class="qz-bar"><i style="width:' + Math.round(QZ.i * 100 / N) + '%"></i></div><b style="color:#1f7a64">✔ ' + AD(QZ.ok) + '</b></div>' +
+  box.innerHTML = '<div class="qz-top"><b>سؤال ' + AD(QZ.i + 1) + ' من ' + AD(N) + '</b><div class="qz-bar"><i style="width:' + Math.round(QZ.i * 100 / N) + '%"></i></div><b style="color:#1f7a64">✔ ' + AD(QZ.ok) + '</b><button class="qz-snd" id="qzSnd" title="الصوت">' + (PREF.qzMute ? '🔇' : '🔊') + '</button></div>' +
     '<div class="qz-card"><span class="qz-type">' + esc(x.label) + '</span><div class="qz-q">' + renderTokens(x.q) + (x.body ? '<div style="margin-top:8px">' + renderTokens(x.body) + '</div>' : '') + '</div>' +
     (x.t === 'choice' ? '<div class="qz-opts">' + x.opts.map(o => '<button data-o="' + esc(o) + '">' + esc(o) + '</button>').join('') + '</div>' : '<button class="qz-reveal" id="qzReveal">👁 أظهري الإجابة</button>') +
     '<div id="qzAfter"></div></div><button class="btn" id="qzQuit" style="margin-top:12px">إنهاء المراجعة</button>';
   window.scrollTo(0, 0);
 }
+/* أصوات تُولَّد داخل المتصفح (بلا ملفات) */
+let AC = null;
+function tone(freq, t0, dur, type, vol) { const o = AC.createOscillator(), g = AC.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(freq, AC.currentTime + t0); g.gain.setValueAtTime(0.0001, AC.currentTime + t0); g.gain.exponentialRampToValueAtTime(vol || 0.25, AC.currentTime + t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + t0 + dur); o.connect(g); g.connect(AC.destination); o.start(AC.currentTime + t0); o.stop(AC.currentTime + t0 + dur + 0.05); }
+function sfx(kind) {
+  if (PREF.qzMute) return;
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume();
+    if (kind === 'ok') { tone(660, 0, 0.18, 'sine', 0.22); tone(880, 0.12, 0.28, 'sine', 0.22); }
+    else if (kind === 'no') { tone(180, 0, 0.22, 'square', 0.12); tone(140, 0.2, 0.3, 'square', 0.12); }
+    else if (kind === 'win') { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.12, 0.3, 'triangle', 0.2)); }
+  } catch (e) { }
+}
+function burstAt(el, emojis) {
+  const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  for (let i = 0; i < 12; i++) { const b = document.createElement('span'); b.className = 'burst'; b.textContent = emojis[i % emojis.length]; b.style.left = cx + 'px'; b.style.top = cy + 'px'; const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 90; b.style.setProperty('--dx', Math.cos(a) * d + 'px'); b.style.setProperty('--dy', Math.sin(a) * d - 30 + 'px'); b.style.setProperty('--r', (Math.random() * 360) + 'deg'); document.body.appendChild(b); setTimeout(() => b.remove(), 1100); }
+}
 function qzMark(right, note) {
   const x = QZ.list[QZ.i]; x.right = right; if (right) QZ.ok++;
+  QZ.streak = right ? (QZ.streak || 0) + 1 : 0;
+  const card = $('qzRun').querySelector('.qz-card');
+  if (right) { sfx('ok'); if (card) { card.classList.add('glow'); burstAt(card, QZ.streak >= 3 ? ['🔥', '⭐', '✨'] : ['⭐', '✨', '🌟']); } }
+  else { sfx('no'); if (card) { card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); } }
+  if (QZ.streak >= 3) $('qzAfter').insertAdjacentHTML('afterbegin', '<div class="qz-streak">🔥 ' + AD(QZ.streak) + ' إجابات صحيحة متتالية!</div>');
   QZ.log.push((right ? '✔ ' : '✖ ') + x.label);
   $('qzAfter').insertAdjacentHTML('beforeend', '<button class="qz-next" id="qzNext">' + (QZ.i + 1 < QZ.list.length ? 'السؤال التالي ←' : 'عرض النتيجة') + '</button>');
 }
@@ -3483,9 +3562,11 @@ async function qzEnd() {
   const N = QZ.list.length, pct = N ? Math.round(QZ.ok * 100 / N) : 0;
   const msg = pct >= 90 ? 'ما شاء الله! حفظ متقن، بارك الله فيك.' : pct >= 70 ? 'أحسنتِ، ومع قليل من المراجعة يكتمل الإتقان.' : pct >= 50 ? 'جهد طيب، راجعي المواضع التي أخطأتِ فيها.' : 'لا بأس، المراجعة طريق الإتقان؛ أعيدي المحاولة بعد مراجعة السورة.';
   const wrong = QZ.list.filter(x => x.right === false);
-  $('qzRun').innerHTML = '<div class="qz-card qz-score"><div class="big">' + AD(QZ.ok) + ' / ' + AD(N) + '</div><p style="font-size:18px;margin:6px 0 14px">' + msg + '</p>' +
+  const badge = pct >= 90 ? '🏆' : pct >= 70 ? '🌟' : pct >= 50 ? '👍' : '💪';
+  $('qzRun').innerHTML = '<div class="qz-card qz-score"><div class="qz-badge">' + badge + '</div><div class="big">' + AD(QZ.ok) + ' / ' + AD(N) + '</div><p style="font-size:18px;margin:6px 0 14px">' + msg + '</p>' +
     (wrong.length ? '<details style="text-align:right"><summary style="cursor:pointer;font-weight:800">مراجعة الأخطاء (' + AD(wrong.length) + ')</summary>' + wrong.map(x => '<div class="qz-ans" style="background:var(--soft)"><b>' + esc(x.label) + '</b><br>' + renderTokens(x.body || x.q) + '<br>الإجابة: ' + renderTokens(x.ans) + '</div>').join('') + '</details>' : '') +
     '<div class="qz-self" style="margin-top:14px">' + (wrong.length ? '<button class="y" id="qzRetry">أعيدي ما أخطأتِ فيه</button>' : '') + '<button class="y" id="qzNew" style="background:var(--pri)">مراجعة جديدة</button></div></div>';
+  if (pct >= 70) { sfx('win'); setTimeout(() => { const c = $('qzRun').querySelector('.qz-card'); if (c) burstAt(c, ['🎉', '⭐', '✨', '🌟']); }, 150); }
   try { await api('logQuiz', { name: $('qzName').value.trim(), surahs: [...QZ.surahs].map(sName).join('، '), ok: QZ.ok, total: N, details: QZ.log.join(' | ') }, true); } catch (e) { }
 }
 async function qzStart(list) {
@@ -3493,7 +3574,7 @@ async function qzStart(list) {
   busy(true, 'جارٍ تجهيز الأسئلة…');
   try { QZ.list = list || await qzBuild(+segVal('qzN') || 10); } finally { busy(false); }
   if (!QZ.list.length) { toast('لا توجد أسئلة كافية لهذه السورة بعد.', true); return; }
-  QZ.i = 0; QZ.ok = 0; QZ.log = []; QZ.list.forEach(x => { delete x.right; });
+  QZ.i = 0; QZ.ok = 0; QZ.log = []; QZ.streak = 0; QZ.list.forEach(x => { delete x.right; });
   $('qzSetup').classList.add('hidden'); $('qzRun').classList.remove('hidden'); qzDraw();
 }
 function qzPick() {
@@ -3532,6 +3613,7 @@ function wireQuiz() {
     if (id === 'qzReveal') { e.target.remove(); $('qzAfter').innerHTML = '<div class="qz-ans">' + renderTokens(x.ans) + '</div><p class="hint" style="margin:10px 0 0">هل كانت إجابتك صحيحة؟</p><div class="qz-self"><button class="y" id="qzY">✔ أصبتُ</button><button class="n" id="qzNo">✖ لم أُصب</button></div>'; }
     else if (id === 'qzY' || id === 'qzNo') { $('qzAfter').querySelector('.qz-self').remove(); qzMark(id === 'qzY'); }
     else if (id === 'qzNext') { QZ.i++; qzDraw(); }
+    else if (id === 'qzSnd') { PREF.qzMute = !PREF.qzMute; savePref(); e.target.textContent = PREF.qzMute ? '🔇' : '🔊'; }
     else if (id === 'qzQuit') { qzEnd(); }
     else if (id === 'qzRetry') { const w = QZ.list.filter(z => z.right === false).map(z => Object.assign({}, z)); qzStart(qzShuffle(w)); }
     else if (id === 'qzNew') { $('qzRun').classList.add('hidden'); $('qzSetup').classList.remove('hidden'); }
