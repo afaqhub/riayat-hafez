@@ -178,7 +178,7 @@ table.sum tr:hover td{background:var(--soft);cursor:pointer}
 .tok-tools > *{flex:0 0 auto}
 .tok-tools select{width:130px}.tok-tools input{width:80px}
 .live{border:1px dashed var(--line);border-radius:var(--r1);padding:10px 12px;min-height:48px;background:var(--field)}
-.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:12px;z-index:90;font-size:14.5px;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#2b2530;color:#fff;padding:10px 18px;border-radius:12px;z-index:90;box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:14.5px;max-width:90vw;text-align:center}
 .toast.err{background:var(--danger)}
 .loading{position:fixed;top:0;left:0;right:0;height:3px;z-index:99;background:linear-gradient(90deg,transparent,var(--gold),transparent);background-size:50% 100%;animation:ld 1s linear infinite}
 @keyframes ld{from{background-position:-50% 0}to{background-position:150% 0}}
@@ -441,6 +441,10 @@ html[data-mode=dark] .ez-cur{background:#3a3220;border-color:#6b5a2e;color:#f3e6
 .ez-colors{display:flex;gap:8px;flex-wrap:wrap}
 .ez-colors button{width:44px;height:44px;border-radius:50%;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--line);cursor:pointer}
 .ez-colors button.on{box-shadow:0 0 0 3px var(--ink)}
+.ez-grid button.on small{color:#fff;opacity:.9}
+#appView .an,.modal .an{color:var(--pri);opacity:1}
+html[data-mode=dark] #appView .an,html[data-mode=dark] .modal .an{color:#f0c4d6}
+html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-color=blue] .modal .an{color:#bcd3f0}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -498,6 +502,7 @@ html[data-mode=dark] .ez-cur{background:#3a3220;border-color:#6b5a2e;color:#f3e6
       <span id="syncBadge" class="role hidden">جارٍ التحديث…</span>
       <button id="uiBtn" class="icon-btn" title="الإضاءة وحجم الخط">Aa</button>
       <button id="helpBtn" class="icon-btn">مساعدة</button>
+      <button id="gBtn" class="icon-btn" data-nogx title="صيغة الخطاب ولون المنصة"></button>
       <button id="fbBtn" class="icon-btn" title="أرسلي ملاحظة أو اقتراحًا">💬 اقتراح</button>
       <button id="reloadBtn" class="icon-btn" title="تحديث البيانات من الجدول">تحديث</button>
       <button id="logoutBtn" class="icon-btn">خروج</button>
@@ -1021,14 +1026,14 @@ const GX_WORDS = {
   'استخرجي': 'استخرج', 'رتبي': 'رتِّب', 'ضعي': 'ضع', 'عللي': 'علِّل', 'اقرئي': 'اقرأ', 'انظري': 'انظر', 'تأملي': 'تأمل', 'اعتني': 'اعتن',
   'احفظي': 'احفظ', 'اجعلي': 'اجعل', 'أكثري': 'أكثر', 'تيأسي': 'تيأس', 'أظهري': 'أظهر', 'أعيدي': 'أعد', 'ابدئي': 'ابدأ', 'راجعي': 'راجع', 'اختبري': 'اختبر',
   'عدلي': 'عدِّل', 'احذفي': 'احذف', 'غيري': 'غيِّر', 'أضيفي': 'أضف', 'اطبعي': 'اطبع', 'افتحي': 'افتح', 'اضغطي': 'اضغط', 'اكتشفي': 'اكتشف', 'ابحثي': 'ابحث',
-  'زيدي': 'زد', 'تحبين': 'تحب', 'تريدين': 'تريد', 'تختبرين': 'تختبر', 'تعرفين': 'تعرف', 'تحفظين': 'تحفظ', 'تشائين': 'تشاء', 'تكتبين': 'تكتب', 'تختارين': 'تختار',
+  'زيدي': 'زد', 'جربي': 'جرِّب', 'تأكدي': 'تأكَّد', 'انتظري': 'انتظر', 'اسمحي': 'اسمح', 'حدثي': 'حدِّث', 'ادخلي': 'ادخل', 'أدخلي': 'أدخل', 'افتحيها': 'افتحها', 'احفظيها': 'احفظها', 'اطبعيها': 'اطبعها', 'أضيفيه': 'أضفه', 'أضيفيها': 'أضفها', 'اختاريه': 'اختره', 'اكتبيه': 'اكتبه', 'ابدئيها': 'ابدأها', 'أنهي': 'أنهِ', 'امسحي': 'امسح', 'استعملي': 'استعمل', 'شاركي': 'شارك', 'تعدليها': 'تعدلها', 'تحتاجين': 'تحتاج', 'تستطيعين': 'تستطيع', 'تريدينه': 'تريده', 'لديك': 'لديك', 'تحبين': 'تحب', 'تريدين': 'تريد', 'تختبرين': 'تختبر', 'تعرفين': 'تعرف', 'تحفظين': 'تحفظ', 'تشائين': 'تشاء', 'تكتبين': 'تكتب', 'تختارين': 'تختار',
   'تعدلي': 'تعدل', 'تطبعيها': 'تطبعها', 'تفتحيها': 'تفتحها', 'ترجعي': 'ترجع', 'تجيبي': 'تجيب', 'تكملي': 'تكمل', 'تبدئي': 'تبدأ', 'أصبت': 'أصبت',
   'أخطأت': 'أخطأت', 'أحسنت': 'أحسنت', 'أنت': 'أنت', 'غاليتي': 'أخي الغالي', 'الحبيبة': 'الحبيب', 'الغالية': 'الغالي', 'مستعينة': 'مستعينًا', 'مستعينةً': 'مستعينًا',
   'الطالبة': 'الطالب', 'الطالبات': 'الطلاب', 'الدارسة': 'الدارس', 'الدارسات': 'الدارسين', 'معلمتك': 'معلمك', 'وإياكن': 'وإياكم', 'إياكن': 'إياكم',
   'حفظك': 'حفظك', 'عليك': 'عليك', 'لك': 'لك', 'بارك الله فيك': 'بارك الله فيك', 'طالبة': 'طالب', 'طالبات': 'طلاب'
 };
 // كلمات تحمل كسرة المخاطَبة: تُقلب الكسرة فتحة فقط (أصبتِ ← أصبتَ، حفظكِ ← حفظكَ)
-const GX_KASRA = ['أصبت', 'أخطأت', 'أحسنت', 'أنت', 'حفظك', 'عليك', 'لك', 'فيك', 'منك', 'بك', 'إليك', 'لاحظت', 'كتبت', 'اخترت', 'أجبت'];
+const GX_KASRA = ['أصبت', 'أخطأت', 'أحسنت', 'أنت', 'حفظك', 'عليك', 'لك', 'فيك', 'منك', 'بك', 'إليك', 'لاحظت', 'كتبت', 'اخترت', 'أجبت', 'شئت', 'حفظت', 'فتحت', 'أنهيت', 'بدأت', 'أضفت'];
 let CUR_G = 'f';
 const GX_RE = (() => {
   const D = '[\\u064B-\\u0652\\u0670\\u0640]*', keys = Object.keys(GX_WORDS).filter(k => GX_KASRA.indexOf(k) < 0 && !/ /.test(k)).sort((a, b) => b.length - a.length);
@@ -1769,7 +1774,10 @@ table.pg > tbody > tr > td{padding:0 15mm}
 .open{font-weight:700;margin:1.5mm 0 3mm;font-size:1.04em}
 .open:before{content:"❀ ";color:var(--c1)}
 .sec{margin-top:4mm}
-.sec-h{font-weight:700;margin-bottom:1.5mm;break-after:avoid}
+.sec-h{font-weight:700;margin-bottom:1.5mm;break-after:avoid;page-break-after:avoid}
+.it:has(.ln ~ .ln ~ .ln ~ .ln ~ .ln ~ .ln),.it:has(.sub ~ .sub ~ .sub){break-inside:auto;page-break-inside:auto}
+.sub{break-after:avoid;page-break-after:avoid}.ln{break-inside:avoid;page-break-inside:avoid}
+html.ios .frame,html.ios .corner{display:none!important}
 .sec-h b{color:var(--c1);text-decoration:underline;text-underline-offset:.3em;text-decoration-thickness:1px;margin-inline-end:.35em}
 .it{display:grid;grid-template-columns:1.6em minmax(0,1fr) 13mm;gap:2.5mm;align-items:start;margin:0 0 2.6mm;break-inside:avoid}
 .it-n{font-weight:700;color:var(--c1);min-width:1.4em}
@@ -1850,6 +1858,7 @@ function sheetHTML_(M, key, forPrint) {
   let h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc((U.title || 'ورقة عمل') + ' - ' + (U.sub || '')) + '</title>';
   h += '<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@400;700&family=Cairo:wght@400;700&family=Almarai:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">';
   h += '<style>' + sheetCSS(U) + ':root{--sp:' + U.space + '}</style></head><body>';
+  if (forPrint) h += '<script>if(/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))document.documentElement.classList.add("ios")<\/script>';
   if (forPrint) h += '<div class="tool"><div class="tip">لحفظ الورقة ملفًّا: في نافذة الطباعة اختاري الوجهة <b>«حفظ بتنسيق PDF»</b> (Save as PDF) ثم <b>«حفظ»</b>. يتذكر المتصفح اختيارك للمرات القادمة.</div><button class="p" onclick="window.print()">⬇ حفظ PDF / طباعة</button><button onclick="window.close()">إغلاق</button></div>';
   h += '<div class="frame"></div>' + (U.ornStyle === 'khatam' && U.frame !== 'none' ? cornersSvg() : '') + '<table class="pg"><thead><tr><td></td></tr></thead><tfoot><tr><td></td></tr></tfoot><tbody><tr><td>';
   h += '<div class="hd"><div class="logo">' + (U.logo ? '<img src="' + esc(U.logo) + '" alt="">' : '') + '</div>';
@@ -2600,7 +2609,18 @@ function syncGenderUI() {
   if ($('sheetGSel')) $('sheetGSel').value = sheetGender();
 }
 function syncThemeSeg() { const eff = PREF.themeSet && PREF.theme ? PREF.theme : (sheetGender() === 'm' ? 'blue' : (PREF.theme || 'rose')); document.querySelectorAll('#themeSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === eff)); }
+function syncGBtn() { const b = $('gBtn'); if (b) b.textContent = uiGender() === 'm' ? 'أنا: طالب ▾' : 'أنا: طالبة ▾'; }
+function setUIGender(v) { if (v === uiGender() && PREF.uiGender) { closeModal(); return; } PREF.uiGender = v; if (S.role !== 'admin' && S.role !== 'teacher' && !PREF.sheetGenderSet) PREF.sheetGender = v; savePref(); location.reload(); }
+function askGender(first) {
+  $('modalBox').innerHTML = '<div data-nogx><h3>' + (first ? 'أهلًا بك 🌿' : 'صيغة الخطاب') + (first ? '' : '<button class="btn sm" onclick="closeModal()">إغلاق</button>') + '</h3>' +
+    '<p style="font-size:17px;margin:4px 0 14px">' + (first ? 'لنخاطبك بالصيغة المناسبة، اختر/اختاري:' : 'اختاري الصيغة التي تخاطبك بها المنصة:') + '</p>' +
+    '<div class="ez-gbtns"><button data-gv="f" style="min-height:64px;font-size:20px">طالبة / معلمة</button><button data-gv="m" style="min-height:64px;font-size:20px">طالب / معلم</button></div>' +
+    '<p class="hint" style="margin-top:12px">تتغير صيغة الكلام ولون المنصة (وردي للإناث، أزرق للذكور)، ويمكن تغييرها في أي وقت من زر «أنا» أعلى الصفحة.</p></div>';
+  $('modal').classList.remove('hidden');
+  $('modalBox').querySelectorAll('[data-gv]').forEach(x => { x.classList.toggle('on', !first && x.dataset.gv === uiGender()); x.onclick = () => setUIGender(x.dataset.gv); });
+}
 function wireGender() {
+  $('gBtn').onclick = () => askGender(false); syncGBtn();
   $('uiG').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b || b.dataset.v === uiGender()) return; PREF.uiGender = b.dataset.v; if (S.role !== 'admin' && S.role !== 'teacher' && !PREF.sheetGenderSet) PREF.sheetGender = b.dataset.v; savePref(); S.tabAfterReload = 'home'; location.reload(); });
   $('ezG').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return; PREF.sheetGender = b.dataset.v; PREF.sheetGenderSet = true; savePref(); syncGenderUI(); syncThemeSeg(); schedule(); });
   $('sheetGSel').onchange = () => { PREF.sheetGender = $('sheetGSel').value; PREF.sheetGenderSet = true; savePref(); syncGenderUI(); syncThemeSeg(); schedule(); };
@@ -3888,7 +3908,8 @@ async function loadAll() {
   if (!S.demo && LS.get('ws_pass', null)) LS.set('ws_cache', d);
 }
 function showApp(demo) {
-  try { applyUIGender(); syncGenderUI(); applyUI(); } catch (e) { console.error(e); }
+  try { applyUIGender(); syncGenderUI(); applyUI(); syncGBtn(); } catch (e) { console.error(e); }
+  if (!demo && !PREF.uiGender && (S.role === 'guest' || S.role === 'reader')) setTimeout(() => askGender(true), 400);
   $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden'); $('tabs').classList.remove('hidden');
   $('demoBar').classList.toggle('hidden', !demo);
   showTab(S.tab && S.tab !== 'build' ? S.tab : 'home'); schedule(true);
