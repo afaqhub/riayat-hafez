@@ -457,6 +457,8 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 .spin{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;vertical-align:-4px;margin-inline-end:6px;animation:spn .8s linear infinite}
 #guestBtn .spin{border-color:rgba(0,0,0,.15);border-top-color:var(--pri)}
 @keyframes spn{to{transform:rotate(360deg)}}
+.mutHint{background:var(--soft);border:1.5px dashed var(--pri);border-radius:14px;padding:10px 12px;margin:10px 0}
+.mutHint p{margin:0 0 8px;font-size:14.5px}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -814,6 +816,7 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
     <section id="tab-add" class="hidden">
       <h2>إضافة سؤال</h2>
       <p class="lead">تُضاف الأسئلة إلى البنك بحالة «لم يُراجع» وتأخذ أرقامها تلقائيًا، ثم تراجعها المعلمة من «بنك الأسئلة».</p>
+      <button class="svopt" id="addMutBtn" data-admin style="margin:0 0 12px"><b>⇄ إضافة متشابهات (عدة سور ومواضع)</b><small>اختاري المواضع المتشابهة واحدًا واحدًا (السورة والآية)، وحدّدي الكلمات الظاهرة والفراغ، فتُحفظ في جدول المتشابهات.</small></button>
       <div class="seg" id="addMode" style="margin-bottom:12px"><button data-v="paste" class="on">لصق أسئلة جاهزة</button><button data-v="manual">كتابة سؤال واحد</button></div>
       <div class="panel" id="pasteBox">
         <div class="pstep"><b>١</b> انسخي ردّ الذكاء الاصطناعي كاملًا (أو صفوف الإكسل) والصقيه هنا:</div>
@@ -1017,7 +1020,7 @@ function headWords(t, k) { const w = t.split(' '); let c = 0, out = []; for (con
 function tailWords(t, k) { const w = t.split(' '); let c = 0, out = []; for (let i = w.length - 1; i >= 0; i--) { const x = w[i]; if (!isMark(x)) { if (c >= k) break; c++; } out.unshift(x); } while (out.length && isMark(out[0])) out.shift(); return out.join(' '); }
 
 /* ---------------- الرموز ---------------- */
-const TOK = /\{\s*(آية|مطلع|خاتمة|مقطع|مقتطف|فجوة)\s*:\s*([^:{}]+?)\s*:\s*([^{}]+?)\s*\}/g;
+const TOK = /\{\s*(آية|مطلع|خاتمة|مقطع|مقتطف|فجوة|كلمات)\s*:\s*([^:{}]+?)\s*:\s*([^{}]+?)\s*\}/g;
 function tokSurahs(text, set) {
   set = set || new Set(); String(text || '').replace(TOK, (m, k, n) => { const s = sNum(n); if (s) set.add(s); return m; }); return set;
 }
@@ -1027,6 +1030,7 @@ function parseTok(k, n, rest) {
   if (k === 'مقطع') { const m = p[0].match(/^(\d+)\s*[-–—]\s*(\d+)$/) || [null, p[0], p[0]]; let a = toInt(m[1]), b = toInt(m[2]); if (!a) return null; if (b < a) b = a; return { k, s, a: clampAyah(s, a), b: clampAyah(s, b) }; }
   const a = toInt(p[0]); if (!a || a > ACOUNT(s)) return null;
   if (k === 'فجوة') { const m1 = String(p[1] || '').match(/^(\d+)-(\d+)$/), m2 = String(p[2] || '').match(/^(\d+)-(\d+)$/); if (!m1 || !m2) return null; return { k, s, a, b: a, w1: +m1[1], w2: +m1[2], g1: +m2[1], g2: +m2[2] }; }
+  if (k === 'كلمات') { const m = String(p[1] || '').match(/^[012]+$/); if (!m) return null; return { k, s, a, b: a, mask: m[0] }; }
   if (k === 'مقتطف') { const m = String(p[1] || '').match(/^(\d+)\s*[-–—]\s*(\d+)$/); if (!m) return null; return { k, s, a, b: a, w1: toInt(m[1]), w2: toInt(m[2]) }; }
   return { k, s, a, b: a, n: Math.max(1, toInt(p[1]) || 4) };
 }
@@ -1085,6 +1089,20 @@ function tokOut(t, raw, html) {
   if (t.k === 'آية') body = E(ayahText(t.s, t.a)) + num(t.a);
   else if (t.k === 'مطلع') body = E(headWords(ayahText(t.s, t.a), t.n)) + ' …';
   else if (t.k === 'خاتمة') { const tt = ayahText(t.s, t.a); body = (realWords(tt) > t.n ? '… ' : '') + E(tailWords(tt, t.n)) + num(t.a); }
+  else if (t.k === 'كلمات') {
+    const W = wordsWithMarks(ayahText(t.s, t.a)), M = t.mask, parts = [];
+    const st = W.map((w, i) => +(M[i] || '2'));
+    const first = st.findIndex(v => v !== 2), last = st.length - 1 - [...st].reverse().findIndex(v => v !== 2);
+    const gapHTML = n => !html ? '..........' : n > 32 ? '<span class="gapL">' + '<span class="gap"></span>'.repeat(Math.min(5, Math.ceil(n / 40))) + '</span>' : '<span class="gap" style="width:' + Math.max(6, Math.min(26, Math.round(n * 0.75 + 3))) + 'em"></span>';
+    for (let i = Math.max(0, first); i <= last && first >= 0; i++) {
+      if (st[i] === 0) { parts.push(E(W[i])); continue; }
+      let j = i; while (j + 1 <= last && st[j + 1] === st[i]) j++;
+      if (st[i] === 1) parts.push(gapHTML(W.slice(i, j + 1).join(' ').replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '').length));
+      else parts.push(html ? '<span class="ell">…</span>' : '…');
+      i = j;
+    }
+    body = parts.join(' ');
+  }
   else if (t.k === 'فجوة') {
     const W = wordsWithMarks(ayahText(t.s, t.a)), x = Math.max(1, t.w1), y = Math.min(W.length, t.w2);
     const parts = [];
@@ -1474,7 +1492,7 @@ function mutAnalyze(c) {
 /* سطر الكتابة باليد يتسع لنحو ٦ كلمات من القرآن */
 function nextAyahLines(sn, a) { const t = a < ACOUNT(sn) ? ayahText(sn, a + 1) : ''; if (!t) return 2; const w = t.split(/\s+/).filter(x => /[\u0621-\u064A\u0671]/.test(x)).length; return Math.max(1, Math.min(8, Math.ceil(w / 6))); }
 function parseMutWords(str) {
-  const out = {}; String(str || '').split('؛').forEach(p => { const m = p.trim().match(/^(.+?):(\d+)=(\d+)-(\d+)\/(\d+)-(\d+)$/); if (m) { const sn = sNum(m[1].trim()); if (sn) out[sn + ':' + (+m[2])] = { w1: +m[3], w2: +m[4], g1: +m[5], g2: +m[6] }; } });
+  const out = {}; String(str || '').split('؛').forEach(p => { p = p.trim(); const k = p.match(/^(.+?):(\d+)=#([012]+)$/); if (k) { const sn = sNum(k[1].trim()); if (sn) out[sn + ':' + (+k[2])] = { mask: k[3] }; return; } const m = p.match(/^(.+?):(\d+)=(\d+)-(\d+)\/(\d+)-(\d+)$/); if (m) { const sn = sNum(m[1].trim()); if (sn) out[sn + ':' + (+m[2])] = { w1: +m[3], w2: +m[4], g1: +m[5], g2: +m[6] }; } });
   return out;
 }
 function mutItem(c, space, mode, rand) {
@@ -1482,7 +1500,7 @@ function mutItem(c, space, mode, rand) {
   const A = mutAnalyze(c), names = [...new Set(c.locs.map(l => sName(l.s)))];
   // الكلمات التي اختارتها المعلمة لهذه المجموعة (من عمود «الكلمات المختارة»)
   const WD = parseMutWords(c.g && c.g.words);
-  A.forEach(x => { const o = WD[x.l.s + ':' + x.l.a]; if (o && x.W && x.W.length) Object.assign(x, { ok: true, w1: o.w1, w2: Math.min(o.w2, x.W.length), g1: o.g1, g2: o.g2, custom: true }); });
+  A.forEach(x => { const o = WD[x.l.s + ':' + x.l.a]; if (o && x.W && x.W.length) { if (o.mask) { const st = String(o.mask).split('').map(Number), f = st.findIndex(v => v === 1), l = st.lastIndexOf(1); Object.assign(x, { ok: true, custom: true, mask: o.mask, w1: 1, w2: x.W.length, g1: f + 1, g2: l + 1 }); } else Object.assign(x, { ok: true, w1: o.w1, w2: Math.min(o.w2, x.W.length), g1: o.g1, g2: o.g2, custom: true }); } });
   const ready = A.every(x => x.ok);
   const plainW = (x) => x.W.slice(x.g1 - 1, x.g2).join(' ').replace(/[\u06D6-\u06ED]/g, '').replace(/\s+/g, ' ').trim();
   const choices = ready ? [...new Set(A.map(plainW))] : [];
@@ -1493,7 +1511,7 @@ function mutItem(c, space, mode, rand) {
     const l = x.l, nm = sName(l.s), label = ' [' + nm + ': ' + AD(l.a) + ']';
     if (x.ok && !x.custom && x.g1 - 1 <= 12) x.w1 = 1; // بداية الآية ظاهرة ما دام موضع الاختلاف قريبًا منها
     const head = x.ok && !x.custom && x.w1 > 1 ? '{مطلع:' + nm + ':' + l.a + ':4} ' : '';
-    const gapTok = x.custom && !x.g1 ? '{مقتطف:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + '}' : x.ok ? head + '{فجوة:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + ':' + x.g1 + '-' + x.g2 + '}' : '{مطلع:' + nm + ':' + l.a + ':5}';
+    const gapTok = x.mask ? maskTok(l.s, l.a, x.mask) : x.custom && !x.g1 ? '{مقتطف:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + '}' : x.ok ? head + '{فجوة:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + ':' + x.g1 + '-' + x.g2 + '}' : '{مطلع:' + nm + ':' + l.a + ':5}';
     if (mode === 'surah') { subs.push(x.ok ? '{مقتطف:' + nm + ':' + l.a + ':' + x.w1 + '-' + x.w2 + '}' : '{مطلع:' + nm + ':' + l.a + ':8}'); opts.push(shuffle(names)); keys.push(nm); }
     else if (mode === 'choice') { subs.push(gapTok + label); opts.push(shuffle(choices)); keys.push(plainW(x)); }
     else { subs.push(gapTok + label); opts.push(null); keys.push(null); }
@@ -1625,10 +1643,10 @@ function buildModel(U) {
     const extra = [], mutComp = [];
     // المتشابهات اليدوية لهذه الورقة
     (PREF.manualMut || []).forEach((str, ui) => {
-      if (str && typeof str === 'object' && str.locs && str.locs.some(l => l.w1)) {
+      if (str && typeof str === 'object' && str.locs && str.locs.some(l => l.w1 || l.mask)) {
         // متشابه يدوي بكلمات اختارتها المعلمة
-        const L = str.locs.filter(l => l.w1);
-        const subs = L.map(l => (l.g1 ? '{فجوة:' + sName(l.s) + ':' + l.a + ':' + l.w1 + '-' + l.w2 + ':' + l.g1 + '-' + l.g2 + '}' : '{مقتطف:' + sName(l.s) + ':' + l.a + ':' + l.w1 + '-' + l.w2 + '}') + ' [' + sName(l.s) + ': ' + AD(l.a) + ']');
+        const L = str.locs.filter(l => l.w1 || l.mask);
+        const subs = L.map(l => mmToken(l) + ' [' + sName(l.s) + ': ' + AD(l.a) + ']');
         const it = { kind: 'q', key: 'm:u' + ui, mut: true, mode: 'comp', nextLines: L.map(l => nextAyahLines(l.s, l.a)), tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: L.map(() => null), subKeys: L.map(() => null), subLines: 1, letters: true, ans: L.map(l => '{آية:' + sName(l.s) + ':' + l.a + '}').join(' — '), grade: L.length, surahs: [...new Set(L.map(l => l.s))], anchor: Math.min(...L.map(l => ABS(l.s, l.a))), gi: 'u' + ui };
         mutComp.push(it);
         return;
@@ -2154,8 +2172,13 @@ function rangeFromStates(st) {
   if (!vis.length) return null;
   return { w1: vis[0], w2: vis[vis.length - 1], g1: gap.length ? gap[0] : 0, g2: gap.length ? gap[gap.length - 1] : 0 };
 }
+/* حالة كل كلمة مستقلة: 0 ظاهرة · 1 فراغ · 2 محذوفة */
+function rowStates(r, n) { if (r.mask) { const a = String(r.mask).split('').map(Number); while (a.length < n) a.push(2); return a.slice(0, n); } return r.w1 ? statesFromRange(n, r.w1, r.w2, r.g1, r.g2) : Array(n).fill(0); }
+function toggleWord(r, n, i) { const st = rowStates(r, n); st[i] = (st[i] + 1) % 3; if (st.every(v => v === 2)) return false; r.mask = st.join(''); r.w1 = r.w1 || 1; r.custom = true; return true; }
+function maskTok(sn, a, mask) { return '{كلمات:' + sName(sn) + ':' + a + ':' + mask + '}'; }
 function mmToken(l) {
   const nm = sName(l.s);
+  if (l.mask) return maskTok(l.s, l.a, l.mask);
   if (l.w1 && l.g1) return '{فجوة:' + nm + ':' + l.a + ':' + l.w1 + '-' + l.w2 + ':' + l.g1 + '-' + l.g2 + '}';
   if (l.w1) return '{مقتطف:' + nm + ':' + l.a + ':' + l.w1 + '-' + l.w2 + '}';
   return null;
@@ -2187,7 +2210,7 @@ function openMutEditor(idx) {
   const draw = () => {
     $('mlocs').innerHTML = rows.map((r, k) => {
       const t = ayahText(r.s, r.a), W = t ? wordsWithMarks(t) : [];
-      const st = r.w1 ? statesFromRange(W.length, r.w1, r.w2, r.g1, r.g2) : W.map(() => 0);
+      const st = rowStates(r, W.length);
       return '<div class="mbox" data-k="' + k + '"><div class="xr"><select data-ms>' + so(r.s) + '</select><span class="hint" style="flex:0 0 auto">آية</span><input type="number" min="1" data-ma value="' + r.a + '" style="flex:0 0 76px"><button type="button" class="btn sm off" data-mdel style="flex:0 0 auto"' + (rows.length > 2 ? '' : ' disabled') + '>✕</button></div>' +
         '<div class="wchips">' + (W.length ? W.map((w, i) => '<span class="wst w' + st[i] + '" data-w="' + (i + 1) + '">' + esc(w) + '</span>').join(' ') : '<span class="hint">جارٍ تحميل نص الآية…</span>') + '</div>' +
         '<div class="row" style="margin-top:4px"><button type="button" class="btn sm" data-auto style="flex:0 0 auto">تلقائي</button><button type="button" class="btn sm" data-all style="flex:0 0 auto">الآية كاملة ظاهرة</button></div></div>';
@@ -2203,22 +2226,22 @@ function openMutEditor(idx) {
   $('mlocs').addEventListener('change', e => {
     const box = e.target.closest('.mbox'); if (!box) return; const k = +box.dataset.k;
     rows[k].s = +box.querySelector('[data-ms]').value; rows[k].a = Math.max(1, Math.min(ACOUNT(rows[k].s), +box.querySelector('[data-ma]').value || 1));
-    rows[k].w1 = 0; rows[k].custom = false; autoFill();
+    rows[k].w1 = 0; rows[k].custom = false; rows[k].mask = null; autoFill();
   });
   $('mlocs').addEventListener('click', e => {
     const box = e.target.closest('.mbox'); if (!box) return; const k = +box.dataset.k, r = rows[k];
     if (e.target.closest('[data-mdel]')) { if (rows.length > 2) { rows.splice(k, 1); draw(); } return; }
-    if (e.target.closest('[data-auto]')) { r.w1 = 0; r.custom = false; autoFill(); return; }
+    if (e.target.closest('[data-auto]')) { r.w1 = 0; r.custom = false; r.mask = null; autoFill(); return; }
     const W = wordsWithMarks(ayahText(r.s, r.a) || '');
-    if (e.target.closest('[data-all]')) { Object.assign(r, { w1: 1, w2: W.length, g1: 0, g2: 0, custom: true }); draw(); return; }
+    if (e.target.closest('[data-all]')) { Object.assign(r, { w1: 1, w2: W.length, g1: 0, g2: 0, custom: true, mask: null }); draw(); return; }
     const chip = e.target.closest('[data-w]'); if (!chip) return;
-    const rg = cycleWord(r, W.length, +chip.dataset.w - 1); if (!rg) return; Object.assign(r, rg, { custom: true }); draw();
+    if (!toggleWord(r, W.length, +chip.dataset.w - 1)) return; draw();
   });
   $('mAddLoc').onclick = () => { rows.push({ s: rows[rows.length - 1].s, a: (+rows[rows.length - 1].a || 1) + 1 }); autoFill(); };
   $('mOk').onclick = () => {
     const keys = rows.map(r => r.s + ':' + r.a);
     if (new Set(keys).size < 2) { $('mErr').textContent = 'اختاري موضعين مختلفين على الأقل.'; return; }
-    const entry = { locs: rows.map(r => ({ s: r.s, a: +r.a, w1: r.w1, w2: r.w2, g1: r.g1, g2: r.g2 })) };
+    const entry = { locs: rows.map(r => ({ s: r.s, a: +r.a, w1: r.w1, w2: r.w2, g1: r.g1, g2: r.g2, mask: r.mask || null })) };
     const list = PREF.manualMut = PREF.manualMut || [];
     if (idx != null) list[idx] = entry; else list.push(entry);
     savePref(); closeModal(); renderManualMuts(); refresh(false); toast('أُضيف المتشابه إلى الورقة.');
@@ -2260,11 +2283,12 @@ async function openWordEditor(tokStr, onSave) {
   const p = T.p; await ensureSurahs(new Set([p.s]));
   if (p.k === 'مقطع' && p.b > p.a) { toast('هذا مقطع من عدة آيات؛ يُعدَّل نطاقه برقمي «من آية» و«إلى آية».', true); return; }
   const W = wordsWithMarks(ayahText(p.s, p.a) || ''); if (!W.length) { toast('تعذّر تحميل نص الآية.', true); return; }
-  let r = tokRange(p, W.length);
+  let r = p.mask ? { mask: p.mask, w1: 1 } : tokRange(p, W.length);
+  const outTok = () => r.mask ? maskTok(p.s, p.a, r.mask) : rangeToTok(p.s, p.a, r, W.length);
   const draw = () => {
-    const st = statesFromRange(W.length, r.w1, r.w2, r.g1, r.g2);
+    const st = rowStates(r, W.length);
     $('weChips').innerHTML = W.map((w, i) => '<span class="wst w' + st[i] + '" data-w="' + (i + 1) + '">' + esc(w) + '</span>').join(' ');
-    $('wePrev').innerHTML = renderTokens(rangeToTok(p.s, p.a, r, W.length));
+    $('wePrev').innerHTML = renderTokens(outTok());
   };
   wordModal('<h3>كلمات الآية — ' + esc(sName(p.s)) + ' ' + AD(p.a) + '<button class="btn sm" id="weClose">إغلاق</button></h3>' +
     '<p class="hint" style="margin-top:0">اضغطي على أي كلمة: <span class="wst w0">ظاهرة</span> ← <span class="wst w1">فراغ</span> ← <span class="wst w2">محذوفة</span></p>' +
@@ -2274,12 +2298,12 @@ async function openWordEditor(tokStr, onSave) {
   draw();
   $('weClose').onclick = () => $('wmodal').classList.add('hidden');
   $('weAll').onclick = () => { r = { w1: 1, w2: W.length, g1: 0, g2: 0 }; draw(); };
-  $('weNoGap').onclick = () => { r.g1 = r.g2 = 0; draw(); };
+  $('weNoGap').onclick = () => { if (r.mask) r.mask = r.mask.replace(/1/g, '0'); else r.g1 = r.g2 = 0; draw(); };
   $('weChips').onclick = e => {
     const c = e.target.closest('[data-w]'); if (!c) return;
-    const rg = cycleWord(r, W.length, +c.dataset.w - 1); if (rg) { r = rg; draw(); }
+    if (toggleWord(r, W.length, +c.dataset.w - 1)) draw();
   };
-  $('weOk').onclick = () => { $('wmodal').classList.add('hidden'); onSave(rangeToTok(p.s, p.a, r, W.length)); };
+  $('weOk').onclick = () => { $('wmodal').classList.add('hidden'); onSave(outTok()); };
 }
 /* ربط أزرار «✎ الآية» بخانة نصية: يستبدل الرمز رقم i في نص الخانة */
 function bindTokChips(container, getField) {
@@ -2470,7 +2494,7 @@ function ezAddFromBank(rep) {
 }
 function ezAddMut(rep) {
   const R = getRange(), set = ezMutSet(), pool = mutCandidates(R).filter(c => !set.has(c.gi));
-  $('modalBox').innerHTML = '<h3>' + (rep ? 'اختاري متشابهًا بدلًا منه' : 'أضيفي متشابهًا') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint">' + (pool.length ? 'متاح ' + AD(pool.length) + ' متشابهًا لهذا النطاق. أو <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.' : 'لا توجد متشابهات أخرى لهذا النطاق. <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.') + '</p><div id="ezML"></div>';
+  $('modalBox').innerHTML = (rep ? '' : '<button class="svopt main" id="ezOwnMut2" style="margin-bottom:10px"><b>＋ اختاري المواضع بنفسك</b><small>من سورة واحدة أو من عدة سور: السورة والآية لكل موضع، والكلمات الظاهرة والفراغ.</small></button>') + '<h3>' + (rep ? 'اختاري متشابهًا بدلًا منه' : 'أو اختاري من المتشابهات الجاهزة') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint">' + (pool.length ? 'متاح ' + AD(pool.length) + ' متشابهًا لهذا النطاق. أو <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.' : 'لا توجد متشابهات أخرى لهذا النطاق. <a href="#" id="ezOwnMut">اختاري آيات متشابهة بنفسك</a>.') + '</p><div id="ezML"></div>';
   $('modal').classList.remove('hidden');
   const list = pool.slice(0, 25);
   (async () => {
@@ -2481,6 +2505,7 @@ function ezAddMut(rep) {
     if (rep) { s2.delete(rep.gi); s2.add(+b.dataset.gi); S.mutPicked = s2; closeModal(); await refresh(false); toast('اختير المتشابه.'); return; }
     s2.add(+b.dataset.gi); S.mutPicked = s2; ezSetCount('mutCount', s2.size); b.textContent = '✔ أُضيف'; b.disabled = true; await refresh(false); };
   const own = $('ezOwnMut'); if (own) own.onclick = e => { e.preventDefault(); closeModal(); openMutEditor(); };
+  const own2 = $('ezOwnMut2'); if (own2) own2.onclick = () => { closeModal(); openMutEditor(); };
 }
 function ezWrite() {
   $('modalBox').innerHTML = '<h3>اكتبي سؤالًا من عندك<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><label class="f">السؤال</label><textarea id="ezWQ" rows="4" style="font-size:16px" placeholder="مثال: اذكري الآية التي فيها…"></textarea><label class="f" style="margin-top:8px">الإجابة (اختياري)</label><textarea id="ezWA" rows="2"></textarea><div class="row" style="margin-top:8px;align-items:flex-end"><div style="flex:0 1 140px"><label class="f">أسطر الإجابة</label><input type="number" id="ezWL" value="3" min="1" max="15"></div><div style="flex:0 1 120px"><label class="f">الدرجة</label><input type="number" id="ezWG" value="2" min="0" max="20"></div></div><div class="row" style="margin-top:12px"><button class="btn pri" id="ezWOk" style="flex:0 0 auto;min-height:48px;font-size:17px">أضيفيه إلى الورقة</button></div>';
@@ -3070,6 +3095,13 @@ function replaceRow(row) {
   return q;
 }
 function openQuickAdd() {
+  $('modalBox').innerHTML = '<h3>ماذا تريدين أن تضيفي؟<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+    '<button class="svopt main" id="qaNormal"><b>✎ سؤال عادي</b><small>سؤال عن آية أو آيات من سورة: إكمال، أو معنى، أو قصة، أو تقسيم…</small></button>' +
+    '<button class="svopt" id="qaMut"><b>⇄ متشابهات (عدة مواضع)</b><small>آيات متشابهة من سورة واحدة أو من عدة سور: تختارين كل موضع (السورة والآية)، وتحددين الكلمات الظاهرة والفراغ.</small></button>';
+  $('modal').classList.remove('hidden');
+  $('qaNormal').onclick = openQuickAddQ; $('qaMut').onclick = () => { closeModal(); openMutGroupEditor(null); };
+}
+function openQuickAddQ() {
   const R = getRange();
   const pre = { surah: sName(surahOfAbs(R.A)) };
   $('modalBox').innerHTML = '<h3>سؤال جديد<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><p class="hint" style="margin-top:0">يكفي السورة ونص السؤال؛ وبقية الحقول اختيارية.</p><div id="edRoot">' + editorHTML(pre, 'add') + '</div>';
@@ -3134,34 +3166,34 @@ function openMutGroupEditor(gi) {
     if (!$('mgLocs')) return;
     $('mgLocs').innerHTML = rows.map((r, k) => {
       const t = ayahText(r.s, r.a), W = t ? wordsWithMarks(t) : [];
-      const st = r.w1 ? statesFromRange(W.length, r.w1, r.w2, r.g1, r.g2) : W.map(() => 0);
+      const st = rowStates(r, W.length);
       return '<div class="mbox" data-k="' + k + '"><div class="xr"><select data-ms>' + so(r.s) + '</select><span class="hint" style="flex:0 0 auto">آية</span><input type="number" min="1" data-ma value="' + r.a + '" style="flex:0 0 76px"><button type="button" class="btn sm off" data-mdel style="flex:0 0 auto"' + (rows.length > 2 ? '' : ' disabled') + ' title="حذف هذا الموضع">✕</button></div>' +
         '<div class="wchips">' + (W.length ? W.map((w, i) => '<span class="wst w' + st[i] + '" data-w="' + (i + 1) + '">' + esc(w) + '</span>').join(' ') : '<span class="hint">جارٍ تحميل نص الآية…</span>') + '</div>' +
         '<div class="row" style="margin-top:4px"><button type="button" class="btn sm" data-auto style="flex:0 0 auto">تلقائي</button><button type="button" class="btn sm" data-all style="flex:0 0 auto">الآية كاملة</button>' + (r.custom ? '<span class="chip" style="flex:0 0 auto;align-self:center">معدّل</span>' : '') + '</div></div>';
     }).join('');
-    const subs = rows.filter(r => r.w1).map(r => (r.g1 ? '{فجوة:' + sName(r.s) + ':' + r.a + ':' + r.w1 + '-' + r.w2 + ':' + r.g1 + '-' + r.g2 + '}' : '{مقتطف:' + sName(r.s) + ':' + r.a + ':' + r.w1 + '-' + r.w2 + '}') + ' [' + sName(r.s) + ': ' + AD(r.a) + ']');
+    const subs = rows.filter(r => r.w1 || r.mask).map(r => mmToken(r) + ' [' + sName(r.s) + ': ' + AD(r.a) + ']');
     $('mgPrev').innerHTML = subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') || '<span class="hint">اختاري المواضع.</span>';
   };
   $('mgLocs').addEventListener('change', e => {
     const box = e.target.closest('.mbox'); if (!box) return; const r = rows[+box.dataset.k];
     r.s = +box.querySelector('[data-ms]').value; r.a = Math.max(1, Math.min(ACOUNT(r.s), +box.querySelector('[data-ma]').value || 1));
-    r.custom = false; r.w1 = 0; autoFill();
+    r.custom = false; r.w1 = 0; r.mask = null; autoFill();
   });
   $('mgLocs').addEventListener('click', e => {
     const box = e.target.closest('.mbox'); if (!box) return; const k = +box.dataset.k, r = rows[k];
     if (e.target.closest('[data-mdel]')) { if (rows.length > 2) { rows.splice(k, 1); autoFill(); } return; }
-    if (e.target.closest('[data-auto]')) { r.custom = false; r.w1 = 0; autoFill(); return; }
+    if (e.target.closest('[data-auto]')) { r.custom = false; r.w1 = 0; r.mask = null; autoFill(); return; }
     const W = wordsWithMarks(ayahText(r.s, r.a) || '');
-    if (e.target.closest('[data-all]')) { Object.assign(r, { w1: 1, w2: W.length, g1: 0, g2: 0, custom: true }); draw(); return; }
+    if (e.target.closest('[data-all]')) { Object.assign(r, { w1: 1, w2: W.length, g1: 0, g2: 0, custom: true, mask: null }); draw(); return; }
     const chip = e.target.closest('[data-w]'); if (!chip) return;
-    const rg = cycleWord(r, W.length, +chip.dataset.w - 1); if (!rg) return; Object.assign(r, rg, { custom: true }); draw();
+    if (!toggleWord(r, W.length, +chip.dataset.w - 1)) return; draw();
   });
   $('mgAdd').onclick = () => { const last = rows[rows.length - 1] || { s: 1, a: 1 }; rows.push({ s: last.s, a: (+last.a || 1) + 1 }); autoFill(); };
   $('mgSave').onclick = async () => {
     const sorted = rows.slice().sort((x, y) => x.s - y.s || x.a - y.a), keys = [...new Set(sorted.map(r => sName(r.s) + ':' + r.a))];
     if (keys.length < 2) { $('mgErr').textContent = 'أضيفي موضعين مختلفين على الأقل.'; return; }
     const str = keys.join(' ؛ '), bab = sName(sorted[0].s), diff = $('mgDiff').value.trim(), status = $('mgStatus').value;
-    const words = sorted.filter(r => r.custom && r.w1).map(r => sName(r.s) + ':' + r.a + '=' + r.w1 + '-' + r.w2 + '/' + (r.g1 || 0) + '-' + (r.g2 || 0)).join(' ؛ ');
+    const words = sorted.filter(r => r.custom && (r.w1 || r.mask)).map(r => sName(r.s) + ':' + r.a + '=' + (r.mask ? '#' + r.mask : r.w1 + '-' + r.w2 + '/' + (r.g1 || 0) + '-' + (r.g2 || 0))).join(' ؛ ');
     if ((!g || String(g.locs).replace(/\s+/g, '') !== str.replace(/\s+/g, '')) && S.mut.some(x => x !== g && String(x.locs).replace(/\s+/g, '') === str.replace(/\s+/g, ''))) { $('mgErr').textContent = 'هذه المجموعة موجودة بالمواضع نفسها.'; return; }
     try {
       if (g) { await api('updateMut', { oldLocs: g.locs, locs: str, diff, status, bab, words }); Object.assign(g, { locs: str, diff, status, bab, words }); }
@@ -3190,7 +3222,7 @@ function wireMutBank() {
 }
 function wireBank() {
   wireMutBank();
-  $('bankQuickAdd').onclick = openQuickAdd;
+  $('bankQuickAdd').onclick = openQuickAdd; if ($('addMutBtn')) $('addMutBtn').onclick = () => openMutGroupEditor(null);
   ['bSearch', 'bSurah', 'bTpl', 'bStatus', 'bSort'].forEach(id => $(id).addEventListener('input', () => { S.bankPage = 0; renderBank(); }));
   $('bPager').onclick = e => { const p = e.target.dataset.p; if (!p) return; S.bankPage += +p; renderBank(); window.scrollTo(0, 0); };
   $('bList').onclick = async e => {
@@ -3988,6 +4020,14 @@ function loginBusy(on, btnId) {
     loginT2 = setTimeout(() => { if (S.loggingIn) { $('loginNote').textContent = ''; $('loginErr').innerHTML = 'تأخّر الاتصال كثيرًا. تأكّدي من الإنترنت ثم <button class="ez-link" onclick="location.reload()">أعيدي المحاولة</button>'; } }, 30000);
   } else { b.disabled = false; b.textContent = b.dataset.label || 'دخول'; $('loginNote').textContent = ''; }
 }
+/* في محرر السؤال: إن اختير قالب متشابهات ظهر زر محرر المواضع */
+document.addEventListener('change', e => {
+  const sel = e.target; if (!sel.matches || !sel.matches('select[name=tpl]')) return;
+  const root = sel.closest('#edRoot, .panel, .modal-box') || sel.parentElement; let hint = root.querySelector('.mutHint');
+  if (/متشابه/.test(sel.value)) {
+    if (!hint) { hint = document.createElement('div'); hint.className = 'mutHint'; hint.innerHTML = '<p>أسئلة المتشابهات تحتاج اختيار عدة مواضع (من سورة أو أكثر) وتحديد الكلمات؛ ولها محرر خاص أسهل:</p><button type="button" class="btn pri">⇄ افتحي محرر المتشابهات</button>'; sel.parentElement.insertAdjacentElement('afterend', hint); hint.querySelector('button').onclick = () => { closeModal(); openMutGroupEditor(null); }; }
+  } else if (hint) hint.remove();
+});
 function boot() {
   // ١) زر الدخول أولًا، فلا يتعطل الدخول مهما حدث بعده
   $('loginBtn').onclick = async () => {
