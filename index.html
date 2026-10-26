@@ -318,7 +318,7 @@ details.fold[open] > summary{margin-bottom:6px}
 .fszr{display:flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);overflow:hidden;flex:0 0 auto}
 .fszr button{border:0;background:none;min-width:40px;height:36px;font:800 16px Tajawal,sans-serif;color:var(--pri);cursor:pointer}
 .fszr b{min-width:52px;text-align:center;font-size:14px}
-.controls.easy-on > :not(#easy){display:none!important}
+.controls.easy-on > :not(#easy):not(#modeBar){display:none!important}
 .controls:not(.easy-on) #easy{display:none}
 #easy{display:flex;flex-direction:column;gap:14px}
 .ez-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
@@ -419,7 +419,7 @@ details.fold[open] > summary{margin-bottom:6px}
 .qlog td,.qlog th{padding:6px 8px;border-bottom:1px solid var(--soft);font-size:14px;text-align:right}
 .gap{display:inline-block;min-width:4em;border-bottom:2px dotted currentColor;height:1.2em;vertical-align:-.2em;margin:0 .25em;opacity:.8}
 .qz-q .gap{border-bottom-color:#1f7a64;border-bottom-style:dashed;min-width:6em}
-.gapL{display:block}.gapL .gap{display:block;width:100%;margin:.2em 0}
+.gap{margin:0 .08em}
 .gsw{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-weight:700}
 .fbitem{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:8px;background:var(--soft)}
 .fbitem .fbh{display:flex;gap:8px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-bottom:4px}
@@ -459,6 +459,15 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 @keyframes spn{to{transform:rotate(360deg)}}
 .mutHint{background:var(--soft);border:1.5px dashed var(--pri);border-radius:14px;padding:10px 12px;margin:10px 0}
 .mutHint p{margin:0 0 8px;font-size:14.5px}
+.modebar{position:sticky;top:0;z-index:20;background:var(--bg);padding:6px 0 10px}
+.modebar .seg{width:100%}.modebar .seg button{flex:1;min-height:46px;font-size:16px}
+.ez-opt{margin:-2px 0 6px;border:1px dashed var(--line);border-radius:12px;background:var(--soft)}
+.ez-opt > summary{cursor:pointer;padding:9px 12px;font:700 14.5px Tajawal,sans-serif;color:var(--pri);list-style:none}
+.ez-opt > summary::-webkit-details-marker{display:none}
+.ez-optb{display:flex;flex-direction:column;gap:6px;padding:0 12px 12px}
+.ez-optb label{font:700 13.5px Tajawal,sans-serif;color:var(--muted)}
+.ez-optb select{min-height:44px;font-size:15.5px}
+.capsel{min-height:42px;font-size:15px}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -531,6 +540,7 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
     <section id="tab-build">
       <div class="builder">
         <div class="controls easy-on" id="controls">
+          <div class="modebar" id="modeBar" data-nogx><div class="seg"><button data-md="easy" class="on">الطريقة السهلة</button><button data-md="adv">كل الخيارات</button></div></div>
           <div id="easy">
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">١</span><h3>اختاري السورة</h3></div>
@@ -544,8 +554,18 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
               <div class="ez-h"><span class="ez-n">٢</span><h3>لمن الورقة؟ وكم سؤالًا؟</h3></div>
               <div class="ez-gcard"><b>الورقة لـ:</b><div class="ez-gbtns" id="ezG" data-nogx><button data-v="f">طالبات</button><button data-v="m">طلاب</button></div><small class="hint" style="flex:1 1 100%">تتغير صيغة الأسئلة ولون الورقة تلقائيًا (أكملي/أكمل).</small></div>
               <div class="ez-cnt"><div><b>إكمال الآيات</b><small>تكتب الطالبة الآيات من موضع إلى موضع</small></div><div class="ez-stp"><button data-ez="segCount" data-d="-1">−</button><span id="ez_segCount">٢</span><button data-ez="segCount" data-d="1">+</button></div></div>
+              <details class="ez-opt"><summary>⚙ خيارات الإكمال</summary><div class="ez-optb">
+                <label>نمط الإكمال</label><select id="ezCompMode"><option value="seg">مقاطع من الآيات</option><option value="blank">فراغات داخل النص</option></select>
+                <label>طول المقطع</label><select id="ezSegLen"></select></div></details>
               <div class="ez-cnt"><div><b>المتشابهات</b><small>آيات متشابهة تكمل الطالبة الفرق بينها</small></div><div class="ez-stp"><button data-ez="mutCount" data-d="-1">−</button><span id="ez_mutCount">٢</span><button data-ez="mutCount" data-d="1">+</button></div></div>
+              <details class="ez-opt" id="ezMutOpt"><summary>⚙ خيارات المتشابهات <span class="chip" id="ezMutAvail"></span></summary><div class="ez-optb">
+                <label>صيغة السؤال</label><select id="ezMutMode"></select>
+                <label>عدد المواضع في المتشابه الواحد</label><select id="ezMutCap" class="capsel"><option value="0">الكل (كل مواضعه في المصحف)</option><option value="2">٢</option><option value="3">٣</option><option value="4">٤</option><option value="5">٥</option><option value="6">٦</option><option value="8">٨</option><option value="10">١٠</option><option value="12">١٢</option></select>
+                <div class="accrow"><button class="btn sm" id="ezMutShuf">🎲 متشابهات أخرى</button><button class="btn sm" id="ezMutAll">كل المتاح في هذا النطاق</button></div></div></details>
               <div class="ez-cnt"><div><b>أسئلة متنوعة</b><small>معانٍ وقصص وتقسيمات من بنك الأسئلة</small></div><div class="ez-stp"><button data-ez="qMax" data-d="-1">−</button><span id="ez_qMax">٢</span><button data-ez="qMax" data-d="1">+</button></div></div>
+              <details class="ez-opt"><summary>⚙ خيارات الأسئلة</summary><div class="ez-optb">
+                <label>نوع الأسئلة</label><select id="ezTpl"></select>
+                <label class="chk"><input type="checkbox" id="ezIncWait"> أُظهر الأسئلة التي لم تُراجع بعد</label></div></details>
             </div>
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">٣</span><h3>أسئلة ورقتك</h3></div>
@@ -664,7 +684,7 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
                   <div><label class="f">صيغة السؤال</label><select id="mutMode"><option value="comp">إكمال الفراغ</option><option value="surah">تحديد السورة</option><option value="mix">منوّعة (إكمال وتحديد)</option></select></div>
                   <div style="flex:0 0 auto"><button class="btn sm" id="mutShuffle">اختيار آخر</button></div>
                 </div>
-                <div class="cnt" style="margin-top:8px"><span>أقصى عدد للمواضع في المتشابه الواحد</span><div class="stp"><button type="button" data-mloc="-1">−</button><b id="cv_mloc">٤</b><button type="button" data-mloc="1">+</button></div></div>
+                <div class="cnt" style="margin-top:8px"><span>عدد المواضع في المتشابه الواحد</span><select id="mutCapSel" class="capsel"><option value="0">الكل (كل مواضعه في المصحف)</option><option value="2">٢</option><option value="3">٣</option><option value="4">٤</option><option value="5">٥</option><option value="6">٦</option><option value="8">٨</option><option value="10">١٠</option><option value="12">١٢</option></select></div>
                 <p class="hint" style="margin:8px 0 4px">بعض الآيات لها مواضع كثيرة في المصحف؛ تُعرض مواضع النطاق أولًا ثم أقربها، والباقي يظهر عدده. المختارة للورقة مُعلَّمة؛ اضغطي لإضافة مجموعة أو إزالتها.</p>
                 <div id="mutList" class="cand"></div>
               </details>
@@ -886,6 +906,9 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 
     <!-- ========== الإعدادات ========== -->
     <section id="tab-settings" class="hidden">
+      <div class="panel" id="defPanel" style="margin-bottom:14px"><h3 style="margin-top:0">⚙ افتراضيات إعداد الورقة (على هذا الجهاز)</h3>
+        <div class="cnt"><span>عدد المواضع في المتشابه الواحد</span><select id="mutCapSel2" class="capsel"><option value="0">الكل (كل مواضعه في المصحف)</option><option value="2">٢</option><option value="3">٣</option><option value="4">٤</option><option value="5">٥</option><option value="6">٦</option><option value="8">٨</option><option value="10">١٠</option><option value="12">١٢</option></select></div>
+        <p class="hint" style="margin:6px 0 0">الأصل «الكل»: تظهر كل مواضع المتشابه مهما كثرت. وتختارين رقمًا فقط إن أردتِ التقييد.</p></div>
       <div class="panel" id="accPanel" style="margin-bottom:14px">
         <h3 style="margin-top:0">👥 المستخدمون والصلاحيات</h3>
         <p class="hint" style="margin-top:0">إعداد الأوراق وطباعتها متاح لكل من يدخل. ومن هنا تحدّدين ما يراه كل نوع من المستخدمين وما يستطيعه. (كلمة مرور الإدارة نفسها في رأس ملف Code.gs.)</p>
@@ -1076,6 +1099,14 @@ function renderTokens(text, mode) {
   parts.push(plain(src.slice(last)));
   return parts.join('');
 }
+/* فراغ الكتابة على قدر المحذوف، من قطع سطرية قصيرة تلتف مع النص فتملأ السطر كاملًا (بلا كتلة تقطع السطر في منتصفه) */
+function gapMarkup(n, html) {
+  if (!html) return '..........';
+  const tot = Math.max(6, Math.min(80, Math.round(n * 0.75 + 3)));
+  if (tot <= 12) return '<span class="gap" style="width:' + tot + 'em"></span>';
+  const k = Math.ceil(tot / 9), w = (tot / k).toFixed(1);
+  return Array(k).fill('<span class="gap" style="width:' + w + 'em"></span>').join(' ');
+}
 function tokOut(t, raw, html) {
   if (!t) return html ? '<span class="tokfail">' + esc(raw) + '</span>' : raw;
   const ref = 'سورة ' + sName(t.s) + ': ' + AD(t.a) + (t.b !== t.a ? '–' + AD(t.b) : '');
@@ -1093,7 +1124,7 @@ function tokOut(t, raw, html) {
     const W = wordsWithMarks(ayahText(t.s, t.a)), M = t.mask, parts = [];
     const st = W.map((w, i) => +(M[i] || '2'));
     const first = st.findIndex(v => v !== 2), last = st.length - 1 - [...st].reverse().findIndex(v => v !== 2);
-    const gapHTML = n => !html ? '..........' : n > 32 ? '<span class="gapL">' + '<span class="gap"></span>'.repeat(Math.min(5, Math.ceil(n / 40))) + '</span>' : '<span class="gap" style="width:' + Math.max(6, Math.min(26, Math.round(n * 0.75 + 3))) + 'em"></span>';
+    const gapHTML = n => gapMarkup(n, html);
     for (let i = Math.max(0, first); i <= last && first >= 0; i++) {
       if (st[i] === 0) { parts.push(E(W[i])); continue; }
       let j = i; while (j + 1 <= last && st[j + 1] === st[i]) j++;
@@ -1110,9 +1141,7 @@ function tokOut(t, raw, html) {
       if (i === t.g1) {
         // الفراغ على قدر المحذوف: قصير للكلمة والكلمتين، وسطر كامل (أو أكثر) للعبارة الطويلة
         const hid = W.slice(t.g1 - 1, t.g2).join(' ').replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, ''), n = hid.length;
-        if (!html) parts.push('..........');
-        else if (n > 32) parts.push('<span class="gapL">' + '<span class="gap"></span>'.repeat(Math.min(5, Math.ceil(n / 40))) + '</span>');
-        else parts.push('<span class="gap" style="width:' + Math.max(6, Math.min(26, Math.round(n * 0.75 + 3))) + 'em"></span>');
+        parts.push(gapMarkup(n, html));
         i = t.g2; continue;
       }
       parts.push(E(W[i - 1]));
@@ -1434,7 +1463,7 @@ function mutCandidates(R, memOv) {
     let uniq = keep.filter((l, i) => keep.findIndex(x => x.A === l.A) === i);
     if (uniq.length < 2) return;
     // حد أقصى للمواضع: مواضع النطاق أولًا ثم أقربها، والباقي يُذكر عددًا
-    const cap = Math.max(2, +PREF.mutMaxLocs || 4), total = uniq.length;
+    const cap = mutCapN(), total = uniq.length;
     if (uniq.length > cap) {
       const inside = uniq.filter(inR), outside = uniq.filter(l => !inR(l));
       const ref = inside.length ? inside[0].A : R.A;
@@ -1491,6 +1520,8 @@ function mutAnalyze(c) {
 /* عدد أسطر «الآية التالية» على قدر طولها */
 /* سطر الكتابة باليد يتسع لنحو ٦ كلمات من القرآن */
 function nextAyahLines(sn, a) { const t = a < ACOUNT(sn) ? ayahText(sn, a + 1) : ''; if (!t) return 2; const w = t.split(/\s+/).filter(x => /[\u0621-\u064A\u0671]/.test(x)).length; return Math.max(1, Math.min(8, Math.ceil(w / 6))); }
+/* الحد الأقصى لمواضع المتشابه الواحد: الأصل «الكل»، ويُقيَّد فقط إن اختارت المعلمة رقمًا */
+function mutCapN() { const v = +PREF.mutCap; return v >= 2 ? v : Infinity; }
 function parseMutWords(str) {
   const out = {}; String(str || '').split('؛').forEach(p => { p = p.trim(); const k = p.match(/^(.+?):(\d+)=#([012]+)$/); if (k) { const sn = sNum(k[1].trim()); if (sn) out[sn + ':' + (+k[2])] = { mask: k[3] }; return; } const m = p.match(/^(.+?):(\d+)=(\d+)-(\d+)\/(\d+)-(\d+)$/); if (m) { const sn = sNum(m[1].trim()); if (sn) out[sn + ':' + (+m[2])] = { w1: +m[3], w2: +m[4], g1: +m[5], g2: +m[6] }; } });
   return out;
@@ -1519,7 +1550,7 @@ function mutItem(c, space, mode, rand) {
   });
   const dir = mode === 'surah' ? 'حدّدي السورة التي ورد فيها كل موضع من المواضع المتشابهة الآتية:' : mode === 'choice' ? 'اختاري الكلمات الصحيحة لكل فراغ في المواضع المتشابهة الآتية:' : null;
   const nextLines = c.locs.map(l => nextAyahLines(l.s, l.a));
-  return { kind: 'q', key: 'm:' + c.gi, mut: true, mode, dir, nextLines, tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: opts, subKeys: keys, subLines: mode === 'comp' ? 1 : 0, letters: true, ans: ans.join(' — '), grade: c.locs.length, surahs: [...new Set(c.locs.map(l => l.s))], anchor: c.anchor, gi: c.gi };
+  return { kind: 'q', key: 'm:' + c.gi, mut: true, mode, dir, nextLines, tpl: 'متشابهات', text: subs.join(' — '), subs, subOpts: opts, subKeys: keys, subLines: mode === 'comp' ? 1 : 0, letters: true, ans: ans.join(' — '), grade: c.locs.length, surahs: [...new Set(c.locs.map(l => l.s))], anchor: c.anchor, gi: c.gi, locs: c.locs.map(l => ({ s: l.s, a: l.a })) };
 }
 /* توزيع المتشابهات على سور النطاق بالتساوي: دورة على السور، واختيار عشوائي داخل كل سورة */
 function pickMut(cands, n, rand) {
@@ -2183,15 +2214,31 @@ function mmToken(l) {
   if (l.w1) return '{مقتطف:' + nm + ':' + l.a + ':' + l.w1 + '-' + l.w2 + '}';
   return null;
 }
-function openMutEditor(idx) {
-  const R = getRange(), base = idx != null ? mmEntry((PREF.manualMut || [])[idx]) : { locs: [{ s: surahOfAbs(R.A), a: 1 }, { s: surahOfAbs(R.A), a: 2 }] };
+/* تعديل أي سؤال متشابهات (من الجدول أو يدوي) بآياته الحقيقية: مواضع، وكلمات، وإضافة، وحذف */
+function openMutItemEditor(it) {
+  if (typeof it.gi === 'string' && /^u\d+$/.test(it.gi)) { openMutEditor(+it.gi.slice(1)); return; }
+  const rows = (it.locs || []).map((l, k) => {
+    const T = it.subs && it.subs[k] ? tokensIn(it.subs[k])[0] : null, p = T && T.p, r = { s: l.s, a: l.a };
+    if (p && p.s === l.s && p.a === l.a) {
+      if (p.k === 'فجوة') Object.assign(r, { w1: p.w1, w2: p.w2, g1: p.g1, g2: p.g2, custom: true });
+      else if (p.k === 'كلمات') Object.assign(r, { mask: p.mask, w1: 1, custom: true });
+      else if (p.k === 'مقتطف') Object.assign(r, { w1: p.w1, w2: p.w2, g1: 0, g2: 0, custom: true });
+    }
+    return r;
+  });
+  if (rows.length < 2) { toast('تعذّر قراءة مواضع هذا السؤال.', true); return; }
+  openMutEditor(null, { seed: { locs: rows }, replaceKey: it.key });
+}
+function openMutEditor(idx, opts) {
+  opts = opts || {};
+  const R = getRange(), base = opts.seed ? opts.seed : idx != null ? mmEntry((PREF.manualMut || [])[idx]) : { locs: [{ s: surahOfAbs(R.A), a: 1 }, { s: surahOfAbs(R.A), a: 2 }] };
   let rows = base.locs.map(l => Object.assign({}, l));
   const so = v => SUR.map((y, i) => '<option value="' + (i + 1) + '"' + (+v === i + 1 ? ' selected' : '') + '>' + AD(i + 1) + '. ' + y[0] + '</option>').join('');
-  $('modalBox').innerHTML = '<h3>متشابه يدوي<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
+  $('modalBox').innerHTML = '<h3>' + (opts.seed || idx != null ? 'تعديل المتشابه' : 'متشابه يدوي') + '<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
     '<p class="hint" style="margin-top:0">١) اختاري المواضع. ٢) اضغطي على أي كلمة لتغيير حالتها: <span class="wst w0">ظاهرة</span> ← <span class="wst w1">فراغ</span> ← <span class="wst w2">محذوفة</span>. تبدأ كل آية مضبوطة تلقائيًا عند موضع الاختلاف.</p>' +
     '<div id="mlocs"></div><button class="btn sm" id="mAddLoc" style="margin-top:8px">＋ موضع</button>' +
     '<label class="f" style="margin-top:12px">معاينة السؤال</label><div id="mmPrev" class="dprev"></div><div id="mErr" class="tokfail"></div>' +
-    '<div class="row" style="margin-top:12px"><button class="btn pri" id="mOk" style="flex:0 0 auto">' + (idx != null ? 'حفظ التعديل' : 'إضافة إلى الورقة') + '</button></div>';
+    '<div class="row" style="margin-top:12px"><button class="btn pri" id="mOk" style="flex:0 0 auto">' + (idx != null || opts.seed ? 'حفظ التعديل' : 'إضافة إلى الورقة') + '</button></div>';
   $('modal').classList.remove('hidden');
   const autoFill = async (only) => {
     await ensureSurahs(new Set(rows.map(r => r.s)));
@@ -2243,10 +2290,10 @@ function openMutEditor(idx) {
     if (new Set(keys).size < 2) { $('mErr').textContent = 'اختاري موضعين مختلفين على الأقل.'; return; }
     const entry = { locs: rows.map(r => ({ s: r.s, a: +r.a, w1: r.w1, w2: r.w2, g1: r.g1, g2: r.g2, mask: r.mask || null })) };
     const list = PREF.manualMut = PREF.manualMut || [];
-    if (idx != null) list[idx] = entry; else list.push(entry);
+    if (idx != null) list[idx] = entry; else { list.push(entry); if (opts.replaceKey) { const D0 = draftState(); (D0.edits[opts.replaceKey] = D0.edits[opts.replaceKey] || {}).hidden = true; } }
     savePref(); closeModal(); renderManualMuts(); refresh(false); toast('أُضيف المتشابه إلى الورقة.');
   };
-  if (idx != null) rows.forEach(r => { if (r.w1) r.custom = true; });
+  if (idx != null || opts.seed) rows.forEach(r => { if (r.w1 || r.mask) r.custom = true; });
   autoFill();
 }
 /* =====================================================================
@@ -2342,7 +2389,31 @@ function ezText(it) {
   if (it.branches) return (it.tam ? renderTokens(it.tam) + '<br>' : '') + it.branches.map((b, k) => LET[k] + ') ' + renderTokens(b.text)).join('<br>');
   return (it.tam ? '<span class="hint">' + renderTokens(it.tam) + '</span><br>' : '') + renderTokens(it.text || '');
 }
+function capSync() { ['mutCapSel', 'ezMutCap', 'mutCapSel2'].forEach(id => { const el = $(id); if (el) el.value = String(+PREF.mutCap >= 2 ? +PREF.mutCap : 0); }); }
+function bindCap() {
+  capSync();
+  ['mutCapSel', 'ezMutCap', 'mutCapSel2'].forEach(id => { const el = $(id); if (el) el.onchange = () => { PREF.mutCap = +el.value >= 2 ? +el.value : 0; savePref(); capSync(); S.mutPicked = S.mutPicked; refresh(false); toast(PREF.mutCap ? 'تُعرض ' + AD(PREF.mutCap) + ' مواضع كحد أقصى لكل متشابه.' : 'تُعرض كل مواضع المتشابه.'); }; });
+}
+function bindEzOpts() {
+  const fire = (el, ev) => el.dispatchEvent(new Event(ev, { bubbles: true }));
+  const mirror = (ez, real) => { $(ez).onchange = () => { $(real).value = $(ez).value; fire($(real), 'change'); fire($(real), 'input'); }; };
+  mirror('ezSegLen', 'segLen'); mirror('ezMutMode', 'mutMode'); mirror('ezTpl', 'tplFilter');
+  $('ezCompMode').onchange = () => { const b = document.querySelector('#compMode [data-v="' + $('ezCompMode').value + '"]'); if (b) b.click(); };
+  $('ezIncWait').onchange = () => { $('incWait').checked = $('ezIncWait').checked; fire($('incWait'), 'change'); fire($('incWait'), 'input'); };
+  $('ezMutShuf').onclick = () => $('mutShuffle').click();
+  $('ezMutAll').onclick = () => { let n = 0; try { n = mutCandidates(getRange()).length; } catch (e) { } if (!n) { toast('لا متشابهات في هذا النطاق.', true); return; } ezSetCount('mutCount', Math.min(n, 40)); toast('أُضيف كل المتاح (' + AD(Math.min(n, 40)) + ').'); };
+  bindCap();
+}
+function ezOptSync() {
+  const cp = (ez, real, keepFirst) => { const a = $(ez), b = $(real); if (!a || !b) return; if (a.options.length !== b.options.length) a.innerHTML = b.innerHTML; a.value = b.value; };
+  cp('ezSegLen', 'segLen'); cp('ezMutMode', 'mutMode'); cp('ezTpl', 'tplFilter');
+  const cm = document.querySelector('#compMode .on'); if (cm) $('ezCompMode').value = cm.dataset.v;
+  $('ezIncWait').checked = $('incWait').checked;
+  if ($('ezMutOpt').open) { let n = 0; try { n = mutCandidates(getRange()).length; } catch (e) { } $('ezMutAvail').textContent = 'متاح ' + AD(n); }
+  capSync();
+}
 function ezSync() {
+  try { ezOptSync(); } catch (e) { }
   try { ezLookSync(); } catch (e) { }
   try { $('ezSurahName').textContent = rangeName(getRange()); } catch (e) { }
   ['segCount', 'mutCount', 'qMax'].forEach(id => { const el = $('ez_' + id); if (el) el.textContent = AD(+$(id).value || 0); });
@@ -2423,6 +2494,7 @@ function ezChooseSeg(it) {
   };
 }
 function ezEdit(it) {
+  if (it.mut && it.subs) { openMutItemEditor(it); return; }
   const D = draftState(), isSubs = !!it.subs, txt = isSubs ? (it.text || it.subs.join(' — ')) : it.branches ? it.branches.map(b => b.text).join('\n') : (it.text || '');
   $('modalBox').innerHTML = '<h3>تعديل السؤال<button class="btn sm" onclick="closeModal()">إغلاق</button></h3>' +
     '<p class="hint" style="margin-top:0">اكتبي التعديل كما تريدين. ولتغيير كلمات آية اضغطي زرها «✎» تحت الخانة.</p>' +
@@ -2604,9 +2676,11 @@ function wireEasy() {
   $('ezKeep').onclick = ezSaveSheet; $('topSave').onclick = ezSaveSheet; $('ezOpenSaved').onclick = ezOpenSaved; ezSavedBadge(); ezCurSync();
   $('ezCurNew').onclick = () => { PREF.curSaved = ''; PREF.draft = null; PREF.manualSegs = []; PREF.manualMut = []; S.adhoc = []; saveAdhoc(); renderAdhoc(); renderManualMuts(); savePref(); ezCurSync(); S.mutPicked = null; schedule(true); toast('بدأتِ ورقة جديدة.'); };
   const ctl = $('controls');
-  const setMode = easy => { ctl.classList.toggle('easy-on', easy); $('ezBack').classList.toggle('hidden', easy); PREF.ui = easy ? 'easy' : 'adv'; savePref(); if (easy && lastModel) renderEasy(lastModel); window.scrollTo(0, 0); };
+  const setMode = easy => { ctl.classList.toggle('easy-on', easy); $('ezBack').classList.add('hidden'); document.querySelectorAll('#modeBar [data-md]').forEach(b => b.classList.toggle('on', (b.dataset.md === 'easy') === easy)); PREF.ui = easy ? 'easy' : 'adv'; savePref(); if (easy && lastModel) renderEasy(lastModel); window.scrollTo(0, 0); };
   setMode(PREF.ui !== 'adv');
   $('ezAdv').onclick = () => setMode(false); $('ezBack').onclick = () => setMode(true);
+  document.querySelectorAll('#modeBar [data-md]').forEach(b => b.onclick = () => setMode(b.dataset.md === 'easy'));
+  bindEzOpts();
   $('ezSurah').onclick = () => ezSurahPicker(); $('ezMore').onclick = () => ezSurahPicker();
   $('ezAyahsBtn').onclick = () => {
     $('ezAyahs').classList.toggle('hidden');
@@ -2625,6 +2699,7 @@ function wireEasy() {
   $('ezList').addEventListener('click', e => { const b = e.target.closest('[data-ea]'); if (!b) return;
     if (b.dataset.ea === 'more') { const q = b.closest('.ez-q'), open = q.classList.toggle('open'); b.textContent = open ? 'إخفاء ▴' : 'عرض السؤال كاملًا ▾'; return; } const i = +b.closest('.ez-q').dataset.i, x = (S.ezItems || [])[i]; if (x) ezAction(b.dataset.ea, x.it); });
   $('ezAddQ').onclick = () => ezAddFromBank(); $('ezAddM').onclick = () => ezAddMut(); $('ezAddW').onclick = ezWrite;
+  $('ezMutOpt').addEventListener('toggle', ezOptSync);
   $('ezAddS').onclick = ezAddSeg; $('advAddSeg').onclick = ezAddSeg;
   document.querySelectorAll('[data-ezgo]').forEach(b => b.onclick = () => ({ s: ezAddSeg, q: () => ezAddFromBank(), m: () => ezAddMut(), w: ezWrite })[b.dataset.ezgo]());
   $('ezPrint').onclick = () => downloadPDF(false);
@@ -2776,9 +2851,12 @@ function renderDraft(M) {
       h += '<div class="ditem' + (it.edited ? ' edited' : '') + '" data-key="' + esc(it.key || '') + '"><div class="dbar"><span class="chip">' + AD(ii + 1) + '</span><span class="hint">' + itemKind(it) + (it.edited ? ' · معدّل' : '') + '</span><span class="sp"></span><button class="ibtn" data-m="up"' + (ii ? '' : ' disabled') + ' title="تقديم">▲</button><button class="ibtn" data-m="down"' + (ii < sec.items.length - 1 ? '' : ' disabled') + ' title="تأخير">▼</button><button class="ibtn" data-m="hide" title="حذف من هذه الورقة">✕</button>' + (it.kind === 'seg' ? '<button class="btn sm" data-m="segpick">اختاري الآيات</button>' : '') + (admin && it.kind !== 'blank' && !it.mut && !it.subs ? '<button class="btn sm" data-m="bank">' + (it.id ? 'حفظ في البنك' : 'إضافة للبنك') + '</button>' : '') + '</div>';
       if (it.kind === 'blank') h += '<p class="hint" style="margin:0">فراغات داخل النص؛ تُضبط من «خيارات الإكمال».</p>';
       else if (it.subs) {
+        h += '<div class="dprev" data-prev>' + it.subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') + '</div>';
+        h += '<div class="row" style="margin:8px 0"><button class="btn pri" data-m="mutedit" style="flex:0 0 auto">✎ تعديل المواضع والكلمات</button><span class="hint" style="align-self:center">أضيفي موضعًا أو احذفيه، وغيّري الكلمات الظاهرة والفراغ.</span></div>';
+        h += '<details class="more"><summary>تحرير بالرموز (متقدم) والإجابة</summary>';
         h += '<label class="f">المواضع (كل موضع يفصله « — »)</label><textarea data-f="text">' + esc(it.text || it.subs.join(' — ')) + '</textarea><div class="chipsbox" data-cf="text">' + tokChipsHTML(it.text || it.subs.join(' — ')) + '</div>';
         h += '<label class="f">الإجابة النموذجية</label><textarea rows="1" data-f="ans">' + esc(it.ans || '') + '</textarea>';
-        h += '<div class="dprev" data-prev>' + it.subs.map((x, k) => LET[k] + ') ' + renderTokens(x)).join('<br>') + '</div>';
+        h += '</details>';
       }
       else {
         if (it.tam != null && String(it.tam).trim() !== '' || it.kind === 'q') h += '<label class="f">التمهيد (اختياري)</label><textarea rows="1" data-f="tam">' + esc(it.tam || '') + '</textarea><div class="chipsbox" data-cf="tam">' + tokChipsHTML(it.tam) + '</div>';
@@ -2828,6 +2906,7 @@ function wireDraft() {
     if (b.dataset.d === 'unhide') { Object.keys(D.edits).forEach(k => { delete D.edits[k].hidden; }); savePref(); await refresh(false); renderDraft(lastModel); return; }
     if (b.dataset.d === 'add') { S.adhoc.push({ text: '', ans: '', lines: 3, grade: 1 }); saveAdhoc(); renderAdhoc(); await refresh(false); renderDraft(lastModel); const t = box.querySelectorAll('.dsec[data-sec="__adhoc"] textarea[data-f=text]'); if (t.length) { t[t.length - 1].focus(); t[t.length - 1].scrollIntoView({ block: 'center' }); } return; }
     const m = b.dataset.m; if (!m) return;
+    if (m === 'mutedit') { const x = itemOf(b); if (x.it) openMutItemEditor(x.it); return; }
     if (m === 'segpick') { const x = itemOf(b); if (x.it) ezChooseSeg(x.it); return; }
     if (m === 'sup' || m === 'sdown') {
       const keys = lastModel.sections.map(x => x.key), i = keys.indexOf(b.closest('.dsec').dataset.sec), j = m === 'sup' ? i - 1 : i + 1;
@@ -3004,8 +3083,7 @@ function wireBuilder() {
   $('ornSel').onchange = () => { PREF.ornSel = $('ornSel').value; savePref(); schedule(); };
   $('gradeSel').onchange = () => { PREF.gradeSel = $('gradeSel').value; savePref(); schedule(); };
   $('sheetDate').addEventListener('input', () => schedule());
-  $('cv_mloc').textContent = AD(+PREF.mutMaxLocs || 4);
-  document.querySelectorAll('[data-mloc]').forEach(bt => bt.onclick = () => { PREF.mutMaxLocs = Math.max(2, Math.min(12, (+PREF.mutMaxLocs || 4) + (+bt.dataset.mloc))); savePref(); $('cv_mloc').textContent = AD(PREF.mutMaxLocs); refresh(false); });
+  bindCap();
   $('mutShuffle').onclick = () => { S.qSeed++; S.mutPicked = null; refresh(false); };
   $('mutList').addEventListener('change', e => {
     const gi = e.target.dataset.gi; if (gi === undefined) return;
