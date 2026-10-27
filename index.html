@@ -319,6 +319,11 @@ details.fold[open] > summary{margin-bottom:6px}
 .fszr button{border:0;background:none;min-width:40px;height:36px;font:800 16px Tajawal,sans-serif;color:var(--pri);cursor:pointer}
 .fszr b{min-width:52px;text-align:center;font-size:14px}
 .controls.easy-on > :not(#easy):not(#modeBar){display:none!important}
+.controls.wiz-on > :not(#wiz){display:none!important}
+.controls:not(.wiz-on) #wiz{display:none}
+body.wiz-mode .preview-bar{display:none!important}
+body.wiz-mode .mbar{display:none!important}
+@media (max-width:980px){body.wiz-mode #previewWrap{display:none}body.wiz-mode.wiz-preview #previewWrap{display:block}body.wiz-mode #tab-build{padding-bottom:20px}}
 .controls:not(.easy-on) #easy{display:none}
 #easy{display:flex;flex-direction:column;gap:14px}
 .ez-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
@@ -468,6 +473,38 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 .ez-optb label{font:700 13.5px Tajawal,sans-serif;color:var(--muted)}
 .ez-optb select{min-height:44px;font-size:15.5px}
 .capsel{min-height:42px;font-size:15px}
+.hdr-menu{position:absolute;top:100%;left:10px;right:10px;max-width:420px;margin:6px auto 0;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 34px rgba(0,0,0,.28);padding:6px;display:flex;flex-direction:column;z-index:70}
+.hdr-menu .icon-btn{border:0;border-bottom:1px solid var(--soft);border-radius:0;background:none;color:var(--ink);text-align:right;padding:0 14px;min-height:54px;font:700 17px Tajawal,sans-serif;width:100%}
+.hdr-menu .icon-btn:last-child{border-bottom:0}
+#menuBtn{font-size:24px;line-height:1;padding:6px 14px;min-height:44px;min-width:52px;flex:0 0 auto;order:99}
+.top-in{flex-wrap:nowrap!important}.top-in .brand{flex:1 1 0!important}
+#tabs .nav-secondary{display:none!important}
+#tabs button span{font-size:13.5px}
+.more-item{display:flex;align-items:center;gap:14px;width:100%;text-align:right;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:10px;cursor:pointer;color:var(--ink);font:inherit;min-height:74px}
+.more-item .mi-ic svg{width:30px;height:30px;stroke:var(--pri);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.more-item .mi-t{flex:1;min-width:0}.more-item .mi-t b{display:block;font-size:19px}.more-item .mi-t small{color:var(--muted);font-size:14px}
+.more-item .mi-ar{font-size:26px;color:var(--muted)}
+.wz-h h2{margin:6px 0 2px;font-size:27px;color:var(--head)}.wz-h p{margin:0 0 12px;color:var(--muted);font-size:17px}
+.wz-search{width:100%;min-height:56px;font-size:19px;border-radius:16px;border:2px solid var(--pri);padding:0 16px;background:var(--paper);color:var(--ink)}
+.wz-grid{max-height:42vh;overflow:auto;margin-top:12px;grid-template-columns:repeat(auto-fill,minmax(106px,1fr))}
+.wz-recent{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}.wz-recent b{font-size:14px;color:var(--muted)}
+.wz-recent button{border:1.5px solid var(--pri);background:var(--paper);color:var(--pri);border-radius:999px;padding:7px 16px;font:800 17px 'Amiri Quran',Tajawal,serif;cursor:pointer}
+.wz-resume{width:100%;min-height:58px;margin-bottom:12px;border:2px solid var(--pri);border-radius:16px;background:var(--soft);color:var(--head);font:800 17px Tajawal,sans-serif;cursor:pointer}
+.wz-top{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:12px 16px}
+.wz-top small{color:var(--muted);font-size:13px}.wz-top b{display:block;font:800 24px 'Amiri Quran',Tajawal,serif;color:var(--head);line-height:1.5}
+.wz-row{display:flex;align-items:center;gap:10px;margin-top:10px}.wz-row > span{font-weight:800;min-width:52px;font-size:16.5px}
+.wz-row .seg{flex:1}.wz-row .seg button{flex:1;min-height:48px;font-size:16.5px}
+.wz-go{width:100%;min-height:70px;margin-top:14px;border:0;border-radius:18px;background:var(--pri);color:#fff;font:800 23px Tajawal,sans-serif;box-shadow:0 10px 24px rgba(0,0,0,.2);cursor:pointer}
+.wz-two{display:flex;gap:8px;margin-top:10px}.wz-two .btn{flex:1;min-height:52px;font-size:17px}
+.wz-sub{margin:22px 0 8px;font-size:19px}.wz-sub small{color:var(--muted);font-weight:600;font-size:13.5px;margin-inline-start:6px}
+.wz-q{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:10px}
+.wz-tag{display:inline-block;font:700 12.5px Tajawal,sans-serif;color:#fff;background:var(--pri);border-radius:999px;padding:2px 10px;margin-bottom:6px}
+.wz-qt{font-size:16.5px;line-height:1.95;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}.wz-q.open .wz-qt{display:block}
+.wz-qa{display:flex;gap:8px;margin-top:10px}
+.wz-qa button{flex:1;min-height:50px;border-radius:12px;border:1px solid var(--line);background:var(--paper);font:700 16px Tajawal,sans-serif;color:var(--ink);cursor:pointer}
+.wz-qa button.sw{border-color:var(--pri);color:var(--pri);flex:2.2}
+.wz-add{width:100%;margin-top:4px;min-height:58px;font-size:17px}
+.wz-links{display:flex;gap:6px 18px;flex-wrap:wrap;margin-top:16px;justify-content:center}
 .mbar{display:none}
 @media (max-width:980px){
   .mbar{display:flex;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:40;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line)}
@@ -524,12 +561,15 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
       <span class="sp"></span>
       <span id="roleBadge" class="role"></span>
       <span id="syncBadge" class="role hidden">جارٍ التحديث…</span>
-      <button id="uiBtn" class="icon-btn" title="الإضاءة وحجم الخط">Aa</button>
-      <button id="helpBtn" class="icon-btn">مساعدة</button>
-      <button id="gBtn" class="icon-btn" data-nogx title="صيغة الخطاب ولون المنصة"></button>
-      <button id="fbBtn" class="icon-btn" title="أرسلي ملاحظة أو اقتراحًا">💬 اقتراح</button>
-      <button id="reloadBtn" class="icon-btn" title="تحديث البيانات من الجدول">تحديث</button>
-      <button id="logoutBtn" class="icon-btn">خروج</button>
+      <button id="menuBtn" class="icon-btn hidden" aria-label="القائمة" title="القائمة" data-nogx>☰</button>
+      <div id="hdrMenu" class="hdr-menu hidden">
+        <button id="gBtn" class="icon-btn" data-nogx title="صيغة الخطاب ولون المنصة"></button>
+        <button id="uiBtn" class="icon-btn" title="الإضاءة وحجم الخط">🔆 المظهر وحجم الخط</button>
+        <button id="fbBtn" class="icon-btn" title="أرسلي ملاحظة أو اقتراحًا">💬 ملاحظة أو اقتراح</button>
+        <button id="helpBtn" class="icon-btn">❓ مساعدة</button>
+        <button id="reloadBtn" class="icon-btn" title="تحديث البيانات من الجدول">🔄 تحديث البيانات</button>
+        <button id="logoutBtn" class="icon-btn">🚪 خروج</button>
+      </div>
     </div>
 
   </header>
@@ -539,8 +579,29 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
     <!-- ========== إعداد ورقة ========== -->
     <section id="tab-build">
       <div class="builder">
-        <div class="controls easy-on" id="controls">
-          <div class="modebar" id="modeBar" data-nogx><div class="seg"><button data-md="easy" class="on">الطريقة السهلة</button><button data-md="adv">كل الخيارات</button></div></div>
+        <div class="controls wiz-on" id="controls">
+          <div id="wiz">
+            <div id="wizA">
+              <div class="wz-h"><h2>أي سورة تريدين مراجعتها؟</h2><p>اضغطي على اسم السورة، وتجهز الورقة مباشرة.</p></div>
+              <button class="wz-resume hidden" id="wizResume"></button>
+              <input type="search" id="wizSS" class="wz-search" placeholder="🔍 ابحثي باسم السورة…" autocomplete="off">
+              <div id="wizRecent" class="wz-recent hidden"></div>
+              <div id="wizGrid" class="ez-grid wz-grid"></div>
+              <div class="wz-links"><button class="ez-link" id="wizMulti">＋ أكثر من سورة</button><button class="ez-link hidden" id="wizSaved">📂 أوراقي المحفوظة</button></div>
+            </div>
+            <div id="wizB" class="hidden">
+              <div class="wz-top"><div><small>ورقة</small><b id="wizName"></b></div><button class="ez-link" id="wizChange">تغيير السورة</button></div>
+              <div class="wz-row"><span>لـ</span><div class="seg" id="wizG" data-nogx><button data-v="f">طالبات</button><button data-v="m">طلاب</button></div></div>
+              <div class="wz-row"><span>الحجم</span><div class="seg" id="wizSize"><button data-v="s">قصيرة</button><button data-v="m">متوسطة</button><button data-v="l">طويلة</button></div></div>
+              <button class="wz-go" id="wizPdf">⬇ حفظ الورقة PDF</button>
+              <div class="wz-two"><button class="btn" id="wizPrint">🖨 طباعة</button><button class="btn" id="wizView">👁 معاينة</button></div>
+              <h3 class="wz-sub">أسئلة الورقة <small>غيّري ما لا يعجبك · واضغطي على النص لقراءته كاملًا</small></h3>
+              <div id="wizList"></div>
+              <button class="ez-add wz-add" id="wizAdd">＋ إضافة سؤال</button>
+              <div class="wz-links"><button class="ez-link" id="wizLook">🎨 العنوان والتوقيع واللون</button><button class="ez-link hidden" id="wizKeep">💾 حفظ الورقة</button><button class="ez-link hidden" id="wizKey">نموذج الإجابة</button><button class="ez-link" id="wizAll">⚙ كل الخيارات</button></div>
+            </div>
+          </div>
+          <div class="modebar" id="modeBar" data-nogx><div class="seg"><button data-md="wiz">الشاشة المبسطة</button><button data-md="easy" class="on">تخصيص</button><button data-md="adv">كل الخيارات</button></div></div>
           <div id="easy">
             <div class="ez-card">
               <div class="ez-h"><span class="ez-n">١</span><h3>اختاري السورة</h3></div>
@@ -574,7 +635,7 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
               <div id="ezList"></div>
               <div class="ez-adds"><button class="ez-add" id="ezAddS">＋ إكمال آيات تختارينها</button><button class="ez-add" id="ezAddQ">＋ سؤال من البنك</button><button class="ez-add" id="ezAddM">＋ متشابه</button><button class="ez-add" id="ezAddW">＋ اكتبي سؤالًا</button></div>
             </div>
-            <div class="ez-card">
+            <div class="ez-card" id="ezLookCard">
               <div class="ez-h"><span class="ez-n">٤</span><h3>مظهر الورقة</h3></div>
               <div class="ez-look">
                 <div><label class="f">عنوان الورقة</label><input type="text" id="ezTitle"></div>
@@ -848,6 +909,11 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
     </section>
 
     <!-- ========== ملخص السور ========== -->
+    <section id="tab-more" class="hidden">
+      <h2 style="margin:6px 0 12px">المزيد</h2>
+      <div id="moreList"></div>
+    </section>
+
     <section id="tab-home" class="hidden">
       <div class="home-hi"><h2 id="homeHi">أهلًا وسهلًا</h2><p>ماذا تريدين اليوم؟</p>
         <div class="gsw"><span>أنا:</span><div class="seg" id="uiG" data-nogx><button data-v="f">طالبة / معلمة</button><button data-v="m">طالب / معلم</button></div></div></div>
@@ -936,12 +1002,13 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 
 <nav class="bnav hidden" id="tabs">
   <button data-tab="build" class="on"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 13h7 M9 17h7"/></svg><span>إعداد ورقة</span></button>
-  <button data-tab="bank"><svg viewBox="0 0 24 24"><path d="M4 6h16 M4 12h16 M4 18h10"/></svg><span>بنك الأسئلة</span></button>
-  <button data-tab="add" data-admin><svg viewBox="0 0 24 24"><path d="M12 5v14 M5 12h14"/></svg><span>إضافة</span></button>
   <button data-tab="quiz"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg><span>راجعي حفظك</span></button>
-  <button data-tab="guide"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z M4 19V5 M8 7h7 M8 11h6"/></svg><span>دليل السور</span></button>
-  <button data-tab="summary"><svg viewBox="0 0 24 24"><path d="M5 20V10 M12 20V4 M19 20v-7"/></svg><span>ملخص السور</span></button>
-  <button data-tab="settings" data-owner><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"/></svg><span>الإعدادات</span></button>
+  <button data-tab="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><span>المزيد</span></button>
+  <button data-tab="bank" class="nav-secondary"><svg viewBox="0 0 24 24"><path d="M4 6h16 M4 12h16 M4 18h10"/></svg><span>بنك الأسئلة</span></button>
+  <button data-tab="add" class="nav-secondary" data-admin><svg viewBox="0 0 24 24"><path d="M12 5v14 M5 12h14"/></svg><span>إضافة</span></button>
+  <button data-tab="guide" class="nav-secondary"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z M4 19V5 M8 7h7 M8 11h6"/></svg><span>دليل السور</span></button>
+  <button data-tab="summary" class="nav-secondary"><svg viewBox="0 0 24 24"><path d="M5 20V10 M12 20V4 M19 20v-7"/></svg><span>ملخص السور</span></button>
+  <button data-tab="settings" class="nav-secondary" data-owner><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9l2.1 2.1 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"/></svg><span>الإعدادات</span></button>
 </nav>
 <div id="modal" class="modal hidden"><div class="box" id="modalBox"></div></div>
 <div id="toast" class="toast hidden"></div>
@@ -1919,10 +1986,11 @@ function sheetHTML_(M, key, forPrint) {
   const U = M.U;
   const hijri = (() => { try { const d = U.dateVal ? new Date(U.dateVal + 'T12:00:00') : new Date(); return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(d) + ' هـ'; } catch (e) { return ''; } })();
   const title = esc(U.title || 'ورقة عمل') + (U.no ? ' (' + esc(AD(U.no)) + ')' : '');
-  let h = '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc((U.title || 'ورقة عمل') + ' - ' + (U.sub || '')) + '</title>';
+  // آيفون/آيباد: سفاري لا يكرر الإطار الثابت في كل صفحة، فيُخفى (يُكتب هنا لا بسكربت داخل الورقة حتى لا تتعطل بطء الإنترنت)
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let h = '<!DOCTYPE html><html lang="ar" dir="rtl"' + (isIOS && forPrint ? ' class="ios"' : '') + '><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc((U.title || 'ورقة عمل') + ' - ' + (U.sub || '')) + '</title>';
   h += '<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@400;700&family=Cairo:wght@400;700&family=Almarai:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">';
   h += '<style>' + sheetCSS(U) + ':root{--sp:' + U.space + '}</style></head><body>';
-  if (forPrint) h += '<script>if(/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))document.documentElement.classList.add("ios")<\/script>';
   if (forPrint) h += '<div class="tool"><div class="tip">لحفظ الورقة ملفًّا: في نافذة الطباعة اختاري الوجهة <b>«حفظ بتنسيق PDF»</b> (Save as PDF) ثم <b>«حفظ»</b>. يتذكر المتصفح اختيارك للمرات القادمة.</div><button class="p" onclick="window.print()">⬇ حفظ PDF / طباعة</button><button onclick="window.close()">إغلاق</button></div>';
   h += '<div class="frame"></div>' + (U.ornStyle === 'khatam' && U.frame !== 'none' ? cornersSvg() : '') + '<table class="pg"><thead><tr><td></td></tr></thead><tfoot><tr><td></td></tr></tfoot><tbody><tr><td>';
   h += '<div class="hd"><div class="logo">' + (U.logo ? '<img src="' + esc(U.logo) + '" alt="">' : '') + '</div>';
@@ -2521,6 +2589,7 @@ function ezApplySurahs(set) {
   $('wholeSurahs').checked = true; syncWhole();
   $('fromS').value = parts[0][0]; $('fromS').onchange(); $('toS').value = parts[0][1]; $('toS').onchange();
   S.mutPicked = null; schedule(true); setTimeout(ezSync, 400);
+  if (typeof wizAfterPick === 'function') wizAfterPick();
 }
 function ezSurahPicker() {
   const sel = ezCurrentSurahs();
@@ -2587,7 +2656,7 @@ function ezWrite() {
 /* ----- أوراقي المحفوظة: حفظ الورقة كما هي (السور، والأسئلة المختارة، والتعديلات) لفتحها لاحقًا ----- */
 const SAVED_KEY = 'ws_saved_sheets';
 function savedList() { const v = LS.get(savedKey(), []); return Array.isArray(v) ? v : []; }
-function ezSavedBadge() { if (!can('save')) { $('ezOpenSaved').classList.add('hidden'); return; } const n = savedList().length; $('ezOpenSaved').classList.toggle('hidden', !n); $('ezSavedN').textContent = n ? '(' + AD(n) + ')' : ''; }
+function ezSavedBadge() { if (!can('save')) { $('ezOpenSaved').classList.add('hidden'); $('wizSaved').classList.add('hidden'); return; } const n = savedList().length; $('ezOpenSaved').classList.toggle('hidden', !n); $('wizSaved').classList.toggle('hidden', !n); $('ezSavedN').textContent = n ? '(' + AD(n) + ')' : ''; }
 function snapshotSheet(name) {
   return {
     name, at: Date.now(), fromS: +$('fromS').value, toS: +$('toS').value, fromA: +$('fromA').value || 1, toA: +$('toA').value || 1, whole: $('wholeSurahs').checked,
@@ -2610,7 +2679,7 @@ async function restoreSheet(x) {
     await new Promise(r => setTimeout(r, 450));
     clearTimeout(refreshT);
     S.seed = x.seed; S.qSeed = x.qSeed; S.picked = new Set(x.picked || []); S.mutPicked = x.mutPicked ? new Set(x.mutPicked) : null;
-    await refresh(false); ezSync(); PREF.curSaved = x.name; savePref(); ezCurSync();
+    await refresh(false); ezSync(); PREF.curSaved = x.name; savePref(); ezCurSync(); S.wizStage = 'B'; try { wizShow(); } catch (e) { }
     toast('فُتحت الورقة «' + x.name + '». عدّلي ما شئت ثم «💾 حفظ الورقة».');
   } finally { busy(false); }
 }
@@ -2671,15 +2740,118 @@ function wireEzLook() {
   $('ezColors').onclick = e => { const b = e.target.closest('[data-th]'); if (!b) return; const t = document.querySelector('#themeSeg [data-v="' + b.dataset.th + '"]'); if (t) t.click(); else { PREF.theme = b.dataset.th; PREF.themeSet = true; savePref(); schedule(); } setTimeout(ezLookSync, 50); };
   [['ezShowName', 'showName'], ['ezShowDate', 'showDate'], ['ezShowGrades', 'showGrades'], ['ezShowBism', 'showBism']].forEach(([a, o]) => { $(a).onchange = () => { $(o).checked = $(a).checked; fire($(o), 'input'); fire($(o), 'change'); }; });
 }
+/* =====================================================================
+   الشاشة المبسطة: سؤال واحد في كل شاشة — «أي سورة؟» ثم «ورقتك جاهزة»
+   ===================================================================== */
+const WIZ_SIZES = { s: { seg: 1, mut: 1, q: 1 }, m: { seg: 2, mut: 2, q: 2 }, l: { seg: 3, mut: 3, q: 4 } };
+function wizOn() { return $('controls').classList.contains('wiz-on'); }
+function wizRenderGrid() {
+  const q = norm($('wizSS').value || '').replace(/^ال/, ''), qn = toInt($('wizSS').value);
+  $('wizGrid').innerHTML = SUR.map((y, i) => { const n = i + 1; if (q && !(norm(y[0]).includes(q) || n === qn)) return ''; return '<button data-n="' + n + '">' + esc(y[0]) + '<small>' + AD(n) + '</small></button>'; }).join('') || '<p class="hint" style="grid-column:1/-1">لا نتائج.</p>';
+}
+function wizEnter() {
+  if (!$('wizGrid').children.length) wizRenderGrid();
+  const rc = (PREF.recentS || []).filter(n => SUR[n - 1]);
+  $('wizRecent').classList.toggle('hidden', !rc.length);
+  $('wizRecent').innerHTML = rc.length ? '<b>آخر ما اخترتِه:</b>' + rc.map(n => '<button data-n="' + n + '">' + esc(sName(n)) + '</button>').join('') : '';
+  const r = $('wizResume'); r.classList.toggle('hidden', !PREF.wizLast); r.textContent = PREF.wizLast ? 'متابعة آخر ورقة: ' + PREF.wizLast + ' ←' : '';
+  wizShow();
+}
+function wizShow() {
+  const B = S.wizStage === 'B';
+  $('wizA').classList.toggle('hidden', B); $('wizB').classList.toggle('hidden', !B);
+  document.querySelectorAll('#wizG button').forEach(b => b.classList.toggle('on', b.dataset.v === sheetGender()));
+  document.querySelectorAll('#wizSize button').forEach(b => b.classList.toggle('on', b.dataset.v === (PREF.wizSize || 'm')));
+  try { $('wizName').textContent = rangeName(getRange()); } catch (e) { }
+}
+function wizApplySize(k, refreshNow) {
+  PREF.wizSize = k; savePref(); const z = WIZ_SIZES[k] || WIZ_SIZES.m;
+  ezSetCount('segCount', z.seg); ezSetCount('mutCount', z.mut); ezSetCount('qMax', z.q);
+  wizShow(); if (refreshNow) { S.mutPicked = null; schedule(true); }
+}
+function wizAfterPick() {
+  if (!wizOn()) return;
+  S.wizStage = 'B'; try { PREF.wizLast = rangeName(getRange()); } catch (e) { }
+  wizApplySize(PREF.wizSize || 'm', false); wizShow(); window.scrollTo(0, 0);
+}
+function wizPick(n) {
+  PREF.recentS = [n].concat((PREF.recentS || []).filter(x => x !== n)).slice(0, 6); savePref();
+  ezApplySurahs(new Set([n]));
+}
+function renderWiz(M) {
+  if (!wizOn()) return;
+  const items = []; M.sections.forEach(sec => sec.items.forEach(it => items.push({ it, sec }))); S.ezItems = items;
+  try { $('wizName').textContent = rangeName(getRange()); } catch (e) { }
+  const box = $('wizList'), prevG = CUR_G; CUR_G = sheetGender();
+  try {
+    box.innerHTML = items.length ? items.map(({ it }, i) => {
+      const canSwap = it.kind === 'seg' || (it.id && !it.adhoc) || (it.mut && typeof it.gi === 'number');
+      return '<div class="wz-q" data-i="' + i + '"><span class="wz-tag">' + AD(i + 1) + ' · ' + esc(EZ_TAG(it)) + '</span><div class="wz-qt" data-nogx>' + ezText(it) + '</div><div class="wz-qa">' +
+        (canSwap ? '<button class="sw" data-wa="swap">🔄 غيّري هذا السؤال</button>' : '') + '<button data-wa="more">⋯ المزيد</button></div></div>';
+    }).join('') : '<p class="hint">لا أسئلة بعد لهذه السورة. جرّبي «＋ إضافة سؤال» أو غيّري الحجم.</p>';
+  } finally { CUR_G = prevG; }
+}
+function wizCardMenu(i) {
+  const x = (S.ezItems || [])[i]; if (!x) return; const it = x.it;
+  const canSwap = it.kind === 'seg' || (it.id && !it.adhoc) || (it.mut && typeof it.gi === 'number');
+  $('modalBox').innerHTML = '<h3>هذا السؤال<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><div id="wmWrap">' +
+    (canSwap ? '<button class="svopt" data-wm="choose"><b>☰ اختاري بنفسك</b><small>تظهر قائمة بدائل لتختاري منها</small></button>' : '') +
+    (it.kind !== 'blank' ? '<button class="svopt" data-wm="edit"><b>✎ عدّلي النص أو الكلمات</b><small>تغيير نص السؤال أو الآيات أو مواضع المتشابه</small></button>' : '') +
+    '<button class="svopt" data-wm="del"><b style="color:#b03030">✕ احذفي هذا السؤال</b><small>يُحذف من هذه الورقة فقط</small></button></div>';
+  $('modal').classList.remove('hidden');
+  $('wmWrap').onclick = e => { const b = e.target.closest('[data-wm]'); if (!b) return; closeModal(); ezAction(b.dataset.wm, it); };
+}
+function wizAddMenu() {
+  $('modalBox').innerHTML = '<h3>ماذا تريدين أن تضيفي؟<button class="btn sm" onclick="closeModal()">إغلاق</button></h3><div id="waWrap">' +
+    '<button class="svopt main" data-wa2="s"><b>إكمال آيات</b><small>تختارين الآيات التي تكملها الطالبة</small></button>' +
+    '<button class="svopt" data-wa2="m"><b>متشابه</b><small>آيات متشابهة من سورة أو أكثر</small></button>' +
+    '<button class="svopt" data-wa2="q"><b>سؤال من البنك</b><small>معانٍ وقصص وتقسيمات جاهزة</small></button>' +
+    '<button class="svopt" data-wa2="w"><b>سؤال من عندك</b><small>تكتبينه بنفسك</small></button></div>';
+  $('modal').classList.remove('hidden');
+  $('waWrap').onclick = e => { const b = e.target.closest('[data-wa2]'); if (!b) return; ({ s: ezAddSeg, m: () => ezAddMut(), q: () => ezAddFromBank(), w: ezWrite })[b.dataset.wa2](); };
+}
+function wireWiz() {
+  $('wizSS').addEventListener('input', wizRenderGrid);
+  const pick = e => { const b = e.target.closest('[data-n]'); if (b) wizPick(+b.dataset.n); };
+  $('wizGrid').onclick = pick; $('wizRecent').onclick = pick;
+  $('wizMulti').onclick = () => ezSurahPicker();
+  $('wizSaved').onclick = () => ezOpenSaved();
+  $('wizResume').onclick = () => { S.wizStage = 'B'; wizShow(); schedule(true); };
+  $('wizChange').onclick = () => { S.wizStage = 'A'; wizEnter(); window.scrollTo(0, 0); };
+  $('wizG').onclick = e => { const b = e.target.closest('[data-v]'); if (!b) return; PREF.sheetGender = b.dataset.v; PREF.sheetGenderSet = true; savePref(); syncGenderUI(); syncThemeSeg(); wizShow(); schedule(); };
+  $('wizSize').onclick = e => { const b = e.target.closest('[data-v]'); if (b) wizApplySize(b.dataset.v, true); };
+  $('wizPdf').onclick = () => downloadPDF(false);
+  $('wizPrint').onclick = () => doPrint(false);
+  $('wizKey').onclick = () => doPrint(true);
+  $('wizView').onclick = () => { const on = document.body.classList.toggle('wiz-preview'); $('wizView').textContent = on ? '✕ إخفاء المعاينة' : '👁 معاينة'; if (on) { setTimeout(scalePaper, 80); setTimeout(() => $('previewWrap').scrollIntoView({ behavior: 'smooth' }), 120); } };
+  $('wizAdd').onclick = wizAddMenu;
+  $('wizKeep').onclick = () => ezSaveSheet();
+  $('wizLook').onclick = () => { window.setBuildMode('easy'); setTimeout(() => $('ezLookCard').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80); };
+  $('wizAll').onclick = () => window.setBuildMode('adv');
+  $('wizList').addEventListener('click', e => {
+    const t = e.target.closest('.wz-qt'); if (t) { t.closest('.wz-q').classList.toggle('open'); return; }
+    const b = e.target.closest('[data-wa]'); if (!b) return; const i = +b.closest('.wz-q').dataset.i, x = (S.ezItems || [])[i]; if (!x) return;
+    if (b.dataset.wa === 'swap') ezAction('swap', x.it); else wizCardMenu(i);
+  });
+}
 function wireEasy() {
   wireEzLook();
   $('ezKeep').onclick = ezSaveSheet; $('topSave').onclick = ezSaveSheet; $('ezOpenSaved').onclick = ezOpenSaved; ezSavedBadge(); ezCurSync();
   $('ezCurNew').onclick = () => { PREF.curSaved = ''; PREF.draft = null; PREF.manualSegs = []; PREF.manualMut = []; S.adhoc = []; saveAdhoc(); renderAdhoc(); renderManualMuts(); savePref(); ezCurSync(); S.mutPicked = null; schedule(true); toast('بدأتِ ورقة جديدة.'); };
   const ctl = $('controls');
-  const setMode = easy => { ctl.classList.toggle('easy-on', easy); $('ezBack').classList.add('hidden'); document.querySelectorAll('#modeBar [data-md]').forEach(b => b.classList.toggle('on', (b.dataset.md === 'easy') === easy)); PREF.ui = easy ? 'easy' : 'adv'; savePref(); if (easy && lastModel) renderEasy(lastModel); window.scrollTo(0, 0); };
-  setMode(PREF.ui !== 'adv');
-  $('ezAdv').onclick = () => setMode(false); $('ezBack').onclick = () => setMode(true);
-  document.querySelectorAll('#modeBar [data-md]').forEach(b => b.onclick = () => setMode(b.dataset.md === 'easy'));
+  const setMode3 = m => {
+    ctl.classList.toggle('wiz-on', m === 'wiz'); ctl.classList.toggle('easy-on', m === 'easy'); $('ezBack').classList.add('hidden');
+    document.querySelectorAll('#modeBar [data-md]').forEach(b => b.classList.toggle('on', b.dataset.md === m));
+    document.body.classList.toggle('wiz-mode', m === 'wiz'); PREF.bmode = m; savePref();
+    if (m === 'easy' && lastModel) renderEasy(lastModel);
+    if (m === 'wiz') { wizEnter(); if (lastModel) renderWiz(lastModel); }
+    window.scrollTo(0, 0);
+  };
+  window.setBuildMode = setMode3;
+  setMode3(PREF.bmode || 'wiz');
+  $('ezAdv').onclick = () => setMode3('adv'); $('ezBack').onclick = () => setMode3('easy');
+  document.querySelectorAll('#modeBar [data-md]').forEach(b => b.onclick = () => setMode3(b.dataset.md));
+  wireWiz();
   bindEzOpts();
   $('ezSurah').onclick = () => ezSurahPicker(); $('ezMore').onclick = () => ezSurahPicker();
   $('ezAyahsBtn').onclick = () => {
@@ -2830,6 +3002,7 @@ function paint(M) {
   lastModel = M;
   renderGrades(M);
   try { renderEasy(M); } catch (e) { console.error(e); }
+  try { renderWiz(M); } catch (e) { console.error(e); }
   if (S.draftView && !$('draftBox').contains(document.activeElement)) renderDraft(M);
   const f = $('paper');
   f.onload = () => { try { const d = f.contentDocument; const fit = () => { f.style.height = Math.max(1123, d.documentElement.scrollHeight) + 'px'; scalePaper(); }; fit(); (d.fonts ? d.fonts.ready : Promise.resolve()).then(fit); setTimeout(fit, 600); } catch (e) { } };
@@ -3985,14 +4158,29 @@ function wireSettings() {
 /* =====================================================================
    الدخول والتنقل والتشغيل
    ===================================================================== */
+const MORE_ITEMS = [['guide', 'دليل السور', 'متشابهات كل سورة وأسئلتها'], ['bank', 'بنك الأسئلة', 'عرض الأسئلة والمتشابهات وتعديلها'], ['add', 'إضافة أسئلة', 'أضيفي أسئلة أو متشابهات جديدة'], ['summary', 'ملخص السور', 'ما في البنك لكل سورة'], ['settings', 'الإعدادات', 'المستخدمون والصلاحيات وغيرها']];
+function moreItems() { return MORE_ITEMS.filter(([k]) => { const b = document.querySelector('#tabs [data-tab="' + k + '"]'); return b && !b.classList.contains('hidden'); }); }
+function renderMore() {
+  $('moreList').innerHTML = moreItems().map(([k, t, d]) => { const ic = document.querySelector('#tabs [data-tab="' + k + '"] svg'); return '<button class="more-item" data-go="' + k + '"><span class="mi-ic">' + (ic ? ic.outerHTML : '') + '</span><span class="mi-t"><b>' + t + '</b><small>' + d + '</small></span><span class="mi-ar">‹</span></button>'; }).join('');
+}
+function wireMenu() {
+  const m = $('hdrMenu'), b = $('menuBtn');
+  b.onclick = e => { e.stopPropagation(); m.classList.toggle('hidden'); };
+  m.addEventListener('click', () => setTimeout(() => m.classList.add('hidden'), 0));
+  document.addEventListener('click', e => { if (!m.contains(e.target) && e.target !== b) m.classList.add('hidden'); });
+  $('moreList').onclick = e => { const x = e.target.closest('[data-go]'); if (x) showTab(x.dataset.go); };
+}
 function showTab(t) {
   if ((t === 'build' && !canSheets()) || (t === 'quiz' && !canQuiz())) t = 'home';
   if ((t === 'add' && !isEditor()) || (t === 'settings' && !isAdmin()) || (t === 'bank' && !can('bank_view') && !isEditor()) || (t === 'guide' && !can('guide')) || (t === 'summary' && !can('summary'))) t = 'build';
+  if (t === 'more' && !moreItems().length) t = 'home';
   S.tab = t;
-  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
-  ['home', 'build', 'bank', 'add', 'quiz', 'guide', 'summary', 'settings'].forEach(x => $('tab-' + x).classList.toggle('hidden', x !== t));
+  const SEC = ['bank', 'add', 'guide', 'summary', 'settings'];
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t || (b.dataset.tab === 'more' && SEC.indexOf(t) >= 0)));
+  ['home', 'build', 'bank', 'add', 'quiz', 'guide', 'summary', 'settings', 'more'].forEach(x => $('tab-' + x).classList.toggle('hidden', x !== t));
+  if (t === 'more') renderMore();
   $('mbar').style.display = t === 'build' ? '' : 'none';
-  if (t === 'build') { schedule(); setTimeout(scalePaper, 50); }
+  if (t === 'build') { schedule(); setTimeout(scalePaper, 50); try { wizEnter(); } catch (e) { } }
   if (t === 'bank') { renderBank(); if (segVal('bankMode') === 'm') renderMutBank(); }
   if (t === 'add' && segVal('addMode') === 'manual') renderAdd();
   if (t === 'summary') renderSummary();
@@ -4022,9 +4210,9 @@ function applyPerms() {
   show('.hcard[data-go="guide"]', can('guide'));
   document.querySelectorAll('[data-admin]').forEach(el => el.classList.toggle('hidden', !isEditor()));
   document.querySelectorAll('[data-owner]').forEach(el => el.classList.toggle('hidden', !isAdmin()));
-  show('#topSave, #ezKeep', can('save'));
+  show('#topSave, #ezKeep, #wizKeep', can('save'));
   if (!can('save')) $('ezOpenSaved').classList.add('hidden'); else ezSavedBadge();
-  show('#ezKey, #viewSeg [data-v="key"]', can('answers'));
+  show('#ezKey, #wizKey, #viewSeg [data-v="key"]', can('answers'));
 }
 function applyData(d) {
   S.role = d.role; S.perms = d.perms || (d.role === 'admin' ? null : S.perms || {}); S.userName = d.name || S.userName || '';
@@ -4044,6 +4232,7 @@ async function loadAll() {
   if (!S.demo && LS.get('ws_pass', null)) LS.set('ws_cache', d);
 }
 function showApp(demo) {
+  $('menuBtn').classList.remove('hidden');
   try { applyUIGender(); syncGenderUI(); applyUI(); syncGBtn(); } catch (e) { console.error(e); }
   if (!demo && !PREF.uiGender && (S.role === 'guest' || S.role === 'reader')) setTimeout(() => askGender(true), 400);
   $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden'); $('tabs').classList.remove('hidden');
@@ -4107,6 +4296,8 @@ document.addEventListener('change', e => {
   } else if (hint) hint.remove();
 });
 function boot() {
+  if (typeof PREF.ui === 'string') PREF.ui = {};   // إصلاح: كان الوضع «السهل» يكتب فوق إعدادات المظهر
+  try { wireMenu(); } catch (e) { console.error(e); }
   // ١) زر الدخول أولًا، فلا يتعطل الدخول مهما حدث بعده
   $('loginBtn').onclick = async () => {
     const p = $('passInput').value.trim(); if (!p) { $('loginErr').textContent = 'اكتبي كلمة المرور.'; $('passInput').focus(); return; }
