@@ -508,6 +508,8 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 .wz-way b{display:block;font-size:22px;color:var(--head);margin-bottom:4px}.wz-way small{display:block;font-size:15px;color:var(--muted);line-height:1.7}
 .wz-way.pri{border-color:var(--pri);background:var(--soft)}.wz-way:active{transform:scale(.99)}
 .wz-or{text-align:center;color:var(--muted);font-weight:800;margin:10px 0 0;font-size:15px}
+.wz-pbar{position:sticky;bottom:76px;z-index:5;display:flex;gap:8px;margin-top:12px}.wz-pbar .wz-go{margin-top:0;min-height:60px;font-size:19px;flex:1}.wz-pbar .btn{min-height:60px}
+.wz-wayrow{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.wz-wayrow .btn{min-height:46px;font-weight:800}
 .wz-note{background:var(--soft);border:1px dashed var(--pri);border-radius:14px;padding:10px 12px;margin-top:10px;font-size:15px;line-height:1.7}
 .wz-steps{display:flex;gap:6px;justify-content:center;margin:0 0 12px}.wz-steps i{width:34px;height:6px;border-radius:4px;background:var(--line)}.wz-steps i.on{background:var(--pri)}
 .wz-sug{border-top:1px dashed var(--line);margin-top:12px;padding-top:6px}.wz-sug h4{margin:8px 0 0;font-size:15px;color:var(--muted)}
@@ -590,12 +592,13 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
         <div class="controls wiz-on" id="controls">
           <div id="wiz">
             <div id="wizA">
-              <div class="wz-h"><h2>أي سورة تريدين مراجعتها؟</h2><p>اضغطي على اسم السورة، وتجهز الورقة مباشرة.</p></div>
+              <div class="wz-h"><h2>أي سورة تريدين مراجعتها؟</h2><p>اضغطي على سورة أو أكثر (والضغط مرة ثانية يلغيها)، ثم زر «تم».</p></div>
               <button class="wz-resume hidden" id="wizResume"></button>
               <input type="search" id="wizSS" class="wz-search" placeholder="🔍 ابحثي باسم السورة…" autocomplete="off">
               <div id="wizRecent" class="wz-recent hidden"></div>
               <div id="wizGrid" class="ez-grid wz-grid"></div>
-              <div class="wz-links"><button class="ez-link" id="wizMulti">＋ أكثر من سورة</button><button class="ez-link hidden" id="wizSaved">📂 أوراقي المحفوظة</button></div>
+              <div class="wz-pbar hidden" id="wizPickBar" data-nogx><button class="wz-go" id="wizPickGo"></button><button class="btn" id="wizPickClr">إلغاء التحديد</button></div>
+              <div class="wz-links"><button class="ez-link hidden" id="wizMulti">＋ أكثر من سورة</button><button class="ez-link hidden" id="wizSaved">📂 أوراقي المحفوظة</button></div>
             </div>
             <div id="wizM" class="hidden">
               <div class="wz-steps" data-nogx><i class="on"></i><i class="on"></i><i></i></div>
@@ -2772,7 +2775,7 @@ const WIZ_SIZES = { s: { seg: 1, mut: 1, q: 1 }, m: { seg: 2, mut: 2, q: 2 }, l:
 function wizOn() { return $('controls').classList.contains('wiz-on'); }
 function wizRenderGrid() {
   const q = norm($('wizSS').value || '').replace(/^ال/, ''), qn = toInt($('wizSS').value);
-  $('wizGrid').innerHTML = SUR.map((y, i) => { const n = i + 1; if (q && !(norm(y[0]).includes(q) || n === qn)) return ''; return '<button data-n="' + n + '">' + esc(y[0]) + '<small>' + AD(n) + '</small></button>'; }).join('') || '<p class="hint" style="grid-column:1/-1">لا نتائج.</p>';
+  $('wizGrid').innerHTML = SUR.map((y, i) => { const n = i + 1; if (q && !(norm(y[0]).includes(q) || n === qn)) return ''; return '<button data-n="' + n + '"' + ((S.wizSel || new Set()).has(n) ? ' class="on"' : '') + '>' + esc(y[0]) + '<small>' + AD(n) + '</small></button>'; }).join('') || '<p class="hint" style="grid-column:1/-1">لا نتائج.</p>';
 }
 function wizEnter() {
   if (!$('wizGrid').children.length) wizRenderGrid();
@@ -2780,15 +2783,23 @@ function wizEnter() {
   $('wizRecent').classList.toggle('hidden', !rc.length);
   $('wizRecent').innerHTML = rc.length ? '<b>آخر ما اخترتِه:</b>' + rc.map(n => '<button data-n="' + n + '">' + esc(sName(n)) + '</button>').join('') : '';
   const r = $('wizResume'); r.classList.toggle('hidden', !PREF.wizLast); r.textContent = PREF.wizLast ? 'متابعة آخر ورقة: ' + PREF.wizLast + ' ←' : '';
-  wizShow();
+  wizPickSync(); wizShow();
 }
+function wizPickSync() {
+  S.wizSel = S.wizSel || new Set();
+  const n = S.wizSel.size; $('wizPickBar').classList.toggle('hidden', !n);
+  if (n) $('wizPickGo').textContent = 'تم — التالي (' + (n === 1 ? 'سورة واحدة' : AD(n) + ' سور') + ') ←';
+  document.querySelectorAll('#wizGrid [data-n]').forEach(b => b.classList.toggle('on', S.wizSel.has(+b.dataset.n)));
+  document.querySelectorAll('#wizRecent [data-n]').forEach(b => b.classList.toggle('on', S.wizSel.has(+b.dataset.n)));
+}
+function wizPickToggle(n) { S.wizSel = S.wizSel || new Set(); if (S.wizSel.has(n)) S.wizSel.delete(n); else S.wizSel.add(n); wizPickSync(); }
 function wizShow() {
   const st = S.wizStage || 'A', man = PREF.wizWay === 'manual';
   ['A', 'M', 'C', 'B'].forEach(k => { const e = $('wiz' + k); if (e) e.classList.toggle('hidden', k !== st); });
   document.querySelectorAll('#wizG button').forEach(b => b.classList.toggle('on', b.dataset.v === sheetGender()));
   document.querySelectorAll('#wizSize button').forEach(b => b.classList.toggle('on', b.dataset.v === (PREF.wizSize || 'm')));
   $('wizSizeRow').classList.toggle('hidden', man); $('wizReroll').classList.toggle('hidden', man);
-  $('wizWayNote').innerHTML = man ? '<b>✍ ورقة يدوية:</b> أضيفي أسئلتك بالزر «＋ إضافة سؤال» (فيه اقتراحات اختيارية). يمكنك تغيير أي سؤال أو حذفه.' : '<b>ورقة مقترحة:</b> غيّري أي سؤال أو احذفيه، وأضيفي ما تشائين.';
+  $('wizWayNote').innerHTML = man ? '<div class="wz-wayrow"><span><b>✍ ورقة يدوية:</b> أضيفي أسئلتك بزر «＋ إضافة سؤال».</span><button class="btn" id="wizWayBtn">← الرجوع إلى الورقة المقترحة</button></div>' : '<div class="wz-wayrow"><span><b>ورقة مقترحة:</b> غيّري أي سؤال أو احذفيه أو أضيفي.</span><button class="btn" id="wizWayBtn">الانتقال إلى الاختيار اليدوي</button></div>';
   try { $('wizName').textContent = rangeName(getRange()); $('wizName2').textContent = rangeName(getRange()); } catch (e) { }
 }
 function wizGo(st) { S.wizStage = st; if (st === 'M') wizMemInit(); wizShow(); window.scrollTo(0, 0); }
@@ -2874,7 +2885,9 @@ function wizAddMenu() {
 }
 function wireWiz() {
   $('wizSS').addEventListener('input', wizRenderGrid);
-  const pick = e => { const b = e.target.closest('[data-n]'); if (b) wizPick(+b.dataset.n); };
+  const pick = e => { const b = e.target.closest('[data-n]'); if (b) wizPickToggle(+b.dataset.n); };
+  $('wizPickGo').onclick = () => { const L = [...(S.wizSel || [])]; if (!L.length) return; PREF.recentS = L.concat((PREF.recentS || []).filter(x => !L.includes(x))).slice(0, 6); savePref(); const set = new Set(L); S.wizSel = new Set(); ezApplySurahs(set); };
+  $('wizPickClr').onclick = () => { S.wizSel = new Set(); wizPickSync(); };
   $('wizGrid').onclick = pick; $('wizRecent').onclick = pick;
   $('wizMulti').onclick = () => ezSurahPicker();
   $('wizSaved').onclick = () => ezOpenSaved();
@@ -2897,6 +2910,7 @@ function wireWiz() {
   $('wizCBack').onclick = () => wizGo('M');
   $('wayManual').onclick = () => wizChoose('manual'); $('waySuggest').onclick = () => wizChoose('suggest');
   $('wizWay').onclick = () => wizGo('C');
+  $('wizWayNote').addEventListener('click', e => { if (!e.target.closest('#wizWayBtn')) return; if (PREF.wizWay === 'manual') wizChoose('suggest'); else if (!(S.ezItems || []).length || confirm('ستبدأين ورقة فارغة وتُحذف أسئلة هذه الورقة الحالية. المتابعة؟')) wizChoose('manual'); window.scrollTo(0, 0); });
   $('wizReroll').onclick = () => { S.qSeed++; S.mutPicked = null; schedule(true); toast('جُهّز اقتراح جديد. أسئلتك المضافة يدويًا باقية.'); };
   $('wizList').addEventListener('click', e => { const b = e.target.closest('[data-wa2]'); if (b) wizAddAct(b.dataset.wa2); });
   $('wizList').addEventListener('click', e => {
