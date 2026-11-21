@@ -508,6 +508,15 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 .wz-way b{display:block;font-size:22px;color:var(--head);margin-bottom:4px}.wz-way small{display:block;font-size:15px;color:var(--muted);line-height:1.7}
 .wz-way.pri{border-color:var(--pri);background:var(--soft)}.wz-way:active{transform:scale(.99)}
 .wz-or{text-align:center;color:var(--muted);font-weight:800;margin:10px 0 0;font-size:15px}
+.wz-nav{display:flex;align-items:center;gap:12px;margin:0 0 12px}
+.wz-back{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:0 18px;border:2px solid var(--pri);border-radius:14px;background:var(--paper);color:var(--head);font:800 18px Tajawal,sans-serif;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.08);flex:none}
+.wz-back:active{transform:scale(.97)}.wz-stepn{font-weight:800;color:var(--muted);font-size:15px}
+#wizA .wz-h h2{font-size:22px;margin:0 0 6px}#wizA .wz-h p{display:none}
+#wizA .wz-search{min-height:48px;font-size:17px;border-radius:14px}
+#wizA .wz-resume{min-height:46px;font-size:15px;margin-bottom:8px;border-radius:14px}
+#wizA .wz-recent{flex-wrap:nowrap;overflow-x:auto;margin-top:8px;padding-bottom:4px}#wizA .wz-recent button{flex:none;padding:5px 14px;font-size:16px}
+#wizA .wz-grid{max-height:none;height:calc(100vh - 330px);height:calc(100dvh - 330px);min-height:300px;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;margin-top:8px;padding-bottom:70px}
+#wizA .wz-grid button{min-height:46px;font-size:16px;padding:2px}
 .wz-pbar{position:sticky;bottom:76px;z-index:5;display:flex;gap:8px;margin-top:12px}.wz-pbar .wz-go{margin-top:0;min-height:60px;font-size:19px;flex:1}.wz-pbar .btn{min-height:60px}
 .wz-wayrow{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.wz-wayrow .btn{min-height:46px;font-weight:800}
 .wz-note{background:var(--soft);border:1px dashed var(--pri);border-radius:14px;padding:10px 12px;margin-top:10px;font-size:15px;line-height:1.7}
@@ -601,17 +610,17 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
               <div class="wz-links"><button class="ez-link hidden" id="wizMulti">＋ أكثر من سورة</button><button class="ez-link hidden" id="wizSaved">📂 أوراقي المحفوظة</button></div>
             </div>
             <div id="wizM" class="hidden">
-              <div class="wz-steps" data-nogx><i class="on"></i><i class="on"></i><i></i></div>
+              <div class="wz-nav" data-nogx><button class="wz-back" id="wizBackM">→ رجوع</button><span class="wz-stepn">الخطوة ٢ من ٣ · المحفوظ</span></div>
               <div class="wz-h"><h2>ماذا حفظت الطالبات؟</h2><p>حتى لا تظهر في الورقة أسئلة من خارج محفوظهن. اختاري نطاقًا محفوظًا، أو حدّدي نطاقًا جديدًا.</p></div>
               <label class="f" for="wizMemSel">نطاق المحفوظ</label><select id="wizMemSel"></select>
               <div id="wizMemBox" class="hidden" style="margin-top:8px"></div>
               <div class="wz-note" id="wizMemSum"></div>
               <button class="wz-go" id="wizMemNext">التالي ←</button>
-              <div class="wz-links"><button class="ez-link" id="wizMemBack">→ رجوع لاختيار السورة</button></div>
+              
             </div>
             <div id="wizC" class="hidden">
-              <div class="wz-steps" data-nogx><i class="on"></i><i class="on"></i><i class="on"></i></div>
-              <div class="wz-top"><div><small>ورقة</small><b id="wizName2"></b></div><button class="ez-link" id="wizCBack">→ رجوع</button></div>
+              <div class="wz-nav" data-nogx><button class="wz-back" id="wizBackC">→ رجوع</button><span class="wz-stepn">الخطوة ٣ من ٣ · طريقة الورقة</span></div>
+              <div class="wz-top"><div><small>ورقة</small><b id="wizName2"></b></div></div>
               <div class="wz-h"><h2>كيف تريدين تجهيز الورقة؟</h2><p>اختاري طريقة واحدة فقط — وفي الطريقتين تستطيعين التعديل كما تشائين.</p></div>
               <button class="wz-way" id="wayManual"><b>✍ اختيار يدوي للورقة</b><small>تبدأين بورقة فارغة وتضيفين أسئلتك بنفسك: إكمال آيات، معانٍ واستنباط، متشابهات، قصص… مع اقتراحات تعينك متى شئتِ (وليست إلزامية).</small></button>
               <div class="wz-or" data-nogx>أو</div>
@@ -619,6 +628,7 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
               <p class="hint" style="text-align:center;margin-top:12px">الخلفية واللون والعنوان والتوقيع خيارات متقدمة اختيارية، تجدينها بعد تجهيز الورقة.</p>
             </div>
             <div id="wizB" class="hidden">
+              <div class="wz-nav" data-nogx><button class="wz-back" id="wizBackB">→ رجوع</button><span class="wz-stepn">ورقتك</span></div>
               <div class="wz-top"><div><small>ورقة</small><b id="wizName"></b></div><button class="ez-link" id="wizChange">تغيير السورة</button></div>
               <div class="wz-row"><span>لـ</span><div class="seg" id="wizG" data-nogx><button data-v="f">طالبات</button><button data-v="m">طلاب</button></div></div>
               <div class="wz-note" id="wizWayNote"></div>
@@ -2908,8 +2918,9 @@ function wireWiz() {
   $('wizMemSel').onchange = () => { const v = $('wizMemSel').value; $('memSel').value = v; $('memSel').dispatchEvent(new Event('change')); wizMemSync(); };
   const memCh = () => { const ed = $('wizMemBox').querySelector('[data-memed]'); if (!ed || $('wizMemSel').value !== 'custom') return; PREF.memCustom = memEditorValue(ed); PREF.memSel = 'custom'; savePref(); syncMem(); $('wizMemSum').innerHTML = '<b>المحفوظ:</b> ' + esc(memLabel(curMem())) + '<br><small>لن تظهر أسئلة ولا متشابهات من خارج هذا النطاق.</small>'; schedule(true); };
   $('wizMemBox').addEventListener('change', memCh); document.addEventListener('memedchange', memCh);
-  $('wizMemNext').onclick = () => wizGo('C'); $('wizMemBack').onclick = () => { S.wizStage = 'A'; wizEnter(); window.scrollTo(0, 0); };
-  $('wizCBack').onclick = () => wizGo('M');
+  $('wizMemNext').onclick = () => wizGo('C');
+  $('wizBackM').onclick = () => { S.wizStage = 'A'; wizEnter(); window.scrollTo(0, 0); };
+  $('wizBackC').onclick = () => wizGo('M'); $('wizBackB').onclick = () => wizGo('C');
   $('wayManual').onclick = () => wizChoose('manual'); $('waySuggest').onclick = () => wizChoose('suggest');
   $('wizWay').onclick = () => wizGo('C');
   $('wizWayNote').addEventListener('click', e => { if (!e.target.closest('#wizWayBtn')) return; if (PREF.wizWay === 'manual') wizChoose('suggest'); else if (!(S.ezItems || []).length || confirm('ستبدأين ورقة فارغة وتُحذف أسئلة هذه الورقة الحالية. المتابعة؟')) wizChoose('manual'); window.scrollTo(0, 0); });
