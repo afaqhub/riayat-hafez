@@ -517,6 +517,8 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
 #wizA .wz-recent{flex-wrap:nowrap;overflow-x:auto;margin-top:8px;padding-bottom:4px}#wizA .wz-recent button{flex:none;padding:5px 14px;font-size:16px}
 #wizA .wz-grid{max-height:none;height:calc(100vh - 330px);height:calc(100dvh - 330px);min-height:300px;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;margin-top:8px;padding-bottom:70px}
 #wizA .wz-grid button{min-height:46px;font-size:16px;padding:2px}
+.wz-gb{border:1.5px solid var(--pri);background:var(--soft);color:var(--head);border-radius:999px;padding:4px 14px;font:800 14px Tajawal,sans-serif;cursor:pointer;margin-inline-start:6px}
+.wz-total{display:inline-block;margin-inline-start:8px;background:var(--pri);color:#fff;border-radius:999px;padding:3px 14px;font:800 15px Tajawal,sans-serif}
 .wz-pbar{position:sticky;bottom:76px;z-index:5;display:flex;gap:8px;margin-top:12px}.wz-pbar .wz-go{margin-top:0;min-height:60px;font-size:19px;flex:1}.wz-pbar .btn{min-height:60px}
 .wz-wayrow{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.wz-wayrow .btn{min-height:46px;font-weight:800}
 .wz-note{background:var(--soft);border:1px dashed var(--pri);border-radius:14px;padding:10px 12px;margin-top:10px;font-size:15px;line-height:1.7}
@@ -635,7 +637,7 @@ html[data-mode=dark][data-color=blue] #appView .an,html[data-mode=dark][data-col
               <div class="wz-row" id="wizSizeRow"><span>الحجم</span><div class="seg" id="wizSize"><button data-v="s">قصيرة</button><button data-v="m">متوسطة</button><button data-v="l">طويلة</button></div></div>
               <button class="wz-go" id="wizPdf">⬇ حفظ الورقة PDF</button>
               <div class="wz-two"><button class="btn" id="wizPrint">🖨 طباعة</button><button class="btn" id="wizView">👁 معاينة</button></div>
-              <h3 class="wz-sub">أسئلة الورقة <small>غيّري ما لا يعجبك · واضغطي على النص لقراءته كاملًا</small></h3>
+              <h3 class="wz-sub">أسئلة الورقة <span class="wz-total" id="wizTotal" data-nogx></span> <small>غيّري ما لا يعجبك · واضغطي على النص لقراءته كاملًا</small></h3>
               <div id="wizList"></div>
               <button class="ez-add wz-add" id="wizAdd">＋ إضافة سؤال</button>
               <div class="wz-links"><button class="ez-link" id="wizReroll">↻ اقتراح جديد</button><button class="ez-link" id="wizWay">↺ غيّري طريقة الورقة</button><button class="ez-link" id="wizLook">🎨 العنوان والتوقيع واللون</button><button class="ez-link hidden" id="wizKeep">💾 حفظ الورقة</button><button class="ez-link hidden" id="wizKey">نموذج الإجابة</button><button class="ez-link" id="wizAll">⚙ كل الخيارات</button></div>
@@ -2881,15 +2883,17 @@ function wizPick(n) {
   PREF.recentS = [n].concat((PREF.recentS || []).filter(x => x !== n)).slice(0, 6); savePref();
   ezApplySurahs(new Set([n]));
 }
+function wizGradeTxt(g) { g = +g || 0; const n = AD(g); return g === 1 ? 'درجة واحدة' : g === 2 ? 'درجتان' : g >= 3 && g <= 10 && g === Math.floor(g) ? n + ' درجات' : n + ' درجة'; }
 function renderWiz(M) {
   if (!wizOn()) return;
+  try { $('wizTotal').textContent = 'المجموع: ' + AD(M.total); } catch (e) { }
   const items = []; M.sections.forEach(sec => sec.items.forEach(it => items.push({ it, sec }))); S.ezItems = items;
   try { $('wizName').textContent = rangeName(getRange()); } catch (e) { }
   const box = $('wizList'), prevG = CUR_G; CUR_G = sheetGender();
   try {
     box.innerHTML = items.length ? items.map(({ it }, i) => {
       const canSwap = it.kind === 'seg' || (it.id && !it.adhoc) || (it.mut && typeof it.gi === 'number');
-      return '<div class="wz-q" data-i="' + i + '"><span class="wz-tag">' + AD(i + 1) + ' · ' + esc(EZ_TAG(it)) + '</span><div class="wz-qt" data-nogx>' + ezText(it) + '</div><div class="wz-qa">' +
+      return '<div class="wz-q" data-i="' + i + '"><span class="wz-tag">' + AD(i + 1) + ' · ' + esc(EZ_TAG(it)) + '</span><button class="wz-gb" data-wa="grade" data-nogx title="اضغطي لتغيير الدرجة">' + wizGradeTxt(it.grade) + ' ✎</button><div class="wz-qt" data-nogx>' + ezText(it) + '</div><div class="wz-qa">' +
         (canSwap ? '<button class="sw" data-wa="swap">🔄 غيّري هذا السؤال</button>' : '') + '<button data-wa="more">⋯ المزيد</button></div></div>';
     }).join('') : '<div class="wz-note" id="wizEmpty"><b>' + (PREF.wizWay === 'manual' ? 'ورقتك فارغة الآن.' : 'لا أسئلة مقترحة لهذه السورة.') + '</b> ابدئي بإضافة سؤال:</div>' + wizAddHTML('waEmpty');
   } finally { CUR_G = prevG; }
@@ -2944,7 +2948,7 @@ function wireWiz() {
   $('wizList').addEventListener('click', e => {
     const t = e.target.closest('.wz-qt'); if (t) { t.closest('.wz-q').classList.toggle('open'); return; }
     const b = e.target.closest('[data-wa]'); if (!b) return; const i = +b.closest('.wz-q').dataset.i, x = (S.ezItems || [])[i]; if (!x) return;
-    if (b.dataset.wa === 'swap') ezAction('swap', x.it); else wizCardMenu(i);
+    if (b.dataset.wa === 'swap') ezAction('swap', x.it); else if (b.dataset.wa === 'grade') ezGrade(x.it); else wizCardMenu(i);
   });
 }
 function wireEasy() {
